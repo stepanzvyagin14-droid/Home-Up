@@ -238,7 +238,6 @@ function publicUser(u){
 
 async function handleAPI(req, res, pathname, url){
   try {
-    // --- AUTH ---
     if(pathname === '/api/register' && req.method === 'POST'){
       const { username, password } = await readBody(req);
       if(typeof username !== 'string' || typeof password !== 'string') return sendJSON(res, 400, { error:'Неверный формат' });
@@ -278,8 +277,6 @@ async function handleAPI(req, res, pathname, url){
       u.avatar = avatar; markDirty();
       return sendJSON(res, 200, { ok:true });
     }
-
-    // --- TAP ---
     if(pathname === '/api/tap' && req.method === 'POST'){
       const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
       if(!u._taps) u._taps = [];
@@ -291,14 +288,11 @@ async function handleAPI(req, res, pathname, url){
       u.coins += 1; u.totalTaps += 1; markDirty();
       return sendJSON(res, 200, { coins:u.coins });
     }
-
-    // --- STATIC DATA ---
     if(pathname === '/api/cases' && req.method === 'GET')
       return sendJSON(res, 200, CASES.map(c => ({ id:c.id, name:c.name, icon:c.icon, price:c.price, color:c.color })));
     if(pathname === '/api/items' && req.method === 'GET') return sendJSON(res, 200, ITEMS);
     if(pathname === '/api/rarities' && req.method === 'GET') return sendJSON(res, 200, RARITIES);
 
-    // --- OPEN CASE ---
     if(pathname === '/api/open-case' && req.method === 'POST'){
       const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
       const { caseId, multi } = await readBody(req);
@@ -317,7 +311,6 @@ async function handleAPI(req, res, pathname, url){
       });
     }
 
-    // --- DAILY ---
     if(pathname === '/api/daily' && req.method === 'POST'){
       const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
       const now = Date.now();
@@ -332,7 +325,6 @@ async function handleAPI(req, res, pathname, url){
       return sendJSON(res, 200, { reward, day: dayIdx+1, coins:u.coins, dailyStreak:ns, lastDaily:now, totalClaimed:u.totalClaimed });
     }
 
-    // --- MARKET ---
     if(pathname === '/api/market' && req.method === 'GET'){
       const list = ITEMS.map(item => {
         const s = getSupply(item.name);
@@ -366,7 +358,6 @@ async function handleAPI(req, res, pathname, url){
       return sendJSON(res, 200, { coins:u.coins, inventory:getInv(u.id), earned:total });
     }
 
-    // --- UPGRADE ---
     if(pathname === '/api/upgrade' && req.method === 'POST'){
       const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
       const { bet, targetName, chance } = await readBody(req);
@@ -400,7 +391,6 @@ async function handleAPI(req, res, pathname, url){
       });
     }
 
-    // --- CRAFT ---
     if(pathname === '/api/craft' && req.method === 'POST'){
       const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
       const { itemName } = await readBody(req);
@@ -424,7 +414,6 @@ async function handleAPI(req, res, pathname, url){
       });
     }
 
-    // --- WHEEL ---
     if(pathname === '/api/wheel' && req.method === 'POST'){
       const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
       if(u.coins < WHEEL_COST) return sendJSON(res, 400, { error:'Недостаточно монет' });
@@ -443,14 +432,12 @@ async function handleAPI(req, res, pathname, url){
       return sendJSON(res, 200, { prize:payload, coins:u.coins, inventory:getInv(u.id) });
     }
 
-    // --- LEADERBOARD ---
     if(pathname === '/api/leaderboard' && req.method === 'GET'){
       const top = [...db.users].sort((a,b) => b.coins - a.coins).slice(0, 20)
         .map(u => ({ username:u.username, avatar:u.avatar, coins:u.coins, totalTaps:u.totalTaps, isDev:isDev(u) }));
       return sendJSON(res, 200, top);
     }
 
-    // === NEWS ===
     if(pathname === '/api/news' && req.method === 'GET'){
       const list = [...db.news].sort((a,b) => {
         if(a.pinned !== b.pinned) return a.pinned ? -1 : 1;
@@ -498,7 +485,6 @@ async function handleAPI(req, res, pathname, url){
       return sendJSON(res, 200, { ok: true, pinned: n.pinned });
     }
 
-    // === USERS SEARCH ===
     if(pathname === '/api/users/search' && req.method === 'GET'){
       const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
       const q = (url.searchParams.get('q') || '').toLowerCase().trim();
@@ -516,7 +502,6 @@ async function handleAPI(req, res, pathname, url){
       return sendJSON(res, 200, results);
     }
 
-    // === FRIENDS ===
     if(pathname === '/api/friends' && req.method === 'GET'){
       const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
       const friends = [], incoming = [], outgoing = [];
