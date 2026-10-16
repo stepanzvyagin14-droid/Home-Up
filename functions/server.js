@@ -1,18 +1,15 @@
-/**
- * HOME UP — сервер
- * Запуск: node server.js
- */
 const http = require('http');
-const fs   = require('fs');
+const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
 const PORT = process.env.PORT || 3000;
-// ИСПРАВЛЕНО: фиксированный секрет, чтобы токены не сбрасывались при перезапуске
-const SECRET = process.env.JWT_SECRET || 'home-up-super-secret-key-2026';
+const SECRET = process.env.JWT_SECRET || crypto.randomBytes(48).toString('hex');
 const DB_FILE = path.join(__dirname, 'data.json');
 const TOKEN_TTL = 90 * 24 * 3600 * 1000;
 const DEVELOPERS = ['baconsigma67656'];
+const OFFLINE_RATE = 5;      // 5 офлайн-коинов за минуту
+const EXCHANGE_RATE = 5;     // 5 офлайн-коинов = 1 монета
 
 let db = { users: [], inventory: {}, supply: {}, priceHistory: {}, news: [], friendships: [] };
 let dbDirty = false;
@@ -126,6 +123,7 @@ const AVATARS = ['🐺','🦊','🐉','🦁','🐯','🦅','🐻','🐼','🦖',
 const INITIAL_SUPPLY = 100, SELL_SPREAD = 0.85, WHEEL_COST = 100;
 const DAILY_CD = 24*60*60*1000, DAILY_GRACE = 48*60*60*1000;
 const CRAFT_COST = 5;
+const OFFLINE_MIN_GAP = 60*1000; // учитываем только паузы > 1 мин
 
 function getSupply(item){
   if(!db.supply[item]) db.supply[item] = { drops:0, trend:0, updated:Date.now() };
@@ -222,11 +220,28 @@ function readBody(req){
     req.on('error', reject);
   });
 }
+
+// === get user + начисление офлайн-коинов ===
 function getUser(req){
   const auth = req.headers.authorization || '';
   const uid = verifyToken(auth.replace('Bearer ', ''));
   if(!uid) return null;
-  return db.users.find(u => u.id === uid);
+  const u = db.users.find(x => x.id === uid);
+  if(!u) return null;
+  const now = Date.now();
+  const last = u.lastSeen || now;
+  const gap = now - last;
+  // если пауза > 1 мин — начисляем офлайн-коины
+  if(gap > OFFLINE_MIN_GAP){
+    const minutes = Math.floor(gap / 60000);
+    u.offlineCoins = (u.offlineCoins || 0) + minutes * OFFLINE_RATE;
+    u.lastOfflineGain = minutes * OFFLINE_RATE;
+  } else {
+    u.lastOfflineGain = 0;
+  }
+  u.lastSeen = now;
+  markDirty();
+  return u;
 }
 function publicUser(u){
   return {
@@ -234,6 +249,8 @@ function publicUser(u){
     totalTaps: u.totalTaps, lastDaily: u.lastDaily, dailyStreak: u.dailyStreak,
     totalClaimed: u.totalClaimed, created: u.created, inventory: getInv(u.id),
     isDev: isDev(u),
+    offlineCoins: u.offlineCoins || 0,
+    lastOfflineGain: u.lastOfflineGain || 0,
   };
 }
 
@@ -254,6 +271,8 @@ async function handleAPI(req, res, pathname, url){
         avatar: AVATARS[Math.floor(Math.random() * AVATARS.length)],
         coins: 100, totalTaps: 0, lastDaily: 0, dailyStreak: 0, totalClaimed: 0,
         created: Date.now(),
+        lastSeen: Date.now(),
+        offlineCoins: 0,
       };
       db.users.push(user);
       markDirty();
@@ -265,11 +284,26 @@ async function handleAPI(req, res, pathname, url){
       const user = db.users.find(u => u.username.toLowerCase() === username.toLowerCase().trim());
       if(!user) return sendJSON(res, 400, { error:'Пользователь не найден' });
       if(!verifyPassword(password, user.password)) return sendJSON(res, 400, { error:'Неверный пароль' });
-      return sendJSON(res, 200, { token: makeToken(user.id), username: user.username });
+      // Начисляем офлайн-коины
+      const now = Date.now();
+      const gap = now - (user.lastSeen || now);
+      let gainedOffline = 0;
+      if(gap > OFFLINE_MIN_GAP){
+        const minutes = Math.floor(gap / 60000);
+        gainedOffline = minutes * OFFLINE_RATE;
+        user.offlineCoins = (user.offlineCoins || 0) + gainedOffline;
+      }
+      user.lastSeen = now;
+      markDirty();
+      return sendJSON(res, 200, { token: makeToken(user.id), username: user.username, offlineGain: gainedOffline });
     }
     if(pathname === '/api/me' && req.method === 'GET'){
       const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
       return sendJSON(res, 200, publicUser(u));
+    }
+    if(pathname === '/api/heartbeat' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      return sendJSON(res, 200, { offlineCoins: u.offlineCoins || 0 });
     }
     if(pathname === '/api/avatar' && req.method === 'POST'){
       const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
@@ -293,6 +327,29 @@ async function handleAPI(req, res, pathname, url){
       return sendJSON(res, 200, CASES.map(c => ({ id:c.id, name:c.name, icon:c.icon, price:c.price, color:c.color })));
     if(pathname === '/api/items' && req.method === 'GET') return sendJSON(res, 200, ITEMS);
     if(pathname === '/api/rarities' && req.method === 'GET') return sendJSON(res, 200, RARITIES);
+
+    // === МАГАЗИН ===
+    if(pathname === '/api/shop/exchange' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const { count } = await readBody(req);
+      const have = u.offlineCoins || 0;
+      let c = Math.max(EXCHANGE_RATE, Math.floor((parseInt(count) || 0) / EXCHANGE_RATE) * EXCHANGE_RATE);
+      if(have < c) c = Math.floor(have / EXCHANGE_RATE) * EXCHANGE_RATE;
+      if(c < EXCHANGE_RATE) return sendJSON(res, 400, { error:`Минимум ${EXCHANGE_RATE} офлайн-коинов` });
+      const regular = c / EXCHANGE_RATE;
+      u.offlineCoins = have - c;
+      u.coins += regular;
+      markDirty();
+      return sendJSON(res, 200, { ok:true, coins:u.coins, offlineCoins:u.offlineCoins, exchanged:c, gained:regular });
+    }
+    if(pathname === '/api/shop/free' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      if(!isDev(u)) return sendJSON(res, 403, { error:'Только разработчик' });
+      const amount = 1000;
+      u.coins += amount;
+      markDirty();
+      return sendJSON(res, 200, { ok:true, coins:u.coins, amount });
+    }
 
     if(pathname === '/api/open-case' && req.method === 'POST'){
       const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
@@ -577,12 +634,6 @@ const server = http.createServer(async (req, res) => {
   if(pathname.startsWith('/api/')) return handleAPI(req, res, pathname, url);
 
   const publicDir = path.join(__dirname, 'public');
-  
-  // ИСПРАВЛЕНО: Создаем папку public, если её нет
-  if (!fs.existsSync(publicDir)) {
-    fs.mkdirSync(publicDir, { recursive: true });
-  }
-  
   const filePath = pathname === '/' ? '/index.html' : pathname;
   const fullPath = path.join(publicDir, filePath);
   if(!fullPath.startsWith(publicDir)){ res.writeHead(403); return res.end('Forbidden'); }
@@ -596,12 +647,11 @@ const server = http.createServer(async (req, res) => {
 });
 
 loadDB();
-// ИСПРАВЛЕНО: Добавлен 0.0.0.0 для Render
-server.listen(PORT, '0.0.0.0', () => {
+server.listen(PORT, () => {
   console.log('\n🚀 HOME UP сервер запущен');
   console.log(`📍 http://localhost:${PORT}`);
   console.log(`👑 Разработчики: ${DEVELOPERS.join(', ')}`);
   console.log(`👥 Пользователей: ${db.users.length}`);
-  console.log(`📰 Новостей: ${db.news.length}\n`);
+  console.log(`🌙 Офлайн: ${OFFLINE_RATE} коинов/мин, курс ${EXCHANGE_RATE} → 1\n`);
 });
 process.on('SIGINT', () => { console.log('\n💾 Сохраняю...'); saveDB(); process.exit(0); });
