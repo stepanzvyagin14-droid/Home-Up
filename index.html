@@ -7,11 +7,13 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{overflow-x:hidden;max-width:100vw;width:100%}
-body{background:#050508;font-family:'Segoe UI',Roboto,sans-serif;color:#e8e8ee;min-height:100vh;padding:8px 8px 88px;user-select:none;font-weight:500}
+body{background:#050508;font-family:'Segoe UI',Roboto,sans-serif;color:#e8e8ee;min-height:100vh;min-height:100dvh;padding:8px 8px 88px;user-select:none;font-weight:500}
 @media(min-width:900px){body{padding:14px 14px 20px}}
 .bg-fx{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 .bg-fx::before{content:'';position:absolute;inset:-50%;background:radial-gradient(circle at 20% 30%,rgba(240,185,11,.1),transparent 40%),radial-gradient(circle at 80% 70%,rgba(230,90,140,.07),transparent 40%);animation:bgShift 30s linear infinite}
 @keyframes bgShift{to{transform:rotate(360deg)}}
+.particle{position:absolute;width:2px;height:2px;border-radius:50%;opacity:.4;animation:float linear infinite}
+@keyframes float{0%{transform:translateY(100vh) scale(0)}10%{opacity:.6}90%{opacity:.6}100%{transform:translateY(-10vh) scale(1);opacity:0}}
 .auth-screen{position:fixed;inset:0;background:radial-gradient(circle at 50% 30%,#16161c,#050508 70%);z-index:500;display:flex;justify-content:center;align-items:center;padding:16px;overflow-y:auto}
 .auth-screen.hidden{display:none}
 .auth-box{width:100%;max-width:420px;background:linear-gradient(180deg,#16161c,#0b0b10);border:1px solid #23232a;border-radius:20px;padding:26px 22px;box-shadow:0 25px 90px rgba(0,0,0,.9)}
@@ -35,14 +37,15 @@ body{background:#050508;font-family:'Segoe UI',Roboto,sans-serif;color:#e8e8ee;m
 .auth-hint{text-align:center;font-size:11px;color:#555;margin-top:12px}
 .app{max-width:1400px;width:100%;margin:0 auto;position:relative;z-index:1}
 .app.hidden{display:none}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 14px;background:linear-gradient(180deg,#16161c,#0d0d12);border:1px solid #1f1f28;border-radius:14px;margin-bottom:10px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 14px;background:linear-gradient(180deg,#16161c,#0d0d12);border:1px solid #1f1f28;border-radius:14px;margin-bottom:10px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:10px}
 .brand-logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#f0b90b,#8a6600);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#1a1a1a}
 .brand-text b{font-size:14px;letter-spacing:1.5px;font-weight:900;background:linear-gradient(90deg,#f0b90b,#ffe488);-webkit-background-clip:text;background-clip:text;color:transparent}
 .brand-text small{font-size:8px;color:#666;letter-spacing:1.5px;text-transform:uppercase;font-weight:800;display:block;margin-top:2px}
-.topbar-right{display:flex;align-items:center;gap:8px}
-.balance-pill{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#1a1a22,#0f0f14);border:1px solid #2a2a34;padding:7px 14px;border-radius:50px;font-weight:900;font-size:13px;color:#f0b90b;transition:transform .12s}
+.topbar-right{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.balance-pill{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#1a1a22,#0f0f14);border:1px solid #2a2a34;padding:7px 12px;border-radius:50px;font-weight:900;font-size:13px;color:#f0b90b;transition:transform .12s}
 .balance-pill.bump{transform:scale(1.08)}
+.balance-pill.offline{color:#a78bfa;border-color:rgba(167,139,250,.4)}
 .profile-btn{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#1e1e26,#0f0f14);border:2px solid #2a2a34;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;position:relative;padding:0}
 .profile-btn.has-reward::after{content:'';position:absolute;top:-2px;right:-2px;width:10px;height:10px;background:#f0b90b;border-radius:50%;border:2px solid #16161c}
 .dev-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:900;background:linear-gradient(135deg,#ff4444,#ffaa00);color:#fff;padding:2px 7px;border-radius:10px;letter-spacing:.5px;text-transform:uppercase}
@@ -69,22 +72,52 @@ body{background:#050508;font-family:'Segoe UI',Roboto,sans-serif;color:#e8e8ee;m
 .nav-btn .nav-badge{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:#f0b90b;color:#1a1a1a;font-size:9px;font-weight:900;border-radius:10px;padding:2px 7px;display:none}
 .nav-btn .nav-badge.show{display:block}
 .nav-btn .nav-badge.dot{background:#ff4444;width:8px;height:8px;padding:0;border-radius:50%;font-size:0}
+.nav-btn .nav-badge.purple{background:#a78bfa}
 .bottomnav{display:none}
 }
-.bottomnav{position:fixed;bottom:0;left:0;right:0;width:100%;background:linear-gradient(180deg,rgba(20,20,26,.98),rgba(10,10,14,.98));border-top:1px solid #232329;display:flex;padding:6px 2px calc(6px + env(safe-area-inset-bottom,0px));z-index:60;overflow-x:auto;scrollbar-width:none}
+.bottomnav{position:fixed;bottom:0;left:0;right:0;width:100%;background:linear-gradient(180deg,rgba(20,20,26,.98),rgba(10,10,14,.98));backdrop-filter:blur(20px);border-top:1px solid #232329;display:flex;padding:6px 2px calc(6px + env(safe-area-inset-bottom,0px));z-index:60;overflow-x:auto;scrollbar-width:none}
 .bottomnav::-webkit-scrollbar{display:none}
-.bnav-btn{flex:1 1 0;min-width:64px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 2px;background:none;border:none;color:#6a6a78;font-weight:800;font-size:9px;cursor:pointer;font-family:inherit;position:relative;white-space:nowrap}
+.bnav-btn{flex:1 1 0;min-width:60px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 2px;background:none;border:none;color:#6a6a78;font-weight:800;font-size:9px;cursor:pointer;font-family:inherit;position:relative;white-space:nowrap}
 .bnav-btn .bicon{font-size:18px;width:20px;height:20px;line-height:20px;text-align:center;display:block}
 .bnav-btn.active{color:#f0b90b}
 .bnav-btn.active::before{content:'';position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:20px;height:2px;background:#f0b90b;border-radius:2px}
 .bnav-badge{position:absolute;top:2px;right:calc(50% - 20px);background:#f0b90b;color:#1a1a1a;font-size:8px;font-weight:900;border-radius:10px;padding:1px 4px;min-width:13px;text-align:center;display:none}
 .bnav-badge.show{display:block}
 .bnav-badge.dot{background:#ff4444;width:7px;height:7px;min-width:7px;padding:0;border-radius:50%}
+.bnav-badge.purple{background:#a78bfa}
 .card{background:linear-gradient(180deg,#16161c,#0f0f14);border-radius:14px;padding:14px;border:1px solid #1f1f28;margin-bottom:10px}
 @media(min-width:900px){.card{padding:18px;border-radius:16px;margin-bottom:14px}}
 h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-transform:uppercase;display:flex;align-items:center;gap:6px;font-weight:900;flex-wrap:wrap}
 .badge{font-size:10px;background:#22222a;color:#999;padding:2px 8px;border-radius:10px;font-weight:700;text-transform:none;border:1px solid #2a2a34}
 .badge.gold{background:linear-gradient(135deg,#f0b90b,#ffd968);color:#1a1a1a;border-color:#f0b90b}
+.badge.purple{background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;border-color:#a78bfa}
+/* SHOP */
+.shop-hero{background:linear-gradient(135deg,rgba(167,139,250,.12),rgba(167,139,250,.02));border:1.5px solid rgba(167,139,250,.35);border-radius:16px;padding:22px 18px;margin-bottom:16px;text-align:center;position:relative;overflow:hidden}
+.shop-hero::before{content:'';position:absolute;top:-50%;right:-50%;width:200%;height:200%;background:radial-gradient(circle at 70% 30%,rgba(167,139,250,.15),transparent 50%);pointer-events:none;animation:bgShift 20s linear infinite}
+.shop-hero .offline-icon{font-size:56px;display:block;margin-bottom:8px;filter:drop-shadow(0 0 20px rgba(167,139,250,.6))}
+.shop-hero .offline-label{font-size:11px;color:#a78bfa;text-transform:uppercase;letter-spacing:3px;font-weight:900;margin-bottom:6px}
+.shop-hero .offline-value{font-size:clamp(40px,12vw,56px);font-weight:900;background:linear-gradient(90deg,#a78bfa,#c4b5fd,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1;letter-spacing:-2px;position:relative;z-index:1}
+.shop-hero .offline-hint{font-size:11px;color:#888;margin-top:10px;line-height:1.5;font-weight:700;position:relative;z-index:1}
+.shop-hero .rate-badge{display:inline-block;background:rgba(167,139,250,.2);border:1px solid rgba(167,139,250,.5);color:#c4b5fd;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:900;letter-spacing:.5px;margin-top:10px;position:relative;z-index:1}
+.shop-actions{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.shop-btn{background:linear-gradient(135deg,#a78bfa,#7c3aed);border:none;color:#fff;font-weight:900;font-size:13px;padding:14px;border-radius:12px;cursor:pointer;font-family:inherit;letter-spacing:1px;text-transform:uppercase;transition:transform .12s,box-shadow .2s;box-shadow:0 6px 20px rgba(124,58,237,.35);display:flex;justify-content:space-between;align-items:center;padding-left:20px;padding-right:20px}
+.shop-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 30px rgba(124,58,237,.5)}
+.shop-btn:active:not(:disabled){transform:translateY(0) scale(.98)}
+.shop-btn:disabled{opacity:.35;cursor:not-allowed;filter:grayscale(.7);transform:none}
+.shop-btn .price{background:rgba(0,0,0,.25);padding:3px 10px;border-radius:20px;font-size:12px}
+.shop-btn.all{background:linear-gradient(135deg,#f0b90b,#d4a017);color:#1a1a1a;box-shadow:0 6px 20px rgba(240,185,11,.35)}
+.shop-btn.all:hover:not(:disabled){box-shadow:0 10px 30px rgba(240,185,11,.5)}
+.shop-btn.all .price{background:rgba(0,0,0,.15)}
+.shop-btn.free{background:linear-gradient(135deg,#22c55e,#16a34a);box-shadow:0 6px 20px rgba(34,197,94,.35)}
+.shop-btn.free:hover:not(:disabled){box-shadow:0 10px 30px rgba(34,197,94,.5)}
+.shop-info{background:#0b0b10;border:1px solid #1c1c24;border-radius:12px;padding:14px;font-size:11px;color:#888;line-height:1.7;text-align:center}
+.shop-info b{color:#a78bfa}
+.offline-modal-box .offline-big{font-size:64px;text-align:center;margin-bottom:8px;filter:drop-shadow(0 0 25px rgba(167,139,250,.7))}
+.offline-modal-box h3{color:#a78bfa;font-size:22px;text-align:center;margin-bottom:14px}
+.offline-modal-box .offline-gain{text-align:center;font-size:40px;font-weight:900;background:linear-gradient(90deg,#a78bfa,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent;margin:14px 0}
+.offline-modal-box .offline-sub{text-align:center;font-size:12px;color:#888;margin-bottom:20px;line-height:1.5}
+.offline-modal-box .offline-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.offline-modal-box .offline-btns .primary,.offline-modal-box .offline-btns .secondary{padding:12px;border-radius:12px;font-size:12px}
 .news-card{background:#0b0b10;border:1px solid #1c1c24;border-radius:12px;padding:14px;margin-bottom:10px}
 .news-card.pinned{border-color:rgba(240,185,11,.4);background:linear-gradient(135deg,rgba(240,185,11,.05),#0b0b10)}
 .news-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
@@ -106,6 +139,26 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
 .news-checkbox-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#0b0b10;border:1px solid #1c1c24;border-radius:10px;cursor:pointer}
 .news-checkbox-row input{width:auto;accent-color:#f0b90b;transform:scale(1.3)}
 .news-checkbox-row label{font-size:12px;font-weight:800;color:#ccc;cursor:pointer;flex:1}
+.friends-tabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;background:#0b0b10;border-radius:12px;padding:4px;margin-bottom:12px;border:1px solid #1c1c24}
+.ftab{padding:10px;text-align:center;border-radius:9px;font-weight:900;font-size:11px;color:#888;cursor:pointer;background:none;border:none;font-family:inherit;position:relative}
+.ftab.active{background:linear-gradient(135deg,#f0b90b,#ffd968);color:#1a1a1a}
+.ftab .ftab-badge{position:absolute;top:2px;right:6px;background:#ff4444;color:#fff;font-size:9px;font-weight:900;border-radius:10px;padding:1px 5px;min-width:14px;text-align:center;display:none}
+.ftab .ftab-badge.show{display:block}
+.search-row{display:flex;gap:8px;margin-bottom:12px}
+.search-row input{flex:1;background:#0e0e14;border:1.5px solid #23232a;border-radius:12px;padding:12px 14px;color:#fff;font-size:14px;font-family:inherit;outline:none}
+.search-row input:focus{border-color:#f0b90b}
+.search-row button{background:linear-gradient(135deg,#f0b90b,#ffd968);border:none;color:#1a1a1a;font-weight:900;font-size:12px;padding:12px 20px;border-radius:12px;cursor:pointer;font-family:inherit;text-transform:uppercase;white-space:nowrap}
+.user-card{display:flex;align-items:center;gap:12px;padding:12px;background:#0b0b10;border:1px solid #1c1c24;border-radius:12px;margin-bottom:8px}
+.user-avatar{width:44px;height:44px;border-radius:50%;background:#16161c;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.user-info{flex:1;min-width:0}
+.user-name{font-size:13px;font-weight:900;color:#fff;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.user-meta{font-size:10px;color:#666;font-weight:700;margin-top:2px}
+.user-actions{display:flex;gap:6px;flex-shrink:0}
+.ua-btn{background:#1e1e26;border:1px solid #2a2a34;color:#ddd;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:900;font-size:10px;font-family:inherit;white-space:nowrap}
+.ua-btn.primary{background:linear-gradient(135deg,#1d6a3a,#228a4a);border-color:#2a9a55;color:#fff}
+.ua-btn.danger{background:rgba(179,45,45,.2);border-color:#7a1a1a;color:#f87171}
+.ua-btn:disabled{opacity:.4;cursor:not-allowed}
+.friends-empty{color:#555;text-align:center;font-size:12px;padding:30px 10px;font-style:italic;font-weight:700}
 .tap-view{display:grid;grid-template-columns:1fr;gap:16px;padding:12px 0;text-align:center}
 @media(min-width:640px){.tap-view{grid-template-columns:1fr 1fr;text-align:left;padding:20px 12px;align-items:center}}
 .tap-balance{display:flex;flex-direction:column;gap:6px;align-items:center}
@@ -237,6 +290,7 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
 .pstat{background:#0b0b10;border:1px solid #1c1c24;border-radius:12px;padding:12px}
 .pstat .lbl{font-size:10px;color:#6a6a78;text-transform:uppercase;font-weight:800}
 .pstat .v{font-size:18px;font-weight:900;color:#f0b90b;margin-top:3px}
+.pstat .v.purple{color:#a78bfa}
 .daily-card{background:linear-gradient(135deg,rgba(240,185,11,.08),rgba(240,185,11,.02));border:1.5px solid rgba(240,185,11,.25);border-radius:14px;padding:16px}
 .daily-card.ready{border-color:#f0b90b;box-shadow:0 0 30px rgba(240,185,11,.25)}
 .daily-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap}
@@ -371,7 +425,7 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
       <div class="auth-msg ok" id="regSuccess">✅ <span></span></div>
       <button class="auth-submit" id="registerBtn">Создать аккаунт</button>
     </div>
-    <div class="auth-hint">💾 Аккаунт хранится в этом браузере</div>
+    <div class="auth-hint">💾 Аккаунт хранится на сервере</div>
   </div>
 </div>
 
@@ -379,6 +433,7 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
   <div class="topbar">
     <div class="brand"><div class="brand-logo">H</div><div class="brand-text"><b>HOME UP</b><small>Case Roulette</small></div></div>
     <div class="topbar-right">
+      <div class="balance-pill offline" id="offlinePill"><span>🌙</span><span id="offlineAmount">0</span></div>
       <div class="balance-pill" id="balancePill"><span>🪙</span><span id="coinsAmount">0</span></div>
       <button class="profile-btn" id="profileBtn"><span id="topAvatar">🐺</span></button>
     </div>
@@ -392,11 +447,13 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
       <button class="nav-btn" data-view="craft"><span class="nav-icon">⚒️</span><span>Крафт</span></button>
       <button class="nav-btn" data-view="upgrader"><span class="nav-icon">⚡</span><span>Апгрейдер</span></button>
       <button class="nav-btn" data-view="wheel"><span class="nav-icon">🎡</span><span>Колесо</span></button>
-      <div class="nav-section">Социальное</div>
-      <button class="nav-btn" data-view="news"><span class="nav-icon">📰</span><span>Новости</span><span class="nav-badge dot" id="newsBadgeDesktop" style="display:none"></span></button>
       <div class="nav-section">Экономика</div>
+      <button class="nav-btn" data-view="shop"><span class="nav-icon">🛒</span><span>Магазин</span><span class="nav-badge purple" id="offlineBadgeDesktop">0</span></button>
       <button class="nav-btn" data-view="market"><span class="nav-icon">🏪</span><span>Рынок</span></button>
       <button class="nav-btn" data-view="inventory"><span class="nav-icon">🎒</span><span>Инвентарь</span><span class="nav-badge" id="invBadgeDesktop">0</span></button>
+      <div class="nav-section">Социальное</div>
+      <button class="nav-btn" data-view="news"><span class="nav-icon">📰</span><span>Новости</span><span class="nav-badge dot" id="newsBadgeDesktop" style="display:none"></span></button>
+      <button class="nav-btn" data-view="friends"><span class="nav-icon">👥</span><span>Друзья</span><span class="nav-badge" id="friendsBadgeDesktop">0</span></button>
       <div class="nav-section">Аккаунт</div>
       <button class="nav-btn" data-view="profile"><span class="nav-icon">👤</span><span>Профиль</span><span class="nav-badge dot" id="dailyBadgeDesktop" style="display:none"></span></button>
       <button class="nav-btn" data-view="settings"><span class="nav-icon">⚙️</span><span>Настройки</span></button>
@@ -414,11 +471,47 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
           <div class="tap-area2"><button id="tapBtn">ТАП<span class="subtext">+1 🪙</span></button></div>
         </div></div>
       </section>
+      <section class="view" id="view-shop">
+        <div class="card">
+          <h2>🛒 Магазин <span class="badge purple">обмен офлайн-коинов</span></h2>
+          <div class="shop-hero">
+            <span class="offline-icon">🌙</span>
+            <div class="offline-label">Офлайн-коины</div>
+            <div class="offline-value" id="shopOfflineValue">0</div>
+            <div class="offline-hint">Пока тебя нет, копится <b style="color:#a78bfa">5 коинов в минуту</b><br>Меняй их на обычные монеты</div>
+            <div class="rate-badge">💱 Курс: 5 🌙 → 1 🪙</div>
+          </div>
+          <div class="shop-actions">
+            <button class="shop-btn" data-exchange="25"><span>Обменять 25 🌙</span><span class="price">+5 🪙</span></button>
+            <button class="shop-btn" data-exchange="100"><span>Обменять 100 🌙</span><span class="price">+20 🪙</span></button>
+            <button class="shop-btn all" id="exchangeAllBtn"><span>Обменять ВСЁ</span><span class="price" id="allPreview">0 🪙</span></button>
+            <button class="shop-btn free" id="freeCoinsBtn" style="display:none"><span>👑 Забрать 1000 🪙</span><span class="price">бесплатно</span></button>
+          </div>
+          <div class="shop-info">
+            <b>Как это работает?</b><br>
+            Каждую минуту офлайн накапливается 5 🌙 офлайн-коинов.<br>
+            Заходи чаще — забирай больше монет!
+          </div>
+        </div>
+      </section>
       <section class="view" id="view-news">
         <div class="card">
           <h2>📰 Новости Home Up</h2>
           <button class="news-create-btn" id="newsCreateBtn" style="display:none">➕ Написать новость</button>
           <div id="newsList"></div>
+        </div>
+      </section>
+      <section class="view" id="view-friends">
+        <div class="card">
+          <h2>👥 Друзья</h2>
+          <div class="search-row"><input type="text" id="friendSearch" placeholder="Поиск игрока по нику..." maxlength="20"><button id="friendSearchBtn">🔍</button></div>
+          <div id="searchResults"></div>
+          <div class="friends-tabs">
+            <button class="ftab active" data-ftab="friends">Друзья <span class="ftab-badge" id="friendsCountBadge">0</span></button>
+            <button class="ftab" data-ftab="incoming">Входящие <span class="ftab-badge" id="incomingBadge">0</span></button>
+            <button class="ftab" data-ftab="outgoing">Отправленные <span class="ftab-badge" id="outgoingBadge">0</span></button>
+          </div>
+          <div id="friendsList"></div>
         </div>
       </section>
       <section class="view" id="view-cases">
@@ -476,7 +569,7 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
       </section>
       <section class="view" id="view-market">
         <div class="card">
-          <h2>🏪 Рынок</h2>
+          <h2>🏪 Рынок <span class="badge">общий</span></h2>
           <div class="market-filters" id="marketFilters">
             <button class="filter-btn active" data-filter="all">Все</button>
             <button class="filter-btn" data-filter="legendary">Легендарные</button>
@@ -513,6 +606,7 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
           </div>
           <div class="profile-stats">
             <div class="pstat"><div class="lbl">Баланс</div><div class="v" id="pstatCoins">0</div></div>
+            <div class="pstat"><div class="lbl">🌙 Офлайн</div><div class="v purple" id="pstatOffline">0</div></div>
             <div class="pstat"><div class="lbl">Тапов</div><div class="v" id="pstatTaps">0</div></div>
             <div class="pstat"><div class="lbl">Предметов</div><div class="v" id="pstatItems">0</div></div>
             <div class="pstat"><div class="lbl">Стоимость</div><div class="v" id="pstatValue">0</div></div>
@@ -543,10 +637,8 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
           </div>
         </div>
         <div class="card">
-          <h2>🗑️ Данные</h2>
-          <div class="settings-list">
-            <div class="set-row"><div class="set-info"><b>Удалить аккаунт</b><small>Обнулить весь прогресс</small></div><button class="set-btn danger" id="resetBtn">Удалить</button></div>
-          </div>
+          <h2>ℹ️ О игре</h2>
+          <div class="set-info" style="padding:14px;background:#0b0b10;border:1px solid #1c1c24;border-radius:12px"><b>HOME UP — Case Roulette</b><small style="margin-top:8px;display:block;line-height:1.6">Версия 6.0 · Магазин, офлайн-коины, крафт, апгрейдер, колесо, рынок, новости, друзья.<br>Всё сохраняется на сервере.</small></div>
         </div>
       </section>
     </main>
@@ -555,15 +647,28 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
 
 <nav class="bottomnav">
   <button class="bnav-btn active" data-view="tap"><span class="bicon">👆</span><span>Тап</span></button>
-  <button class="bnav-btn" data-view="news"><span class="bicon">📰</span><span>Новости</span><span class="bnav-badge dot" id="newsBadge" style="display:none"></span></button>
   <button class="bnav-btn" data-view="cases"><span class="bicon">🎁</span><span>Кейсы</span></button>
   <button class="bnav-btn" data-view="craft"><span class="bicon">⚒️</span><span>Крафт</span></button>
   <button class="bnav-btn" data-view="upgrader"><span class="bicon">⚡</span><span>Апгрейд</span></button>
   <button class="bnav-btn" data-view="wheel"><span class="bicon">🎡</span><span>Колесо</span></button>
+  <button class="bnav-btn" data-view="shop"><span class="bicon">🛒</span><span>Магазин</span><span class="bnav-badge purple" id="offlineBadge">0</span></button>
   <button class="bnav-btn" data-view="market"><span class="bicon">🏪</span><span>Рынок</span></button>
   <button class="bnav-btn" data-view="inventory"><span class="bicon">🎒</span><span>Инв.</span><span class="bnav-badge" id="invBadge">0</span></button>
+  <button class="bnav-btn" data-view="news"><span class="bicon">📰</span><span>Новости</span><span class="bnav-badge dot" id="newsBadge" style="display:none"></span></button>
+  <button class="bnav-btn" data-view="friends"><span class="bicon">👥</span><span>Друзья</span><span class="bnav-badge" id="friendsBadge">0</span></button>
   <button class="bnav-btn" data-view="profile"><span class="bicon">👤</span><span>Профиль</span><span class="bnav-badge dot" id="dailyBadge" style="display:none"></span></button>
 </nav>
+
+<div class="modal-overlay" id="offlineModal"><div class="modal offline-modal-box">
+  <div class="offline-big">🌙</div>
+  <h3>С возвращением!</h3>
+  <div class="offline-gain" id="offlineGain">+0 🌙</div>
+  <div class="offline-sub">Пока тебя не было, накопились офлайн-коины.<br>Обменяешь их в магазине по курсу <b style="color:#a78bfa">5 🌙 → 1 🪙</b></div>
+  <div class="offline-btns">
+    <button class="primary" id="offlineGoShop">В магазин</button>
+    <button class="secondary" id="offlineLater">Позже</button>
+  </div>
+</div></div>
 
 <div class="modal-overlay" id="newsModal"><div class="modal">
   <button class="close-btn" id="newsModalClose">✕</button>
@@ -584,6 +689,7 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
   <div style="text-align:center;font-size:10px;text-transform:uppercase;font-weight:900;margin-bottom:10px" id="modalRarity">Редкость</div>
   <div style="text-align:center;font-size:20px;font-weight:900;color:#f0b90b;margin-bottom:10px" id="modalPrice">🪙 0</div>
   <div style="display:flex;justify-content:space-between;font-size:11px;padding:6px 10px;background:#0e0e14;border-radius:8px;margin-bottom:4px"><span>Продать:</span><b id="modalSell">0</b></div>
+  <div style="display:flex;justify-content:space-between;font-size:11px;padding:6px 10px;background:#0e0e14;border-radius:8px;margin-bottom:4px"><span>Выпало:</span><b id="modalDrops">0</b></div>
   <div style="display:flex;justify-content:space-between;font-size:11px;padding:6px 10px;background:#0e0e14;border-radius:8px;margin-bottom:12px"><span>У тебя:</span><b id="modalOwned">0</b></div>
   <button class="primary" id="modalSellBtn" style="width:100%">ПРОДАТЬ 1</button>
 </div></div>
@@ -607,8 +713,45 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
 <div class="toast" id="toast"></div>
 
 <script>
-const STORAGE_KEY = 'homeup_v1';
-const DEVELOPERS = ['baconsigma67656'];
+const API = '/api';
+let authToken = localStorage.getItem('homeup_token') || null;
+
+async function api(path, opts = {}){
+  const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
+  if(authToken) headers['Authorization'] = 'Bearer ' + authToken;
+  const res = await fetch(API + path, { ...opts, headers });
+  const data = await res.json().catch(() => ({}));
+  if(!res.ok) throw new Error(data.error || 'Ошибка');
+  return data;
+}
+const HU = {
+  register:(u,p)=>api('/register',{method:'POST',body:JSON.stringify({username:u,password:p})}),
+  login:(u,p)=>api('/login',{method:'POST',body:JSON.stringify({username:u,password:p})}),
+  me:()=>api('/me'),
+  setAvatar:(a)=>api('/avatar',{method:'POST',body:JSON.stringify({avatar:a})}),
+  tap:()=>api('/tap',{method:'POST'}),
+  openCase:(id,m)=>api('/open-case',{method:'POST',body:JSON.stringify({caseId:id,multi:m})}),
+  daily:()=>api('/daily',{method:'POST'}),
+  market:()=>api('/market'),
+  buy:(n)=>api('/buy',{method:'POST',body:JSON.stringify({itemName:n})}),
+  sell:(n,c)=>api('/sell',{method:'POST',body:JSON.stringify({itemName:n,count:c})}),
+  upgrade:(b,t,c)=>api('/upgrade',{method:'POST',body:JSON.stringify({bet:b,targetName:t,chance:c})}),
+  craft:(n)=>api('/craft',{method:'POST',body:JSON.stringify({itemName:n})}),
+  wheel:()=>api('/wheel',{method:'POST'}),
+  exchange:(c)=>api('/shop/exchange',{method:'POST',body:JSON.stringify({count:c})}),
+  freeCoins:()=>api('/shop/free',{method:'POST'}),
+  heartbeat:()=>api('/heartbeat',{method:'POST'}),
+  news:()=>api('/news'),
+  createNews:(d)=>api('/news',{method:'POST',body:JSON.stringify(d)}),
+  deleteNews:(id)=>api('/news/'+id,{method:'DELETE'}),
+  pinNews:(id)=>api('/news/pin',{method:'POST',body:JSON.stringify({id})}),
+  searchUsers:(q)=>api('/users/search?q='+encodeURIComponent(q)),
+  getFriends:()=>api('/friends'),
+  sendFriendReq:(u)=>api('/friends/request',{method:'POST',body:JSON.stringify({username:u})}),
+  acceptFriend:(u)=>api('/friends/accept',{method:'POST',body:JSON.stringify({username:u})}),
+  declineFriend:(u)=>api('/friends/decline',{method:'POST',body:JSON.stringify({username:u})}),
+  removeFriend:(u)=>api('/friends/remove',{method:'POST',body:JSON.stringify({username:u})}),
+};
 
 const RARITIES = {
   common:{label:'Обычный',color:'#7a7a88',basePrice:2,next:'uncommon'},
@@ -628,126 +771,24 @@ const WHEEL_PRIZES = [
   {value:2000,color:'#8a296a',label:'2000'},{value:5000,color:'#d4a017',label:'5000'},
   {value:0,color:'#e06ebf',label:'EPIC'},{value:0,color:'#f0c14b',label:'LEG'},
 ];
-const WHEEL_COST = 100, DAILY_CD = 24*60*60*1000, CRAFT_COST = 5;
-
-const ITEMS = [
-  { name:'P250 Sand Dune',icon:'🔫',rarity:'common' },
-  { name:'MP9 Storm',icon:'🔫',rarity:'common' },
-  { name:'Nova Predator',icon:'🔫',rarity:'common' },
-  { name:'Dual Berettas Colony',icon:'🔫',rarity:'common' },
-  { name:'Galil AR Cerberus',icon:'🔫',rarity:'common' },
-  { name:'Glock-18 Water Elemental',icon:'🔫',rarity:'uncommon' },
-  { name:'M4A1-S Varicamo',icon:'🔫',rarity:'uncommon' },
-  { name:'USP-S Blueprint',icon:'🔫',rarity:'uncommon' },
-  { name:'P90 Asiimov',icon:'🔫',rarity:'uncommon' },
-  { name:'Five-SeveN Case Hardened',icon:'🔫',rarity:'uncommon' },
-  { name:'AK-47 Redline',icon:'🔫',rarity:'rare' },
-  { name:'AWP Electric Hive',icon:'🔫',rarity:'rare' },
-  { name:'Desert Eagle Code Red',icon:'🔫',rarity:'rare' },
-  { name:'AK-47 Vulcan',icon:'🔫',rarity:'rare' },
-  { name:'M4A1-S Hyper Beast',icon:'🔫',rarity:'rare' },
-  { name:'M4A4 Howl',icon:'🔫',rarity:'epic' },
-  { name:'AWP Asiimov',icon:'🔫',rarity:'epic' },
-  { name:'Karambit Fade',icon:'🔪',rarity:'epic' },
-  { name:'Glock Fade',icon:'🔫',rarity:'epic' },
-  { name:'Deagle Blaze',icon:'🔫',rarity:'epic' },
-  { name:'AWP Dragon Lore',icon:'🔫',rarity:'legendary' },
-  { name:'Butterfly Knife | Gold',icon:'🔪',rarity:'legendary' },
-  { name:'M9 Bayonet | Doppler',icon:'🔪',rarity:'legendary' },
-  { name:'AK-47 Fire Serpent',icon:'🔫',rarity:'legendary' },
-  { name:'AWP Gungnir',icon:'🔫',rarity:'legendary' },
-];
-const CASES = [
-  { id:'starter', name:'Стартовый', icon:'📦', price:25, color:'#7a7a88', weights:{common:70,uncommon:30}, pool:['common','uncommon'] },
-  { id:'standard',name:'Стандартный',icon:'🎁',price:50, color:'#6a8df0', weights:{common:50,uncommon:30,rare:15,epic:4,legendary:1} },
-  { id:'premium', name:'Премиум',   icon:'💎', price:150,color:'#9b6fd0', weights:{uncommon:40,rare:35,epic:20,legendary:5} },
-  { id:'elite',   name:'Элитный',   icon:'👑', price:500,color:'#e06ebf', weights:{rare:40,epic:45,legendary:15} },
-  { id:'knife',   name:'Ножевой',   icon:'🔪', price:1200,color:'#f0c14b',weights:{epic:75,legendary:25}, filterKnife:true },
-  { id:'dragon',  name:'Драконий',  icon:'🐉', price:3000,color:'#ff4444',weights:{epic:50,legendary:50}, filterDragon:true },
-];
+const WHEEL_COST = 100;
+const DAILY_CD = 24*60*60*1000;
+const CRAFT_COST = 5;
+const EXCHANGE_RATE = 5;
 
 let currentUser = null;
-let state = { coins:0, inventory:{}, supply:{}, trend:{}, priceHistory:{}, totalTaps:0, lastDaily:0, dailyStreak:0, totalClaimed:0 };
-let newsList = [];
-let newsLastSeen = parseInt(localStorage.getItem('news_seen')||'0');
+let state = {coins:0,offlineCoins:0,inventory:{},supply:{},trend:{},priceHistory:{},totalTaps:0,lastDaily:0,dailyStreak:0,totalClaimed:0};
+let ITEMS_CACHE = [];
+let CASES_CACHE = [];
 let sessionTaps = 0;
+let newsList = [];
+let newsLastSeen = parseInt(localStorage.getItem('news_last_seen')||'0');
+let friendsData = { friends:[], incoming:[], outgoing:[] };
+let friendsTab = 'friends';
 
-function isDev(){ return currentUser && DEVELOPERS.includes(currentUser.username.toLowerCase()); }
-function loadAll(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'); } catch { return {}; } }
-function saveAll(data){ try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {} }
-function saveUser(){
-  const all = loadAll();
-  all.users = all.users || {};
-  const key = currentUser.username.toLowerCase();
-  all.users[key] = {
-    username: currentUser.username,
-    password: currentUser.password,
-    avatar: currentUser.avatar,
-    created: currentUser.created,
-    state: { coins:state.coins, inventory:state.inventory, supply:state.supply, trend:state.trend, priceHistory:state.priceHistory, totalTaps:state.totalTaps, lastDaily:state.lastDaily, dailyStreak:state.dailyStreak, totalClaimed:state.totalClaimed },
-  };
-  all.session = key;
-  all.news = all.news || [];
-  saveAll(all);
-}
-function saveNews(){
-  const all = loadAll();
-  all.news = newsList;
-  saveAll(all);
-}
-
-function trendMul(n){ return 1 + ((state.trend[n]||0) * 0.15); }
-function getItemPrice(name){
-  const item = ITEMS.find(i => i.name === name); if(!item) return 0;
-  const base = RARITIES[item.rarity].basePrice;
-  const drops = state.supply[name] || 0;
-  const sf = 100 / (100 + drops);
-  return Math.max(1, Math.round(base * sf * trendMul(name)));
-}
-function getSellPrice(name){ return Math.max(1, Math.floor(getItemPrice(name) * 0.85)); }
-function pushHistory(name){
-  if(!state.priceHistory[name]) state.priceHistory[name] = [];
-  state.priceHistory[name].push(getItemPrice(name));
-  if(state.priceHistory[name].length > 30) state.priceHistory[name].shift();
-}
-function registerDrop(name, c=1){
-  state.supply[name] = (state.supply[name]||0) + c;
-  for(let i=0;i<c;i++) pushHistory(name);
-}
-function unregisterDrop(name, c=1){
-  state.supply[name] = Math.max(0, (state.supply[name]||0) - c);
-  pushHistory(name);
-}
-setInterval(() => {
-  if(!currentUser) return;
-  for(const item of ITEMS){
-    state.trend[item.name] = Math.max(-1, Math.min(1, (state.trend[item.name]||0)*0.7 + (Math.random()-0.5)*0.6));
-    pushHistory(item.name);
-  }
-  saveUser();
-  renderMarket(); renderInventory(); renderUpgrader();
-}, 15000);
-
-function pickByWeights(w){
-  const t = Object.values(w).reduce((a,b)=>a+b,0);
-  let r = Math.random()*t;
-  for(const [k,v] of Object.entries(w)){ if(r<v) return k; r-=v; }
-  return Object.keys(w)[0];
-}
-function rollFromCase(c){
-  const r = pickByWeights(c.weights);
-  let pool = ITEMS.filter(i => i.rarity === r);
-  if(c.pool) pool = pool.filter(i => c.pool.includes(i.rarity));
-  if(c.filterKnife) pool = pool.filter(i => i.icon === '🔪');
-  if(c.filterDragon) pool = pool.filter(i => i.rarity === 'legendary' || i.name.includes('Dragon') || i.name.includes('Howl'));
-  if(!pool.length) pool = ITEMS.filter(i => i.rarity === r);
-  return pool[Math.floor(Math.random()*pool.length)];
-}
-
-/* SOUND */
 let audioCtx = null;
 function getAudio(){ if(!audioCtx){ try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch{ return null; } } if(audioCtx.state==='suspended') audioCtx.resume(); return audioCtx; }
-function beep(f,d,t='sine',v=0.06){ const c=getAudio(); if(!c) return; const o=c.createOscillator(), g=c.createGain(); o.type=t; o.frequency.value=f; g.gain.setValueAtTime(v,c.currentTime); g.gain.exponentialRampToValueAtTime(0.0001,c.currentTime+d); o.connect(g); g.connect(c.destination); o.start(); o.stop(c.currentTime+d); }
+function beep(freq,dur,type='sine',vol=0.06){ const ctx = getAudio(); if(!ctx) return; const o = ctx.createOscillator(), g = ctx.createGain(); o.type=type; o.frequency.value=freq; g.gain.setValueAtTime(vol,ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+dur); o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+dur); }
 const sfx = {
   tap:()=>beep(600+Math.random()*200,0.06,'square',0.05),
   click:()=>beep(800,0.05,'triangle',0.05),
@@ -761,23 +802,44 @@ const sfx = {
   err:()=>beep(200,0.15,'sawtooth',0.06),
   daily:()=>[523,659,784,1046].forEach((f,i)=>setTimeout(()=>beep(f,0.15,'triangle',0.08),i*100)),
   wheel:()=>beep(2000,0.02,'square',0.03),
+  coin:()=>{[523,659,784,1046,1318].forEach((f,i)=>setTimeout(()=>beep(f,0.12,'triangle',0.09),i*60));},
 };
-
-/* UI */
 function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function devBadge(){ return '<span class="dev-badge">Разработчик</span>'; }
-function flash(t=''){ const f=document.getElementById('flash'); f.className='flash '+t+' on'; setTimeout(()=>f.classList.remove('on'),120); }
+function flash(type=''){ const f=document.getElementById('flash'); f.className='flash '+type+' on'; setTimeout(()=>f.classList.remove('on'), 120); }
 function confetti(){ const colors=['#f0b90b','#e06ebf','#6a8df0','#4ade80','#fff']; for(let i=0;i<40;i++){ const c=document.createElement('div'); c.className='confetti'; c.style.left=Math.random()*100+'vw'; c.style.background=colors[Math.floor(Math.random()*colors.length)]; c.style.animationDuration=(1.8+Math.random()*1.5)+'s'; document.body.appendChild(c); setTimeout(()=>c.remove(),3800); } }
 let toastTimer;
-function showToast(t){ const el=document.getElementById('toast'); el.textContent=t; el.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove('show'),2200); }
+function showToast(text){ const toast=document.getElementById('toast'); toast.textContent=text; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>toast.classList.remove('show'), 2200); }
+
 function updateCoinsUI(bump){
+  const el = document.getElementById('balancePill');
   document.getElementById('coinsAmount').textContent = state.coins.toLocaleString('ru-RU');
   document.getElementById('tapBalance').textContent = state.coins.toLocaleString('ru-RU');
-  if(bump){ const el=document.getElementById('balancePill'); el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); setTimeout(()=>el.classList.remove('bump'),120); }
+  if(bump){ el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); setTimeout(()=>el.classList.remove('bump'), 120); }
+  // offline
+  document.getElementById('offlineAmount').textContent = (state.offlineCoins||0).toLocaleString('ru-RU');
+  const shopEl = document.getElementById('shopOfflineValue'); if(shopEl) shopEl.textContent = (state.offlineCoins||0).toLocaleString('ru-RU');
+  const allPreview = document.getElementById('allPreview'); if(allPreview) allPreview.textContent = Math.floor((state.offlineCoins||0)/EXCHANGE_RATE) + ' 🪙';
+  // бейджи
+  const b1 = document.getElementById('offlineBadge'); if(b1){ b1.textContent = state.offlineCoins||0; b1.classList.toggle('show', (state.offlineCoins||0) >= EXCHANGE_RATE); }
+  const b2 = document.getElementById('offlineBadgeDesktop'); if(b2){ b2.textContent = state.offlineCoins||0; b2.classList.toggle('show', (state.offlineCoins||0) >= EXCHANGE_RATE); }
+  const freeBtn = document.getElementById('freeCoinsBtn'); if(freeBtn) freeBtn.style.display = (currentUser && currentUser.isDev) ? 'flex' : 'none';
 }
-function updateTapStats(){ document.getElementById('totalTaps').textContent=(state.totalTaps||0).toLocaleString('ru-RU'); document.getElementById('sessionTaps').textContent=sessionTaps.toLocaleString('ru-RU'); }
+function updateTapStats(){
+  document.getElementById('totalTaps').textContent = (state.totalTaps||0).toLocaleString('ru-RU');
+  document.getElementById('sessionTaps').textContent = sessionTaps.toLocaleString('ru-RU');
+}
+function getItemPrice(name){
+  const item = ITEMS_CACHE.find(i => i.name === name);
+  if(!item) return 0;
+  const s = state.supply[name] || { drops:0, trend:0 };
+  const base = RARITIES[item.rarity].basePrice;
+  const sf = 100 / (100 + (s.drops || 0));
+  const tm = 1 + (s.trend || 0) * 0.15;
+  return Math.max(1, Math.round(base * sf * tm));
+}
+function getSellPrice(name){ return Math.max(1, Math.floor(getItemPrice(name) * 0.85)); }
 
-/* AUTH */
 const authScreen = document.getElementById('authScreen'), appEl = document.getElementById('app');
 document.querySelectorAll('.auth-tab').forEach(tab => {
   tab.addEventListener('click', () => {
@@ -791,17 +853,17 @@ document.querySelectorAll('.auth-tab').forEach(tab => {
 document.querySelectorAll('.pass-toggle').forEach(btn => {
   btn.addEventListener('click', () => {
     const t = document.getElementById(btn.dataset.target); if(!t) return;
-    const p = t.type === 'password';
-    t.type = p ? 'text' : 'password';
-    btn.textContent = p ? '🙈' : '👁';
+    const isPass = t.type === 'password';
+    t.type = isPass ? 'text' : 'password';
+    btn.textContent = isPass ? '🙈' : '👁';
     sfx.click();
   });
 });
-function showAuthErr(id, msg){ const el=document.getElementById(id); el.querySelector('span').textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),3000); sfx.err(); }
-function showAuthOk(id, msg){ const el=document.getElementById(id); el.querySelector('span').textContent=msg; el.classList.add('show'); }
+function showAuthErr(id, msg){ const el = document.getElementById(id); el.querySelector('span').textContent = msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'), 3000); sfx.err(); }
+function showAuthOk(id, msg){ const el = document.getElementById(id); el.querySelector('span').textContent = msg; el.classList.add('show'); }
 function hideAuthMsgs(){ document.querySelectorAll('.auth-msg').forEach(e=>e.classList.remove('show')); }
 
-document.getElementById('registerBtn').addEventListener('click', () => {
+document.getElementById('registerBtn').addEventListener('click', async () => {
   const u = document.getElementById('regUser').value.trim();
   const p = document.getElementById('regPass').value;
   const p2 = document.getElementById('regPass2').value;
@@ -809,84 +871,92 @@ document.getElementById('registerBtn').addEventListener('click', () => {
   if(!/^[a-zA-Zа-яА-Я0-9_]+$/.test(u)) return showAuthErr('regError','Только буквы, цифры и _');
   if(p.length < 4) return showAuthErr('regError','Пароль минимум 4 символа');
   if(p !== p2) return showAuthErr('regError','Пароли не совпадают');
-  const all = loadAll();
-  all.users = all.users || {};
-  const key = u.toLowerCase();
-  if(all.users[key]) return showAuthErr('regError','Имя занято');
-  all.users[key] = {
-    username: u, password: p,
-    avatar: AVATARS[Math.floor(Math.random()*AVATARS.length)],
-    created: Date.now(),
-    state: { coins:100, inventory:{}, supply:{}, trend:{}, priceHistory:{}, totalTaps:0, lastDaily:0, dailyStreak:0, totalClaimed:0 },
-  };
-  all.session = key;
-  saveAll(all);
-  showAuthOk('regSuccess','Аккаунт создан!');
-  sfx.auth();
-  setTimeout(()=>enterGame(key), 700);
+  try {
+    const r = await HU.register(u, p);
+    authToken = r.token; localStorage.setItem('homeup_token', authToken);
+    showAuthOk('regSuccess', 'Аккаунт создан!');
+    sfx.auth();
+    setTimeout(()=>enterGame(0), 700);
+  } catch(e){ showAuthErr('regError', e.message); }
 });
-document.getElementById('loginBtn').addEventListener('click', () => {
-  const u = document.getElementById('loginUser').value.trim().toLowerCase();
+document.getElementById('loginBtn').addEventListener('click', async () => {
+  const u = document.getElementById('loginUser').value.trim();
   const p = document.getElementById('loginPass').value;
   if(!u || !p) return showAuthErr('loginError','Заполни поля');
-  const all = loadAll();
-  const user = all.users && all.users[u];
-  if(!user) return showAuthErr('loginError','Пользователь не найден');
-  if(user.password !== p) return showAuthErr('loginError','Неверный пароль');
-  all.session = u;
-  saveAll(all);
-  sfx.auth();
-  enterGame(u);
+  try {
+    const r = await HU.login(u, p);
+    authToken = r.token; localStorage.setItem('homeup_token', authToken);
+    sfx.auth();
+    await enterGame(r.offlineGain || 0);
+  } catch(e){ showAuthErr('loginError', e.message); }
 });
 document.getElementById('regPass2').addEventListener('keypress', e => { if(e.key==='Enter') document.getElementById('registerBtn').click(); });
 document.getElementById('loginPass').addEventListener('keypress', e => { if(e.key==='Enter') document.getElementById('loginBtn').click(); });
 
-function enterGame(username){
-  const all = loadAll();
-  const u = all.users[username];
-  if(!u) return;
-  currentUser = { username: u.username, avatar: u.avatar, created: u.created, password: u.password };
-  const s = u.state || {};
-  state.coins = s.coins || 0;
-  state.inventory = s.inventory || {};
-  state.supply = s.supply || {};
-  state.trend = s.trend || {};
-  state.priceHistory = s.priceHistory || {};
-  state.totalTaps = s.totalTaps || 0;
-  state.lastDaily = s.lastDaily || 0;
-  state.dailyStreak = s.dailyStreak || 0;
-  state.totalClaimed = s.totalClaimed || 0;
-  newsList = all.news || [];
-  authScreen.classList.add('hidden');
-  appEl.classList.remove('hidden');
-  refreshProfileUI();
-  updateCoinsUI(false);
-  updateTapStats();
-  renderAll();
-  checkDailyOnLoad();
-  startWheel();
-  updateNewsBadges();
-  showToast(`👋 Привет, ${u.username}!`);
+async function enterGame(offlineGain){
+  try {
+    const me = await HU.me();
+    currentUser = me;
+    state.coins = me.coins;
+    state.offlineCoins = me.offlineCoins || 0;
+    state.inventory = me.inventory || {};
+    state.totalTaps = me.totalTaps || 0;
+    state.lastDaily = me.lastDaily || 0;
+    state.dailyStreak = me.dailyStreak || 0;
+    state.totalClaimed = me.totalClaimed || 0;
+    authScreen.classList.add('hidden');
+    appEl.classList.remove('hidden');
+    await Promise.all([refreshMarketCache(), loadItems(), loadCases(), refreshNews(), refreshFriends()]);
+    refreshProfileUI();
+    updateCoinsUI(false);
+    updateTapStats();
+    renderAll();
+    checkDailyOnLoad();
+    startWheel();
+    updateNewsBadges();
+    // Показ офлайн-модалки
+    const totalOffline = state.offlineCoins;
+    if(offlineGain > 0 && totalOffline > 0){
+      document.getElementById('offlineGain').textContent = '+' + offlineGain.toLocaleString('ru-RU') + ' 🌙';
+      document.getElementById('offlineModal').classList.add('active');
+    }
+    // Heartbeat каждые 30 сек
+    if(window.__heartbeat) clearInterval(window.__heartbeat);
+    window.__heartbeat = setInterval(async () => {
+      if(!currentUser) return;
+      try {
+        const r = await HU.heartbeat();
+        if(r.offlineCoins > state.offlineCoins){
+          state.offlineCoins = r.offlineCoins;
+          updateCoinsUI(false);
+        }
+      } catch(e){}
+    }, 30000);
+    showToast(`👋 Привет, ${me.username}!`);
+  } catch(e){
+    localStorage.removeItem('homeup_token'); authToken = null;
+    showToast('Ошибка входа');
+  }
 }
+async function loadItems(){ const r = await fetch('/api/items'); ITEMS_CACHE = await r.json(); }
+async function loadCases(){ const r = await fetch('/api/cases'); CASES_CACHE = await r.json(); }
+async function refreshMarketCache(){
+  const list = await HU.market();
+  state.supply = {}; state.trend = {}; state.priceHistory = {};
+  for(const it of list){
+    state.supply[it.name] = { drops: it.supply, trend: it.trend };
+    state.trend[it.name] = it.trend;
+    state.priceHistory[it.name] = it.history || [];
+  }
+}
+async function refreshNews(){ try { newsList = await HU.news(); } catch(e){ newsList = []; } renderNews(); renderTapNews(); updateNewsBadges(); }
+async function refreshFriends(){ try { friendsData = await HU.getFriends(); } catch(e){ friendsData = { friends:[], incoming:[], outgoing:[] }; } renderFriends(); updateFriendsBadges(); }
 document.getElementById('logoutBtn').addEventListener('click', () => {
   if(!confirm('Выйти?')) return;
-  saveUser();
-  const all = loadAll();
-  delete all.session;
-  saveAll(all);
-  location.reload();
-});
-document.getElementById('resetBtn').addEventListener('click', () => {
-  if(!confirm('Удалить аккаунт и весь прогресс?')) return;
-  const all = loadAll();
-  const key = currentUser.username.toLowerCase();
-  delete all.users[key];
-  delete all.session;
-  saveAll(all);
+  localStorage.removeItem('homeup_token');
   location.reload();
 });
 
-/* NAV */
 function switchView(view){
   document.querySelectorAll('.nav-btn,.bnav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
   document.querySelectorAll('.view').forEach(v => {
@@ -896,7 +966,9 @@ function switchView(view){
   window.scrollTo({ top: 0, behavior: 'smooth' });
   if(view === 'profile') renderProfile();
   if(view === 'craft') renderCraft();
-  if(view === 'news'){ newsLastSeen = Date.now(); localStorage.setItem('news_seen', newsLastSeen); updateNewsBadges(); }
+  if(view === 'shop') updateCoinsUI(false);
+  if(view === 'news'){ newsLastSeen = Date.now(); localStorage.setItem('news_last_seen', newsLastSeen); updateNewsBadges(); }
+  if(view === 'friends') refreshFriends();
 }
 document.querySelectorAll('.sidebar,.bottomnav').forEach(nav => {
   nav.addEventListener('click', e => {
@@ -906,45 +978,88 @@ document.querySelectorAll('.sidebar,.bottomnav').forEach(nav => {
 });
 document.getElementById('profileBtn').addEventListener('click', () => { switchView('profile'); sfx.click(); });
 
+/* SHOP */
+document.querySelectorAll('[data-exchange]').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const amount = parseInt(btn.dataset.exchange);
+    if(state.offlineCoins < amount){ showToast(`Нужно ${amount} 🌙`); sfx.err(); return; }
+    try {
+      const r = await HU.exchange(amount);
+      state.coins = r.coins;
+      state.offlineCoins = r.offlineCoins;
+      updateCoinsUI(true);
+      renderProfile();
+      sfx.coin(); flash('legend');
+      showToast(`💱 ${r.exchanged} 🌙 → ${r.gained} 🪙`);
+    } catch(e){ showToast(e.message); }
+  });
+});
+document.getElementById('exchangeAllBtn').addEventListener('click', async () => {
+  const canExchange = Math.floor(state.offlineCoins / EXCHANGE_RATE) * EXCHANGE_RATE;
+  if(canExchange < EXCHANGE_RATE){ showToast(`Минимум ${EXCHANGE_RATE} 🌙`); sfx.err(); return; }
+  try {
+    const r = await HU.exchange(canExchange);
+    state.coins = r.coins;
+    state.offlineCoins = r.offlineCoins;
+    updateCoinsUI(true);
+    renderProfile();
+    sfx.coin(); flash('legend'); confetti();
+    showToast(`💱 Обменяно: ${r.exchanged} 🌙 → ${r.gained} 🪙`);
+  } catch(e){ showToast(e.message); }
+});
+document.getElementById('freeCoinsBtn').addEventListener('click', async () => {
+  try {
+    const r = await HU.freeCoins();
+    state.coins = r.coins;
+    updateCoinsUI(true);
+    renderProfile();
+    sfx.coin(); flash('legend'); confetti();
+    showToast(`👑 +${r.amount} 🪙 бесплатно`);
+  } catch(e){ showToast(e.message); }
+});
+document.getElementById('offlineGoShop').addEventListener('click', () => {
+  document.getElementById('offlineModal').classList.remove('active');
+  switchView('shop');
+  sfx.click();
+});
+document.getElementById('offlineLater').addEventListener('click', () => {
+  document.getElementById('offlineModal').classList.remove('active');
+  sfx.click();
+});
+
 /* TAP */
 let tapTimes = [], blockedUntil = 0, cheatTimer = null;
-function handleTap(e){
+async function handleTap(e){
   if(!currentUser) return;
   const now = performance.now();
   if(now < blockedUntil){ showCheatBanner(); return; }
   if(tapTimes.length && now - tapTimes[tapTimes.length-1] < 40) return;
   tapTimes.push(now);
   if(tapTimes.length > 15) tapTimes.shift();
-  // античит: слишком ровные интервалы
-  if(tapTimes.length >= 8){
-    const ints = [];
-    for(let i=1;i<tapTimes.length;i++) ints.push(tapTimes[i]-tapTimes[i-1]);
-    const mean = ints.reduce((a,b)=>a+b,0)/ints.length;
-    const vari = ints.reduce((a,b)=>a+(b-mean)**2,0)/ints.length;
-    if(mean < 150 && Math.sqrt(vari) < 8){
-      blockedUntil = now + 3000; tapTimes = []; showCheatBanner(); showToast('🚫 Автокликер!'); return;
-    }
+  try {
+    const r = await HU.tap();
+    state.coins = r.coins;
+    state.totalTaps += 1;
+    sessionTaps += 1;
+    updateCoinsUI(true); updateTapStats();
+    sfx.tap();
+    spawnFloatCoin(e);
+  } catch(err){
+    if(err.message && err.message.includes('Автокликер')){ blockedUntil = now + 3000; tapTimes = []; showCheatBanner(); }
   }
-  state.coins += 1;
-  state.totalTaps += 1;
-  sessionTaps += 1;
-  saveUser();
-  updateCoinsUI(true); updateTapStats();
-  sfx.tap();
-  spawnFloatCoin(e);
 }
-function showCheatBanner(){ const b=document.getElementById('cheatBanner'); b.classList.add('show'); clearTimeout(cheatTimer); cheatTimer=setTimeout(()=>b.classList.remove('show'),3000); }
+function showCheatBanner(){ const b=document.getElementById('cheatBanner'); b.classList.add('show'); clearTimeout(cheatTimer); cheatTimer=setTimeout(()=>b.classList.remove('show'), 3000); }
 function spawnFloatCoin(e){
   const btn = document.getElementById('tapBtn');
   const parent = btn.parentElement;
   const pr = parent.getBoundingClientRect();
   let x, y;
-  if(e && (e.clientX || (e.touches && e.touches[0]))){ x=(e.clientX||e.touches[0].clientX)-pr.left; y=(e.clientY||e.touches[0].clientY)-pr.top; }
-  else { x=pr.width/2; y=pr.height/2; }
+  if(e && (e.clientX || (e.touches && e.touches[0]))){ x = (e.clientX || e.touches[0].clientX) - pr.left; y = (e.clientY || e.touches[0].clientY) - pr.top; }
+  else { x = pr.width/2; y = pr.height/2; }
   const el = document.createElement('div');
   el.className = 'float-coin'; el.textContent = '+1';
   el.style.left = (x-15)+'px'; el.style.top = (y-15)+'px';
-  parent.appendChild(el); setTimeout(()=>el.remove(),950);
+  parent.appendChild(el); setTimeout(()=>el.remove(), 950);
 }
 document.getElementById('tapBtn').addEventListener('pointerdown', e => { e.preventDefault(); handleTap(e); });
 document.getElementById('tapBtn').addEventListener('contextmenu', e => e.preventDefault());
@@ -952,42 +1067,44 @@ document.getElementById('tapBtn').addEventListener('contextmenu', e => e.prevent
 /* NEWS */
 function updateNewsBadges(){
   const hasNew = newsList.some(n => n.createdAt > newsLastSeen);
-  document.getElementById('newsBadge').style.display = hasNew ? 'block' : 'none';
-  document.getElementById('newsBadgeDesktop').style.display = hasNew ? 'block' : 'none';
+  const b1 = document.getElementById('newsBadge');
+  const b2 = document.getElementById('newsBadgeDesktop');
+  if(b1) b1.style.display = hasNew ? 'block' : 'none';
+  if(b2) b2.style.display = hasNew ? 'block' : 'none';
 }
 function renderNews(){
-  const list = document.getElementById('newsList');
+  const list = document.getElementById('newsList'); if(!list) return;
   const createBtn = document.getElementById('newsCreateBtn');
-  if(isDev()) createBtn.style.display = 'block';
+  if(currentUser && currentUser.isDev) createBtn.style.display = 'block';
   else createBtn.style.display = 'none';
   if(!newsList.length){
-    list.innerHTML = '<div class="news-empty">Новостей пока нет.<br>' + (isDev() ? 'Ты можешь создать первую!' : 'Скоро появятся.') + '</div>';
+    list.innerHTML = '<div class="news-empty">Новостей пока нет.<br>' + (currentUser && currentUser.isDev ? 'Ты можешь создать первую!' : 'Скоро появятся.') + '</div>';
     return;
   }
-  const sorted = [...newsList].sort((a,b) => (a.pinned!==b.pinned) ? (a.pinned?-1:1) : (b.createdAt - a.createdAt));
-  list.innerHTML = sorted.map(n => {
+  list.innerHTML = newsList.map(n => {
     const d = new Date(n.createdAt);
-    const dateStr = d.toLocaleDateString('ru-RU',{day:'2-digit',month:'short'}) + ' ' + d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
-    const devMark = n.author.toLowerCase() === 'baconsigma67656' ? devBadge() : '';
-    const actions = isDev() ? `<div class="news-actions"><button class="news-btn pin" data-pin="${n.id}">${n.pinned?'📌 Открепить':'📌 Закрепить'}</button><button class="news-btn del" data-del="${n.id}">🗑 Удалить</button></div>` : '';
-    return `<div class="news-card ${n.pinned?'pinned':''}"><div class="news-head"><div class="news-author-avatar">${n.authorAvatar||'🐺'}</div><div style="flex:1;min-width:0"><div class="news-author-name">${esc(n.author)} ${devMark} ${n.pinned?'<span class="news-pinned-mark">📌</span>':''}</div><div class="news-date">${dateStr}</div></div></div><div class="news-title">${esc(n.title)}</div><div class="news-content">${esc(n.content)}</div>${actions}</div>`;
+    const dateStr = d.toLocaleDateString('ru-RU', { day:'2-digit', month:'short' }) + ' ' + d.toLocaleTimeString('ru-RU', { hour:'2-digit', minute:'2-digit' });
+    const isDevAuthor = n.author.toLowerCase() === 'baconsigma67656';
+    const devMark = isDevAuthor ? devBadge() : '';
+    const actions = currentUser && currentUser.isDev ? `<div class="news-actions"><button class="news-btn pin" data-pin="${n.id}">${n.pinned ? '📌 Открепить' : '📌 Закрепить'}</button><button class="news-btn del" data-del="${n.id}">🗑 Удалить</button></div>` : '';
+    return `<div class="news-card ${n.pinned?'pinned':''}"><div class="news-head"><div class="news-author-avatar">${n.authorAvatar || '🐺'}</div><div style="flex:1;min-width:0"><div class="news-author-name">${esc(n.author)} ${devMark} ${n.pinned?'<span class="news-pinned-mark">📌 Закреплено</span>':''}</div><div class="news-date">${dateStr}</div></div></div><div class="news-title">${esc(n.title)}</div><div class="news-content">${esc(n.content)}</div>${actions}</div>`;
   }).join('');
-  list.querySelectorAll('[data-del]').forEach(el => el.addEventListener('click', () => {
+  list.querySelectorAll('[data-del]').forEach(el => el.addEventListener('click', async () => {
     if(!confirm('Удалить?')) return;
-    newsList = newsList.filter(n => n.id !== parseInt(el.dataset.del));
-    saveNews(); renderNews(); renderTapNews(); updateNewsBadges(); showToast('🗑 Удалено');
+    try { await HU.deleteNews(parseInt(el.dataset.del)); await refreshNews(); showToast('🗑 Удалено'); }
+    catch(e){ showToast(e.message); }
   }));
-  list.querySelectorAll('[data-pin]').forEach(el => el.addEventListener('click', () => {
-    const n = newsList.find(x => x.id === parseInt(el.dataset.pin));
-    if(n){ n.pinned = !n.pinned; saveNews(); renderNews(); renderTapNews(); }
+  list.querySelectorAll('[data-pin]').forEach(el => el.addEventListener('click', async () => {
+    try { await HU.pinNews(parseInt(el.dataset.pin)); await refreshNews(); }
+    catch(e){ showToast(e.message); }
   }));
 }
 function renderTapNews(){
   const card = document.getElementById('tapNewsCard'), content = document.getElementById('tapNewsContent');
+  if(!card || !content) return;
   if(!newsList.length){ card.style.display = 'none'; return; }
   card.style.display = 'block';
-  const sorted = [...newsList].sort((a,b) => (a.pinned!==b.pinned) ? (a.pinned?-1:1) : (b.createdAt - a.createdAt));
-  const n = sorted[0];
+  const n = newsList[0];
   const devMark = n.author.toLowerCase() === 'baconsigma67656' ? devBadge() : '';
   content.innerHTML = `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><div class="news-author-avatar" style="width:28px;height:28px;font-size:16px">${n.authorAvatar||'🐺'}</div><div style="flex:1;font-size:11px;font-weight:800;color:#fff">${esc(n.author)} ${devMark}</div></div><div style="font-size:14px;font-weight:900;margin-bottom:6px">${esc(n.title)}</div><div style="font-size:12px;color:#c8c8d0;line-height:1.5;white-space:pre-wrap">${esc(n.content).slice(0,300)}${n.content.length>300?'...':''}</div>`;
 }
@@ -1000,8 +1117,7 @@ document.getElementById('newsCreateBtn').addEventListener('click', () => {
 });
 document.getElementById('newsModalClose').addEventListener('click', () => document.getElementById('newsModal').classList.remove('active'));
 document.getElementById('newsModal').addEventListener('click', e => { if(e.target.id === 'newsModal') e.currentTarget.classList.remove('active'); });
-document.getElementById('newsSubmitBtn').addEventListener('click', () => {
-  if(!isDev()){ showToast('Только разработчик'); return; }
+document.getElementById('newsSubmitBtn').addEventListener('click', async () => {
   const title = document.getElementById('newsTitleInput').value.trim();
   const content = document.getElementById('newsContentInput').value.trim();
   const pinned = document.getElementById('newsPinnedInput').checked;
@@ -1010,25 +1126,81 @@ document.getElementById('newsSubmitBtn').addEventListener('click', () => {
     err.querySelector('span').textContent = 'Заполни заголовок и текст';
     err.classList.add('show'); return;
   }
-  newsList.push({
-    id: Date.now(),
-    title, content,
-    author: currentUser.username,
-    authorAvatar: currentUser.avatar,
-    createdAt: Date.now(),
-    pinned,
-  });
-  saveNews();
-  document.getElementById('newsModal').classList.remove('active');
-  renderNews(); renderTapNews(); updateNewsBadges();
-  showToast('📰 Опубликовано!'); sfx.craft();
+  try {
+    await HU.createNews({ title, content, pinned });
+    document.getElementById('newsModal').classList.remove('active');
+    await refreshNews();
+    showToast('📰 Опубликовано!'); sfx.craft();
+  } catch(e){ showToast(e.message); }
 });
+
+/* FRIENDS */
+function updateFriendsBadges(){
+  const ic = friendsData.incoming.length;
+  const b1 = document.getElementById('friendsBadge'); if(b1){ b1.textContent = friendsData.friends.length; b1.classList.toggle('show', friendsData.friends.length > 0); }
+  const b2 = document.getElementById('friendsBadgeDesktop'); if(b2){ b2.textContent = friendsData.friends.length; b2.classList.toggle('show', friendsData.friends.length > 0); }
+  const bi = document.getElementById('incomingBadge'); if(bi){ bi.textContent = ic; bi.classList.toggle('show', ic > 0); }
+  const bf = document.getElementById('friendsCountBadge'); if(bf){ bf.textContent = friendsData.friends.length; bf.classList.toggle('show', friendsData.friends.length > 0); }
+  const bo = document.getElementById('outgoingBadge'); if(bo){ bo.textContent = friendsData.outgoing.length; bo.classList.toggle('show', friendsData.outgoing.length > 0); }
+}
+function renderFriends(){
+  updateFriendsBadges();
+  const list = document.getElementById('friendsList'); if(!list) return;
+  let arr = [];
+  if(friendsTab === 'friends') arr = friendsData.friends.map(f => ({...f, rel:'friends'}));
+  else if(friendsTab === 'incoming') arr = friendsData.incoming.map(f => ({...f, rel:'incoming'}));
+  else arr = friendsData.outgoing.map(f => ({...f, rel:'outgoing'}));
+  if(!arr.length){
+    const empty = friendsTab === 'friends' ? 'Пока нет друзей. Найди их через поиск!' : friendsTab === 'incoming' ? 'Нет входящих заявок' : 'Нет отправленных заявок';
+    list.innerHTML = `<div class="friends-empty">${empty}</div>`; return;
+  }
+  list.innerHTML = arr.map(u => {
+    const dev = u.isDev ? devBadge() : '';
+    let actions = '';
+    if(u.rel === 'friends') actions = `<button class="ua-btn danger" data-remove="${esc(u.username)}">Удалить</button>`;
+    else if(u.rel === 'incoming') actions = `<button class="ua-btn primary" data-accept="${esc(u.username)}">✓ Принять</button><button class="ua-btn danger" data-decline="${esc(u.username)}">✕</button>`;
+    else actions = `<button class="ua-btn" data-cancel="${esc(u.username)}">Отменить</button>`;
+    return `<div class="user-card"><div class="user-avatar">${u.avatar || '🐺'}</div><div class="user-info"><div class="user-name">${esc(u.username)} ${dev}</div><div class="user-meta">🪙 ${(u.coins||0).toLocaleString('ru-RU')}</div></div><div class="user-actions">${actions}</div></div>`;
+  }).join('');
+  list.querySelectorAll('[data-accept]').forEach(el => el.addEventListener('click', async () => { try { await HU.acceptFriend(el.dataset.accept); await refreshFriends(); showToast('✓ Теперь друзья'); sfx.click(); } catch(e){ showToast(e.message); } }));
+  list.querySelectorAll('[data-decline]').forEach(el => el.addEventListener('click', async () => { try { await HU.declineFriend(el.dataset.decline); await refreshFriends(); } catch(e){ showToast(e.message); } }));
+  list.querySelectorAll('[data-remove]').forEach(el => el.addEventListener('click', async () => { if(!confirm('Удалить из друзей?')) return; try { await HU.removeFriend(el.dataset.remove); await refreshFriends(); showToast('Удалено'); } catch(e){ showToast(e.message); } }));
+  list.querySelectorAll('[data-cancel]').forEach(el => el.addEventListener('click', async () => { try { await HU.removeFriend(el.dataset.cancel); await refreshFriends(); } catch(e){ showToast(e.message); } }));
+}
+document.querySelectorAll('.ftab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.ftab').forEach(x => x.classList.toggle('active', x === t));
+    friendsTab = t.dataset.ftab; sfx.click(); renderFriends();
+  });
+});
+document.getElementById('friendSearchBtn').addEventListener('click', doSearch);
+document.getElementById('friendSearch').addEventListener('keypress', e => { if(e.key === 'Enter') doSearch(); });
+async function doSearch(){
+  const q = document.getElementById('friendSearch').value.trim();
+  const box = document.getElementById('searchResults');
+  if(q.length < 2){ box.innerHTML = ''; return; }
+  try {
+    const res = await HU.searchUsers(q);
+    if(!res.length){ box.innerHTML = '<div class="friends-empty">Никого не найдено</div>'; return; }
+    box.innerHTML = res.map(u => {
+      const dev = u.isDev ? devBadge() : '';
+      let actionBtn = '';
+      if(u.relationship === 'none') actionBtn = `<button class="ua-btn primary" data-add="${esc(u.username)}">+ Добавить</button>`;
+      else if(u.relationship === 'friends') actionBtn = `<button class="ua-btn" disabled>✓ В друзьях</button>`;
+      else if(u.relationship === 'outgoing') actionBtn = `<button class="ua-btn" disabled>Отправлено</button>`;
+      else if(u.relationship === 'incoming') actionBtn = `<button class="ua-btn primary" data-accept2="${esc(u.username)}">✓ Принять</button>`;
+      return `<div class="user-card"><div class="user-avatar">${u.avatar || '🐺'}</div><div class="user-info"><div class="user-name">${esc(u.username)} ${dev}</div><div class="user-meta">🪙 ${(u.coins||0).toLocaleString('ru-RU')}</div></div><div class="user-actions">${actionBtn}</div></div>`;
+    }).join('');
+    box.querySelectorAll('[data-add]').forEach(el => el.addEventListener('click', async () => { try { await HU.sendFriendReq(el.dataset.add); showToast('✓ Заявка отправлена'); doSearch(); await refreshFriends(); } catch(e){ showToast(e.message); } }));
+    box.querySelectorAll('[data-accept2]').forEach(el => el.addEventListener('click', async () => { try { await HU.acceptFriend(el.dataset.accept2); showToast('✓ Теперь друзья'); doSearch(); await refreshFriends(); } catch(e){ showToast(e.message); } }));
+  } catch(e){ box.innerHTML = ''; }
+}
 
 /* CASES */
 function renderCases(){
-  const grid = document.getElementById('casesGrid');
-  grid.innerHTML = CASES.map(c => {
-    const icons = ITEMS.filter(i => i.rarity === 'legendary').slice(0,3).map(i => `<div class="pv rarity-${i.rarity}">${i.icon}</div>`).join('');
+  const grid = document.getElementById('casesGrid'); if(!grid) return;
+  grid.innerHTML = CASES_CACHE.map(c => {
+    const icons = ITEMS_CACHE.filter(i => i.rarity === 'legendary').slice(0,3).map(i => `<div class="pv rarity-${i.rarity}">${i.icon}</div>`).join('');
     return `<div class="case-card" style="--case-color:${c.color}"><div class="case-icon">${c.icon}</div><div class="case-name">${c.name}</div><div class="case-price">🪙 ${c.price.toLocaleString('ru-RU')}</div><div class="case-preview">${icons}</div><button class="case-btn" data-open="${c.id}">ОТКРЫТЬ</button></div>`;
   }).join('');
   grid.querySelectorAll('.case-btn').forEach(btn => {
@@ -1042,7 +1214,7 @@ function renderCases(){
 }
 let currentCase = null, spinning = false;
 function openCaseModal(caseId){
-  const c = CASES.find(x => x.id === caseId); if(!c) return;
+  const c = CASES_CACHE.find(x => x.id === caseId); if(!c) return;
   currentCase = c;
   document.getElementById('caseModalTitle').textContent = `${c.icon} ${c.name}`;
   document.getElementById('caseModalPrice').textContent = `🪙 ${c.price.toLocaleString('ru-RU')} за открытие`;
@@ -1061,7 +1233,7 @@ function fillTrack(){
   const track = document.getElementById('track'); track.innerHTML = '';
   const frag = document.createDocumentFragment();
   for(let i = 0; i < 30; i++){
-    const it = ITEMS[Math.floor(Math.random()*ITEMS.length)];
+    const it = ITEMS_CACHE[Math.floor(Math.random()*ITEMS_CACHE.length)];
     const d = document.createElement('div');
     d.className = `item rarity-${it.rarity}`;
     d.innerHTML = `<div class="icon">${it.icon}</div><div>${it.name}</div><div class="price">🪙 ${getItemPrice(it.name)}</div>`;
@@ -1081,7 +1253,7 @@ function runSpin(winItem){
     const winIdx = total - 5;
     const frag = document.createDocumentFragment();
     for(let i = 0; i < total; i++){
-      const it = (i === winIdx) ? winItem : ITEMS[Math.floor(Math.random()*ITEMS.length)];
+      const it = (i === winIdx) ? winItem : ITEMS_CACHE[Math.floor(Math.random()*ITEMS_CACHE.length)];
       const d = document.createElement('div');
       d.className = `item rarity-${it.rarity}`;
       d.innerHTML = `<div class="icon">${it.icon}</div><div>${it.name}</div><div class="price">🪙 ${getItemPrice(it.name)}</div>`;
@@ -1113,38 +1285,35 @@ async function openCase(multi){
   spinning = true;
   b1.disabled = b5.disabled = b10.disabled = true;
   try {
-    const items = [];
-    for(let i = 0; i < multi; i++) items.push(rollFromCase(c));
-    state.coins -= cost;
+    const r = await HU.openCase(c.id, multi);
     const resDiv = document.getElementById('caseResult'); resDiv.textContent = '';
     sfx.open();
     const grouped = {};
-    for(const it of items){
+    for(const it of r.items){
       await runSpin(it);
       if(it.rarity === 'legendary'){ flash('legend'); confetti(); sfx.win('legendary'); }
       else if(it.rarity === 'epic'){ flash('epic'); sfx.win('epic'); }
       else sfx.win(it.rarity);
-      grouped[it.name] = (grouped[it.name]||0) + 1;
-      state.inventory[it.name] = (state.inventory[it.name]||0) + 1;
-      registerDrop(it.name, 1);
+      grouped[it.name] = (grouped[it.name] || 0) + 1;
+      state.inventory[it.name] = (state.inventory[it.name] || 0) + 1;
     }
-    saveUser();
+    state.coins = r.coins;
     updateCoinsUI(false);
     renderInventory(); renderMarket(); renderUpgrader(); renderCraft();
-    if(multi === 1){ const it = items[0]; resDiv.innerHTML = `Получено: <span class="win-tag">${it.icon} ${it.name}</span>`; }
-    else { resDiv.innerHTML = 'Получено: ' + Object.entries(grouped).map(([n,c]) => { const it = ITEMS.find(i => i.name === n); return `<span class="win-tag">${it.icon} ${n}${c>1?' x'+c:''}</span>`; }).join(' '); }
+    if(multi === 1){ const it = r.items[0]; resDiv.innerHTML = `Получено: <span class="win-tag">${it.icon} ${it.name}</span>`; }
+    else { resDiv.innerHTML = 'Получено: ' + Object.entries(grouped).map(([n,c]) => { const it = ITEMS_CACHE.find(i => i.name === n); return `<span class="win-tag">${it.icon} ${n}${c>1?' x'+c:''}</span>`; }).join(' '); }
   } catch(e){ showToast('⚠️ ' + e.message); }
   finally { spinning = false; b1.disabled = b5.disabled = b10.disabled = false; }
 }
 
 /* CRAFT */
 function renderCraft(){
-  const grid = document.getElementById('craftGrid');
+  const grid = document.getElementById('craftGrid'); if(!grid) return;
   const names = Object.keys(state.inventory).filter(n => state.inventory[n] > 0);
   if(!names.length){ grid.innerHTML = '<div class="craft-empty">Инвентарь пуст. Открой кейс!</div>'; return; }
-  names.sort((a,b) => { const ia = ITEMS.find(i=>i.name===a), ib = ITEMS.find(i=>i.name===b); if(!ia||!ib) return 0; return (RARITY_ORDER[ia.rarity]-RARITY_ORDER[ib.rarity]) || a.localeCompare(b); });
+  names.sort((a,b) => { const ia = ITEMS_CACHE.find(i=>i.name===a), ib = ITEMS_CACHE.find(i=>i.name===b); if(!ia||!ib) return 0; return (RARITY_ORDER[ia.rarity]-RARITY_ORDER[ib.rarity]) || a.localeCompare(b); });
   grid.innerHTML = names.map(name => {
-    const item = ITEMS.find(i => i.name === name); if(!item) return '';
+    const item = ITEMS_CACHE.find(i => i.name === name); if(!item) return '';
     const count = state.inventory[name];
     const isMax = !RARITIES[item.rarity].next;
     const ready = !isMax && count >= CRAFT_COST;
@@ -1159,48 +1328,38 @@ function renderCraft(){
   }));
 }
 let crafting = false;
-function performCraft(name){
+async function performCraft(name){
   if(crafting) return;
   crafting = true; sfx.craft();
   try {
-    const item = ITEMS.find(i => i.name === name);
-    if(!item || !RARITIES[item.rarity].next) return;
-    if((state.inventory[name]||0) < CRAFT_COST) return;
-    const nextRarity = RARITIES[item.rarity].next;
-    const pool = ITEMS.filter(i => i.rarity === nextRarity);
-    const result = pool[Math.floor(Math.random()*pool.length)];
-    state.inventory[name] -= CRAFT_COST;
-    if(state.inventory[name] <= 0) delete state.inventory[name];
-    unregisterDrop(name, CRAFT_COST);
-    state.inventory[result.name] = (state.inventory[result.name]||0) + 1;
-    registerDrop(result.name, 1);
-    saveUser();
-    showCraftResult(result, { name, count:CRAFT_COST });
+    const r = await HU.craft(name);
+    state.inventory = r.inventory;
+    showCraftResult(r.result, r.consumed);
     renderCraft(); renderInventory(); renderMarket();
-    sfx.win(result.rarity);
-    if(result.rarity === 'legendary'){ flash('legend'); confetti(); }
-    else if(result.rarity === 'epic'){ flash('epic'); }
-  } catch(e){ showToast('⚠️ Ошибка'); }
+    sfx.win(r.result.rarity);
+    if(r.result.rarity === 'legendary'){ flash('legend'); confetti(); }
+    else if(r.result.rarity === 'epic'){ flash('epic'); }
+  } catch(e){ showToast('⚠️ ' + e.message); }
   finally { crafting = false; }
 }
 function showCraftResult(result, consumed){
   const stage = document.getElementById('craftStage');
-  const consumedItem = ITEMS.find(i => i.name === consumed.name);
-  stage.innerHTML = `<div class="craft-result-title">⚒️ КРАФТ УСПЕШЕН</div><div class="craft-result-card rarity-${result.rarity}"><div class="rc-icon">${result.icon}</div><div class="rc-name">${result.name}</div><div class="rc-price">🪙 ${getItemPrice(result.name).toLocaleString('ru-RU')}</div></div><div class="craft-result-sub">Получено за 5 × ${consumedItem.icon} ${consumed.name}</div><div class="craft-consumed">${Array(5).fill(0).map(() => `<div class="cc rarity-${consumedItem.rarity}">${consumedItem.icon}</div>`).join('')}</div>`;
+  const consumedItem = ITEMS_CACHE.find(i => i.name === consumed.name);
+  stage.innerHTML = `<div class="craft-result-title">⚒️ КРАФТ УСПЕШЕН</div><div class="craft-result-card rarity-${result.rarity}"><div class="rc-icon">${result.icon}</div><div class="rc-name">${result.name}</div><div class="rc-price">🪙 ${result.price.toLocaleString('ru-RU')}</div></div><div class="craft-result-sub">Получено за 5 × ${consumedItem.icon} ${consumed.name}</div><div class="craft-consumed">${Array(5).fill(0).map(() => `<div class="cc rarity-${consumedItem.rarity}">${consumedItem.icon}</div>`).join('')}</div>`;
   document.getElementById('craftOverlay').classList.add('active');
   setTimeout(() => document.getElementById('craftOverlay').classList.remove('active'), 2600);
 }
 
 /* DAILY */
-function canClaimDaily(){ return currentUser && Date.now() - (state.lastDaily||0) >= DAILY_CD; }
-function getTimeUntilDaily(){ return Math.max(0, DAILY_CD - (Date.now() - (state.lastDaily||0))); }
-function fmtTime(ms){ if(ms<=0) return 'Готово!'; const t=Math.floor(ms/1000); return `${String(Math.floor(t/3600)).padStart(2,'0')}:${String(Math.floor((t%3600)/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`; }
+function canClaimDaily(){ return currentUser && Date.now() - (currentUser.lastDaily || 0) >= DAILY_CD; }
+function getTimeUntilDaily(){ return Math.max(0, DAILY_CD - (Date.now() - (currentUser.lastDaily || 0))); }
+function fmtTime(ms){ if(ms<=0) return 'Готово!'; const t = Math.floor(ms/1000); return `${String(Math.floor(t/3600)).padStart(2,'0')}:${String(Math.floor((t%3600)/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`; }
 function updateDailyUI(){
   if(!currentUser) return;
   const btn = document.getElementById('claimDailyBtn'), timer = document.getElementById('dailyTimer');
   const badge = document.getElementById('dailyStatusBadge'), card = document.getElementById('dailyCard');
   const sb = document.getElementById('streakBadge'), grid = document.getElementById('dailyGrid');
-  const streak = state.dailyStreak || 0;
+  const streak = currentUser.dailyStreak || 0;
   const dayIdx = streak % 7;
   const ready = canClaimDaily();
   sb.textContent = `${streak} / 7`;
@@ -1218,24 +1377,22 @@ function updateDailyUI(){
 }
 function updateDailyBadge(){
   const show = canClaimDaily();
-  document.getElementById('dailyBadge').style.display = show ? 'block' : 'none';
-  document.getElementById('dailyBadgeDesktop').style.display = show ? 'block' : 'none';
-  document.getElementById('profileBtn').classList.toggle('has-reward', show);
+  const b1 = document.getElementById('dailyBadge'); if(b1) b1.style.display = show ? 'block' : 'none';
+  const b2 = document.getElementById('dailyBadgeDesktop'); if(b2) b2.style.display = show ? 'block' : 'none';
+  const pb = document.getElementById('profileBtn'); if(pb) pb.classList.toggle('has-reward', show);
 }
-document.getElementById('claimDailyBtn').addEventListener('click', () => {
+document.getElementById('claimDailyBtn').addEventListener('click', async () => {
   if(!canClaimDaily()) return;
-  const dayIdx = (state.dailyStreak||0) % 7;
-  const reward = DAILY_REWARDS[dayIdx];
-  state.coins += reward;
-  state.lastDaily = Date.now();
-  state.totalClaimed = (state.totalClaimed||0) + 1;
-  let ns = (state.dailyStreak||0) + 1;
-  if(ns >= 7) ns = 0;
-  state.dailyStreak = ns;
-  saveUser();
-  updateCoinsUI(true); renderProfile(); updateDailyUI(); updateDailyBadge();
-  sfx.daily(); flash('legend'); confetti();
-  showToast(`🎁 +${reward.toLocaleString('ru-RU')} 🪙`);
+  try {
+    const r = await HU.daily();
+    state.coins = r.coins;
+    currentUser.lastDaily = r.lastDaily;
+    currentUser.dailyStreak = r.dailyStreak;
+    currentUser.totalClaimed = r.totalClaimed;
+    updateCoinsUI(true); renderProfile(); updateDailyUI(); updateDailyBadge();
+    sfx.daily(); flash('legend'); confetti();
+    showToast(`🎁 +${r.reward.toLocaleString('ru-RU')} 🪙`);
+  } catch(e){ showToast('⏳ ' + e.message); }
 });
 let dailyTimer;
 function checkDailyOnLoad(){
@@ -1253,49 +1410,48 @@ function refreshProfileUI(){
 function renderProfile(){
   if(!currentUser) return;
   refreshProfileUI();
-  const dev = isDev() ? ' ' + devBadge() : '';
+  const dev = currentUser.isDev ? ' ' + devBadge() : '';
   document.getElementById('profileName').innerHTML = esc(currentUser.username) + dev;
-  document.getElementById('profileJoined').textContent = new Date(currentUser.created).toLocaleDateString('ru-RU',{day:'2-digit',month:'long',year:'numeric'});
+  document.getElementById('profileJoined').textContent = new Date(currentUser.created).toLocaleDateString('ru-RU', { day:'2-digit', month:'long', year:'numeric' });
   document.getElementById('pstatCoins').textContent = '🪙 ' + state.coins.toLocaleString('ru-RU');
-  document.getElementById('pstatTaps').textContent = (state.totalTaps||0).toLocaleString('ru-RU');
+  document.getElementById('pstatOffline').textContent = '🌙 ' + (state.offlineCoins||0).toLocaleString('ru-RU');
+  document.getElementById('pstatTaps').textContent = (state.totalTaps || 0).toLocaleString('ru-RU');
   let ti = 0, tv = 0;
   Object.keys(state.inventory).forEach(n => { ti += state.inventory[n]; tv += state.inventory[n] * getSellPrice(n); });
   document.getElementById('pstatItems').textContent = ti.toLocaleString('ru-RU');
   document.getElementById('pstatValue').textContent = '🪙 ' + tv.toLocaleString('ru-RU');
-  document.getElementById('pstatStreak').textContent = (state.dailyStreak||0) + ' / 7';
-  document.getElementById('pstatClaimed').textContent = (state.totalClaimed||0).toLocaleString('ru-RU');
+  document.getElementById('pstatStreak').textContent = (currentUser.dailyStreak || 0) + ' / 7';
+  document.getElementById('pstatClaimed').textContent = (currentUser.totalClaimed || 0).toLocaleString('ru-RU');
   const picker = document.getElementById('avatarPicker');
   picker.innerHTML = AVATARS.map(a => `<button class="avatar-opt ${a===currentUser.avatar?'active':''}" data-avatar="${a}">${a}</button>`).join('');
-  picker.querySelectorAll('.avatar-opt').forEach(btn => btn.addEventListener('click', () => {
-    currentUser.avatar = btn.dataset.avatar;
-    saveUser(); refreshProfileUI(); renderProfile(); sfx.click();
+  picker.querySelectorAll('.avatar-opt').forEach(btn => btn.addEventListener('click', async () => {
+    try { await HU.setAvatar(btn.dataset.avatar); currentUser.avatar = btn.dataset.avatar; refreshProfileUI(); renderProfile(); sfx.click(); } catch(e){ showToast(e.message); }
   }));
   updateDailyUI();
+  updateCoinsUI(false);
 }
 
 /* INVENTORY */
 let invFilter = 'all';
 function renderInventory(){
-  const grid = document.getElementById('invGrid');
+  const grid = document.getElementById('invGrid'); if(!grid) return;
   let names = Object.keys(state.inventory).filter(n => state.inventory[n] > 0);
   let tc = 0, tv = 0;
   names.forEach(n => { tc += state.inventory[n]; tv += state.inventory[n] * getSellPrice(n); });
   document.getElementById('invCount').textContent = tc;
   document.getElementById('invTotal').textContent = tv ? `≈ 🪙 ${tv.toLocaleString('ru-RU')}` : '';
-  document.getElementById('invBadge').textContent = tc;
-  document.getElementById('invBadge').classList.toggle('show', tc > 0);
-  document.getElementById('invBadgeDesktop').textContent = tc;
-  document.getElementById('invBadgeDesktop').classList.toggle('show', tc > 0);
-  if(invFilter !== 'all') names = names.filter(n => { const it = ITEMS.find(i => i.name === n); return it && it.rarity === invFilter; });
+  const b1 = document.getElementById('invBadge'); if(b1){ b1.textContent = tc; b1.classList.toggle('show', tc > 0); }
+  const b2 = document.getElementById('invBadgeDesktop'); if(b2){ b2.textContent = tc; b2.classList.toggle('show', tc > 0); }
+  if(invFilter !== 'all') names = names.filter(n => { const it = ITEMS_CACHE.find(i => i.name === n); return it && it.rarity === invFilter; });
   if(!names.length){ grid.innerHTML = '<div class="inv-empty">' + (Object.keys(state.inventory).length ? 'Нет этой редкости' : 'Инвентарь пуст') + '</div>'; return; }
-  names.sort((a,b) => { const ia = ITEMS.find(i=>i.name===a), ib = ITEMS.find(i=>i.name===b); if(!ia||!ib) return 0; return (RARITY_ORDER[ia.rarity]-RARITY_ORDER[ib.rarity]) || a.localeCompare(b); });
+  names.sort((a,b) => { const ia = ITEMS_CACHE.find(i=>i.name===a), ib = ITEMS_CACHE.find(i=>i.name===b); if(!ia||!ib) return 0; return (RARITY_ORDER[ia.rarity]-RARITY_ORDER[ib.rarity]) || a.localeCompare(b); });
   grid.innerHTML = names.map(name => {
-    const item = ITEMS.find(i => i.name === name); if(!item) return '';
+    const item = ITEMS_CACHE.find(i => i.name === name); if(!item) return '';
     const count = state.inventory[name];
     const badge = count > 1 ? `<span class="count-badge">x${count}</span>` : '';
     return `<div class="inv-item rarity-${item.rarity}" data-name="${name}">${badge}<div class="icon">${item.icon}</div><div>${item.name}</div><div class="inv-price">🪙 ${getSellPrice(name)}</div></div>`;
   }).join('');
-  grid.querySelectorAll('.inv-item').forEach(el => el.addEventListener('click', () => { const item = ITEMS.find(i => i.name === el.dataset.name); if(item) showItemModal(item); }));
+  grid.querySelectorAll('.inv-item').forEach(el => el.addEventListener('click', () => { const item = ITEMS_CACHE.find(i => i.name === el.dataset.name); if(item) showItemModal(item); }));
 }
 document.getElementById('invFilters').addEventListener('click', e => {
   const btn = e.target.closest('.filter-btn'); if(!btn) return;
@@ -1315,31 +1471,30 @@ function showItemModal(item){
   tag.style.color = RARITIES[item.rarity].color;
   document.getElementById('modalPrice').textContent = `🪙 ${getItemPrice(item.name).toLocaleString('ru-RU')}`;
   document.getElementById('modalSell').textContent = `🪙 ${getSellPrice(item.name).toLocaleString('ru-RU')}`;
+  document.getElementById('modalDrops').textContent = (state.supply[item.name]?.drops) || 0;
   document.getElementById('modalOwned').textContent = state.inventory[item.name] || 0;
   document.getElementById('modalSellBtn').disabled = !(state.inventory[item.name] > 0);
   document.getElementById('modalOverlay').classList.add('active');
 }
 document.getElementById('modalClose').addEventListener('click', () => document.getElementById('modalOverlay').classList.remove('active'));
 document.getElementById('modalOverlay').addEventListener('click', e => { if(e.target.id === 'modalOverlay') e.currentTarget.classList.remove('active'); });
-document.getElementById('modalSellBtn').addEventListener('click', () => {
+document.getElementById('modalSellBtn').addEventListener('click', async () => {
   if(!modalItem) return;
-  const have = state.inventory[modalItem.name] || 0;
-  if(have < 1) return;
-  const price = getSellPrice(modalItem.name);
-  state.coins += price;
-  state.inventory[modalItem.name] -= 1;
-  if(state.inventory[modalItem.name] <= 0) delete state.inventory[modalItem.name];
-  unregisterDrop(modalItem.name, 1);
-  saveUser();
-  updateCoinsUI(true); renderAll();
-  if((state.inventory[modalItem.name]||0) < 1) document.getElementById('modalOverlay').classList.remove('active');
-  else showItemModal(modalItem);
-  showToast(`Продано за 🪙 ${price}`);
+  if((state.inventory[modalItem.name] || 0) < 1) return;
+  try {
+    const r = await HU.sell(modalItem.name, 1);
+    state.coins = r.coins; state.inventory = r.inventory;
+    updateCoinsUI(true); renderAll();
+    if((state.inventory[modalItem.name] || 0) < 1) document.getElementById('modalOverlay').classList.remove('active');
+    else showItemModal(modalItem);
+    showToast(`Продано за 🪙 ${r.earned}`);
+  } catch(e){ showToast(e.message); }
 });
 
 /* CHANCES */
 function renderChances(){
-  document.getElementById('chancesList').innerHTML = ['common','uncommon','rare','epic','legendary'].map(k => {
+  const list = document.getElementById('chancesList'); if(!list) return;
+  list.innerHTML = ['common','uncommon','rare','epic','legendary'].map(k => {
     const r = RARITIES[k];
     return `<div class="chance-row"><span class="chance-dot" style="background:${r.color}"></span><span class="chance-label">${r.label}</span><span class="chance-value">🪙 ${r.basePrice}</span></div>`;
   }).join('');
@@ -1354,59 +1509,40 @@ document.getElementById('marketFilters').addEventListener('click', e => {
   sfx.click(); renderMarket();
 });
 function sparkline(hist, color){
-  const w=100,h=22;
-  if(!hist||hist.length<2) return `<svg class="mc-spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><line x1="0" y1="${h/2}" x2="${w}" y2="${h/2}" stroke="#222"/></svg>`;
-  const mn=Math.min(...hist), mx=Math.max(...hist), rng=(mx-mn)||1, step=w/(hist.length-1);
-  const pts = hist.map((v,i)=>`${(i*step).toFixed(1)},${(h-((v-mn)/rng)*h*0.85-2).toFixed(1)}`).join(' ');
+  const w = 100, h = 22;
+  if(!hist || hist.length < 2) return `<svg class="mc-spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><line x1="0" y1="${h/2}" x2="${w}" y2="${h/2}" stroke="#222"/></svg>`;
+  const mn = Math.min(...hist), mx = Math.max(...hist), rng = (mx - mn) || 1, step = w / (hist.length - 1);
+  const pts = hist.map((v, i) => `${(i*step).toFixed(1)},${(h - ((v-mn)/rng)*h*0.85 - 2).toFixed(1)}`).join(' ');
   return `<svg class="mc-spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>`;
 }
 function renderMarket(){
-  const grid = document.getElementById('marketGrid');
-  let list = [...ITEMS];
-  if(marketFilter === 'owned') list = list.filter(i => (state.inventory[i.name]||0) > 0);
+  const grid = document.getElementById('marketGrid'); if(!grid) return;
+  let list = [...ITEMS_CACHE];
+  if(marketFilter === 'owned') list = list.filter(i => (state.inventory[i.name] || 0) > 0);
   else if(marketFilter !== 'all') list = list.filter(i => i.rarity === marketFilter);
   list.sort((a,b) => (RARITY_ORDER[a.rarity]-RARITY_ORDER[b.rarity]) || (getItemPrice(b.name)-getItemPrice(a.name)));
   if(!list.length){ grid.innerHTML = '<div class="inv-empty">Ничего не найдено</div>'; return; }
   grid.innerHTML = list.map(item => {
     const price = getItemPrice(item.name);
-    const trend = state.trend[item.name]||0;
-    const cls = trend>0.1?'trend-up':trend<-0.1?'trend-down':'trend-flat';
-    const arr = trend>0.1?'↗':trend<-0.1?'↘':'→';
-    const owned = state.inventory[item.name]||0;
+    const s = state.supply[item.name] || { drops:0, trend:0 };
+    const trend = s.trend || 0;
+    const cls = trend > 0.1 ? 'trend-up' : trend < -0.1 ? 'trend-down' : 'trend-flat';
+    const arr = trend > 0.1 ? '↗' : trend < -0.1 ? '↘' : '→';
+    const owned = state.inventory[item.name] || 0;
     const hist = state.priceHistory[item.name] || [price];
-    return `<div class="market-card"><div class="mc-head"><div class="mc-icon">${item.icon}</div><div class="mc-info"><div class="mc-name">${item.name}</div><div class="mc-rarity" style="color:${RARITIES[item.rarity].color}">${RARITIES[item.rarity].label}</div></div></div>${sparkline(hist, RARITIES[item.rarity].color)}<div class="mc-price-row"><div class="mc-price">🪙 ${price.toLocaleString('ru-RU')}</div><div class="mc-trend ${cls}">${arr} ${(trend*15).toFixed(1)}%</div></div><div class="mc-supply"><span>Supply: <b>${state.supply[item.name]||0}</b></span><span>У тебя: <b>${owned}</b></span></div><div class="mc-actions"><button class="mc-btn" data-buy="${item.name}" ${price>state.coins?'disabled':''}>Купить</button><button class="mc-btn sell" data-sell="${item.name}" ${owned<1?'disabled':''}>Продать</button></div></div>`;
+    return `<div class="market-card"><div class="mc-head"><div class="mc-icon">${item.icon}</div><div class="mc-info"><div class="mc-name">${item.name}</div><div class="mc-rarity" style="color:${RARITIES[item.rarity].color}">${RARITIES[item.rarity].label}</div></div></div>${sparkline(hist, RARITIES[item.rarity].color)}<div class="mc-price-row"><div class="mc-price">🪙 ${price.toLocaleString('ru-RU')}</div><div class="mc-trend ${cls}">${arr} ${(trend*15).toFixed(1)}%</div></div><div class="mc-supply"><span>Supply: <b>${s.drops || 0}</b></span><span>У тебя: <b>${owned}</b></span></div><div class="mc-actions"><button class="mc-btn" data-buy="${item.name}" ${price > state.coins ? 'disabled' : ''}>Купить</button><button class="mc-btn sell" data-sell="${item.name}" ${owned < 1 ? 'disabled' : ''}>Продать</button></div></div>`;
   }).join('');
   grid.querySelectorAll('[data-buy]').forEach(el => el.addEventListener('click', () => buyItem(el.dataset.buy)));
   grid.querySelectorAll('[data-sell]').forEach(el => el.addEventListener('click', () => sellItem(el.dataset.sell, 1)));
 }
-function buyItem(name){
-  const price = getItemPrice(name);
-  if(state.coins < price){ showToast('Недостаточно монет'); return; }
-  state.coins -= price;
-  state.inventory[name] = (state.inventory[name]||0) + 1;
-  registerDrop(name, 1);
-  saveUser();
-  updateCoinsUI(false); renderAll();
-  showToast(`Куплено: ${name}`);
-}
-function sellItem(name, count){
-  const have = state.inventory[name]||0;
-  if(have < count) return;
-  const price = getSellPrice(name);
-  state.coins += price*count;
-  state.inventory[name] -= count;
-  if(state.inventory[name] <= 0) delete state.inventory[name];
-  unregisterDrop(name, count);
-  saveUser();
-  updateCoinsUI(true); renderAll();
-  showToast(`Продано за 🪙 ${price*count}`);
-}
+async function buyItem(name){ try { const r = await HU.buy(name); state.coins = r.coins; state.inventory = r.inventory; updateCoinsUI(false); renderAll(); showToast(`Куплено: ${name}`); } catch(e){ showToast(e.message); } }
+async function sellItem(name, count){ try { const r = await HU.sell(name, count); state.coins = r.coins; state.inventory = r.inventory; updateCoinsUI(true); renderAll(); showToast(`Продано за 🪙 ${r.earned}`); } catch(e){ showToast(e.message); } }
 
 /* UPGRADER */
 let upgChance = 50, upgBet = {}, upgTarget = null, upgrading = false;
-function validateBet(){ for(const n in upgBet){ const h = state.inventory[n]||0; if(h<=0) delete upgBet[n]; else if(upgBet[n]>h) upgBet[n] = h; } }
+function validateBet(){ for(const n in upgBet){ const h = state.inventory[n] || 0; if(h <= 0) delete upgBet[n]; else if(upgBet[n] > h) upgBet[n] = h; } }
 document.getElementById('upgChances').addEventListener('click', e => {
-  const btn = e.target.closest('.ch'); if(!btn||upgrading) return;
+  const btn = e.target.closest('.ch'); if(!btn || upgrading) return;
   upgChance = parseInt(btn.dataset.chance);
   document.querySelectorAll('.ch').forEach(b => b.classList.toggle('active', b === btn));
   sfx.click(); renderUpgrader();
@@ -1414,7 +1550,7 @@ document.getElementById('upgChances').addEventListener('click', e => {
 function getBetValue(){ return Object.entries(upgBet).reduce((s,[n,c]) => s + getItemPrice(n)*c, 0); }
 function getTargetPrice(){ return upgTarget ? getItemPrice(upgTarget) : 0; }
 function getRequiredBet(){ return upgTarget ? Math.round(getTargetPrice() * upgChance / 100) : 0; }
-function isReady(){ const r = getRequiredBet(), b = getBetValue(); return upgTarget && b>=r && r>0; }
+function isReady(){ const r = getRequiredBet(), b = getBetValue(); return upgTarget && b >= r && r > 0; }
 function renderUpgrader(){
   if(!currentUser) return;
   validateBet();
@@ -1423,9 +1559,9 @@ function renderUpgrader(){
   document.getElementById('upgInvCount').textContent = names.reduce((s,n) => s + state.inventory[n], 0);
   if(!names.length){ invGrid.innerHTML = '<div class="inv-empty" style="grid-column:1/-1;padding:12px;font-size:10px">Нет</div>'; }
   else {
-    names.sort((a,b) => { const ia = ITEMS.find(i=>i.name===a), ib = ITEMS.find(i=>i.name===b); if(!ia||!ib) return 0; return (RARITY_ORDER[ia.rarity]-RARITY_ORDER[ib.rarity]) || a.localeCompare(b); });
+    names.sort((a,b) => { const ia = ITEMS_CACHE.find(i=>i.name===a), ib = ITEMS_CACHE.find(i=>i.name===b); if(!ia||!ib) return 0; return (RARITY_ORDER[ia.rarity]-RARITY_ORDER[ib.rarity]) || a.localeCompare(b); });
     invGrid.innerHTML = names.map(name => {
-      const item = ITEMS.find(i => i.name === name);
+      const item = ITEMS_CACHE.find(i => i.name === name);
       const count = state.inventory[name];
       const isSel = !!upgBet[name];
       return `<div class="upg-item rarity-${item.rarity} ${isSel?'selected':''}" data-betname="${name}"><span class="bdg">x${count}</span><div class="icon">${item.icon}</div><div>${item.name}</div><div class="price">🪙 ${getItemPrice(name)}</div></div>`;
@@ -1438,18 +1574,18 @@ function renderUpgrader(){
   }
   const targetGrid = document.getElementById('upgTargetGrid');
   const req = getRequiredBet();
-  const withElig = ITEMS.map(it => { const p = getItemPrice(it.name); const eligible = req>0 && p<=req*1.15 && p>=req*0.5; return { ...it, price:p, eligible }; });
-  withElig.sort((a,b) => { if(a.eligible!==b.eligible) return a.eligible?-1:1; const d = RARITY_ORDER[a.rarity]-RARITY_ORDER[b.rarity]; return d!==0?d:a.price-b.price; });
+  const withElig = ITEMS_CACHE.map(it => { const p = getItemPrice(it.name); const eligible = req > 0 && p <= req * 1.15 && p >= req * 0.5; return { ...it, price:p, eligible }; });
+  withElig.sort((a,b) => { if(a.eligible !== b.eligible) return a.eligible ? -1 : 1; const d = RARITY_ORDER[a.rarity] - RARITY_ORDER[b.rarity]; return d !== 0 ? d : a.price - b.price; });
   const ec = withElig.filter(i => i.eligible).length;
-  document.getElementById('upgTargetCount').textContent = ec>0?ec+' ✓':'—';
+  document.getElementById('upgTargetCount').textContent = ec > 0 ? ec + ' ✓' : '—';
   targetGrid.innerHTML = withElig.map(item => {
     const isT = upgTarget === item.name;
-    const dim = (req>0 && !item.eligible) ? 'dim' : '';
+    const dim = (req > 0 && !item.eligible) ? 'dim' : '';
     return `<div class="upg-item rarity-${item.rarity} ${isT?'target-sel':''} ${item.eligible?'elig':''} ${dim}" data-targetname="${item.name}"><div class="icon">${item.icon}</div><div>${item.name}</div><div class="price">🪙 ${item.price}</div></div>`;
   }).join('');
   targetGrid.querySelectorAll('[data-targetname]').forEach(el => el.addEventListener('click', () => {
     const name = el.dataset.targetname;
-    upgTarget = (upgTarget===name)?null:name;
+    upgTarget = (upgTarget === name) ? null : name;
     sfx.click(); renderUpgrader();
   }));
   const betValue = getBetValue();
@@ -1460,29 +1596,30 @@ function renderUpgrader(){
   document.getElementById('infoTarget').textContent = upgTarget ? `🪙 ${targetPrice.toLocaleString('ru-RU')}` : '—';
   const pctEl = document.getElementById('gaugePct'), lblEl = document.getElementById('gaugeLbl'), fillEl = document.getElementById('gaugeFill');
   const ARC = 424.12;
-  pctEl.textContent = upgChance.toFixed(2) + '%';
+  const chance = upgChance;
+  pctEl.textContent = chance.toFixed(2) + '%';
   pctEl.classList.remove('medium','low');
-  if(upgChance < 30){ pctEl.classList.add('low'); lblEl.textContent = 'низкий шанс'; }
-  else if(upgChance < 65){ pctEl.classList.add('medium'); lblEl.textContent = 'средний шанс'; }
+  if(chance < 30){ pctEl.classList.add('low'); lblEl.textContent = 'низкий шанс'; }
+  else if(chance < 65){ pctEl.classList.add('medium'); lblEl.textContent = 'средний шанс'; }
   else lblEl.textContent = 'высокий шанс';
-  fillEl.setAttribute('stroke-dasharray', `${ARC*upgChance/100} 565.49`);
+  fillEl.setAttribute('stroke-dasharray', `${ARC * chance / 100} 565.49`);
   const bar = document.getElementById('upgBarFill');
-  const progress = upgTarget && requiredBet>0 ? Math.min(100, betValue/requiredBet*100) : 0;
-  bar.style.width = progress+'%';
-  bar.classList.toggle('ok', progress>=100);
+  const progress = upgTarget && requiredBet > 0 ? Math.min(100, betValue / requiredBet * 100) : 0;
+  bar.style.width = progress + '%';
+  bar.classList.toggle('ok', progress >= 100);
   const st = document.getElementById('statusTag'), btn = document.getElementById('upgradeBtn');
-  if(!upgTarget){ st.className='status-tag wait'; st.textContent = betValue>0?'Выбери цель →':'Выбери предметы и цель'; btn.disabled=true; btn.textContent='🔒 УЛУЧШИТЬ'; }
-  else if(betValue<=0){ st.className='status-tag hint'; st.textContent=`Нужна ставка 🪙 ${requiredBet.toLocaleString('ru-RU')}`; btn.disabled=true; btn.textContent='🔒 УЛУЧШИТЬ'; }
-  else if(betValue>=requiredBet){ st.className='status-tag ok'; st.textContent='✓ Готово к апгрейду'; btn.disabled=false; btn.textContent='⚡ УЛУЧШИТЬ'; }
-  else { const diff = requiredBet-betValue; st.className='status-tag bad'; st.textContent=`Не хватает 🪙 ${diff.toLocaleString('ru-RU')}`; btn.disabled=true; btn.textContent='🔒 УЛУЧШИТЬ'; }
+  if(!upgTarget){ st.className = 'status-tag wait'; st.textContent = betValue > 0 ? 'Выбери цель →' : 'Выбери предметы и цель'; btn.disabled = true; btn.textContent = '🔒 УЛУЧШИТЬ'; }
+  else if(betValue <= 0){ st.className = 'status-tag hint'; st.textContent = `Нужна ставка 🪙 ${requiredBet.toLocaleString('ru-RU')}`; btn.disabled = true; btn.textContent = '🔒 УЛУЧШИТЬ'; }
+  else if(betValue >= requiredBet){ st.className = 'status-tag ok'; st.textContent = '✓ Готово к апгрейду'; btn.disabled = false; btn.textContent = '⚡ УЛУЧШИТЬ'; }
+  else { const diff = requiredBet - betValue; st.className = 'status-tag bad'; st.textContent = `Не хватает 🪙 ${diff.toLocaleString('ru-RU')}`; btn.disabled = true; btn.textContent = '🔒 УЛУЧШИТЬ'; }
 }
-document.getElementById('upgradeBtn').addEventListener('click', () => {
+document.getElementById('upgradeBtn').addEventListener('click', async () => {
   if(upgrading || !isReady()) return;
   validateBet();
   const bet = { ...upgBet };
   const targetName = upgTarget;
   const chance = upgChance;
-  const targetItem = ITEMS.find(i => i.name === targetName);
+  const targetItem = ITEMS_CACHE.find(i => i.name === targetName);
   const betValue = getBetValue();
   const targetPrice = getTargetPrice();
   const consumed = Object.entries(bet).map(([n,c]) => ({ name:n, count:c }));
@@ -1494,26 +1631,17 @@ document.getElementById('upgradeBtn').addEventListener('click', () => {
   sfx.upg();
   const rn = document.getElementById('rollNum');
   const st = performance.now();
-  function anim(t){ const p = Math.min(1,(t-st)/1400); const v = (Math.sin(p*Math.PI*6)*0.5+0.5)*95+5; if(rn) rn.textContent = v.toFixed(1)+'%'; if(p<1) requestAnimationFrame(anim); }
+  function anim(t){ const p = Math.min(1, (t-st)/1400); const v = (Math.sin(p * Math.PI * 6) * 0.5 + 0.5) * 95 + 5; if(rn) rn.textContent = v.toFixed(1) + '%'; if(p < 1) requestAnimationFrame(anim); }
   requestAnimationFrame(anim);
   const ti = setInterval(() => sfx.tick(), 90);
-  const success = Math.random()*100 < chance;
-  setTimeout(() => {
+  try {
+    const r = await HU.upgrade(bet, targetName, chance);
     clearInterval(ti);
-    // списываем ставку
-    for(const [name,count] of Object.entries(bet)){
-      state.inventory[name] -= count;
-      if(state.inventory[name] <= 0) delete state.inventory[name];
-      unregisterDrop(name, count);
-    }
-    if(success){
-      state.inventory[targetName] = (state.inventory[targetName]||0) + 1;
-      registerDrop(targetName, 1);
-    }
+    state.inventory = r.inventory;
+    state.coins = r.coins;
     upgBet = {}; upgTarget = null;
-    saveUser();
-    showUpgradeResult(success, targetItem, consumed, betValue, targetPrice, chance);
-  }, 1500);
+    showUpgradeResult(r.success, targetItem, consumed, betValue, targetPrice, chance);
+  } catch(e){ clearInterval(ti); ov.classList.remove('active'); upgrading = false; showToast('⚠️ ' + e.message); renderUpgrader(); }
 });
 function showUpgradeResult(success, targetItem, consumed, betValue, targetPrice, chance){
   const stage = document.getElementById('upgStage');
@@ -1525,7 +1653,7 @@ function showUpgradeResult(success, targetItem, consumed, betValue, targetPrice,
     sfx.win(targetItem.rarity);
     if(isRare){ flash('legend'); confetti(); }
   } else {
-    stage.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;gap:14px"><div class="result-title fail">❌ ПРОВАЛ</div><div class="result-sub">Предметы сгорели</div><div class="lost-items">${consumed.map(c => { const it = ITEMS.find(i => i.name === c.name); return `<div class="lost-item rarity-${it.rarity}"><div style="font-size:16px">${it.icon}</div><div>${it.name}${c.count>1?' x'+c.count:''}</div></div>`; }).join('')}</div><div class="result-sub" style="color:#888">Потрачено: 🪙 ${betValue.toLocaleString('ru-RU')}</div></div>`;
+    stage.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;gap:14px"><div class="result-title fail">❌ ПРОВАЛ</div><div class="result-sub">Предметы сгорели</div><div class="lost-items">${consumed.map(c => { const it = ITEMS_CACHE.find(i => i.name === c.name); return `<div class="lost-item rarity-${it.rarity}"><div style="font-size:16px">${it.icon}</div><div>${it.name}${c.count>1?' x'+c.count:''}</div></div>`; }).join('')}</div><div class="result-sub" style="color:#888">Потрачено: 🪙 ${betValue.toLocaleString('ru-RU')}</div></div>`;
     sfx.fail(); flash();
   }
   setTimeout(() => { document.getElementById('upgradeOverlay').classList.remove('active'); upgrading = false; renderAll(); }, success ? 2600 : 2400);
@@ -1537,87 +1665,72 @@ function startWheel(){ drawWheel(0); const btn = document.getElementById('wheelS
 function drawWheel(rotation){
   const c = document.getElementById('wheelCanvas'); if(!c) return;
   const ctx = c.getContext('2d');
-  const w=c.width, h=c.height, cx=w/2, cy=h/2, r=Math.min(w,h)/2-20;
+  const w = c.width, h = c.height, cx = w/2, cy = h/2, r = Math.min(w,h)/2 - 20;
   ctx.clearRect(0,0,w,h);
   const segs = WHEEL_PRIZES.length, sa = (Math.PI*2)/segs;
   ctx.beginPath(); ctx.arc(cx,cy,r+12,0,Math.PI*2); ctx.fillStyle='#1a1a22'; ctx.fill();
   ctx.strokeStyle='#f0b90b'; ctx.lineWidth=6; ctx.stroke();
-  for(let i=0;i<segs;i++){
-    const s = i*sa+rotation-Math.PI/2, e = s+sa;
+  for(let i = 0; i < segs; i++){
+    const s = i*sa + rotation - Math.PI/2, e = s + sa;
     ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,s,e); ctx.closePath();
     ctx.fillStyle = WHEEL_PRIZES[i].color; ctx.fill();
     ctx.strokeStyle = 'rgba(0,0,0,.4)'; ctx.lineWidth = 2; ctx.stroke();
-    ctx.save(); ctx.translate(cx,cy); ctx.rotate(s+sa/2);
-    ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillStyle='#fff'; ctx.font=`bold ${Math.round(r*0.09)}px 'Segoe UI',sans-serif`;
-    ctx.shadowColor='rgba(0,0,0,.8)'; ctx.shadowBlur=4;
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(s + sa/2);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#fff'; ctx.font = `bold ${Math.round(r*0.09)}px 'Segoe UI',sans-serif`;
+    ctx.shadowColor = 'rgba(0,0,0,.8)'; ctx.shadowBlur = 4;
     ctx.fillText(WHEEL_PRIZES[i].label, r*0.72, 0);
     ctx.restore();
   }
 }
-function pickWheelPrize(){ const total = WHEEL_PRIZES.reduce((s,p)=>s+p.weight,0); let r = Math.random()*total; for(let i=0;i<WHEEL_PRIZES.length;i++){ if(r<WHEEL_PRIZES[i].weight) return i; r-=WHEEL_PRIZES[i].weight; } return 0; }
-function spinWheel(){
+async function spinWheel(){
   if(wheelSpinning) return;
   if(state.coins < WHEEL_COST){ showToast(`Нужно 🪙 ${WHEEL_COST}`); return; }
-  state.coins -= WHEEL_COST;
-  saveUser();
-  updateCoinsUI(false);
   wheelSpinning = true;
   const btn = document.getElementById('wheelSpinBtn'); btn.disabled = true;
   const resEl = document.getElementById('wheelResult'); resEl.textContent = 'Крутим...'; resEl.className = 'wheel-result';
   sfx.open();
-  const segs = WHEEL_PRIZES.length, sa = (Math.PI*2)/segs;
-  const prizeIdx = pickWheelPrize();
-  const targetRotBase = -prizeIdx*sa - sa/2;
-  const spins = 6 + Math.floor(Math.random()*3);
-  const fullRot = spins * Math.PI * 2;
-  const jitter = (Math.random()-.5) * sa * 0.6;
-  const startRot = wheelAngle;
-  const targetRot = startRot + fullRot + (targetRotBase - startRot % (Math.PI*2)) + jitter;
-  const dur = 5000, st = performance.now();
-  let lastTick = st;
-  function step(t){
-    const p = Math.min(1, (t-st)/dur);
-    const cur = startRot + (targetRot-startRot) * (1-Math.pow(1-p,3));
-    wheelAngle = cur; drawWheel(cur);
-    if(t-lastTick > 60 && p<0.95){ sfx.wheel(); lastTick = t; }
-    if(p < 1) requestAnimationFrame(step);
-    else finishWheel(prizeIdx);
-  }
-  requestAnimationFrame(step);
-}
-function finishWheel(prizeIdx){
-  const prize = WHEEL_PRIZES[prizeIdx];
-  const resEl = document.getElementById('wheelResult');
-  let received = '';
-  if(prize.value > 0){
-    state.coins += prize.value;
-    received = `+${prize.value} 🪙`;
-    resEl.textContent = `🎉 Выигрыш: ${prize.value} монет!`;
-    resEl.className = 'wheel-result win';
-    sfx.win(prize.value >= 1000 ? 'legendary' : prize.value >= 500 ? 'epic' : 'rare');
-    if(prize.value >= 1000){ flash('legend'); confetti(); }
-  } else {
-    const rarity = prize.label === 'EPIC' ? 'epic' : 'legendary';
-    const pool = ITEMS.filter(i => i.rarity === rarity);
-    const it = pool[Math.floor(Math.random()*pool.length)];
-    state.inventory[it.name] = (state.inventory[it.name]||0) + 1;
-    registerDrop(it.name, 1);
-    received = it.name;
-    resEl.textContent = `🎁 Выигрыш: ${it.icon} ${it.name}!`;
-    resEl.className = 'wheel-result win';
-    sfx.win(rarity);
-    if(rarity === 'legendary'){ flash('legend'); confetti(); }
-    else flash('epic');
-  }
-  wheelHistory.unshift(received);
-  if(wheelHistory.length > 8) wheelHistory.pop();
-  document.getElementById('wheelHistory').innerHTML = wheelHistory.map(h => `<div class="wheel-hist-item">${h}</div>`).join('');
-  saveUser();
-  updateCoinsUI(true);
-  renderAll();
-  wheelSpinning = false;
-  document.getElementById('wheelSpinBtn').disabled = false;
+  try {
+    const r = await HU.wheel();
+    const prizeIdx = r.prize.index;
+    const segs = WHEEL_PRIZES.length, sa = (Math.PI*2)/segs;
+    const targetRotBase = -prizeIdx*sa - sa/2;
+    const spins = 6 + Math.floor(Math.random()*3);
+    const fullRot = spins * Math.PI*2;
+    const jitter = (Math.random()-.5) * sa * 0.6;
+    const startRot = wheelAngle;
+    const targetRot = startRot + fullRot + (targetRotBase - startRot % (Math.PI*2)) + jitter;
+    const dur = 5000, st = performance.now();
+    let lastTick = st;
+    await new Promise(resolve => {
+      function step(t){
+        const p = Math.min(1, (t-st)/dur);
+        const cur = startRot + (targetRot-startRot) * (1-Math.pow(1-p,3));
+        wheelAngle = cur; drawWheel(cur);
+        if(t - lastTick > 60 && p < 0.95){ sfx.wheel(); lastTick = t; }
+        if(p < 1) requestAnimationFrame(step); else resolve();
+      }
+      requestAnimationFrame(step);
+    });
+    state.coins = r.coins; state.inventory = r.inventory;
+    if(r.prize.type === 'coins'){
+      resEl.textContent = `🎉 Выигрыш: ${r.prize.coins} монет!`;
+      resEl.className = 'wheel-result win';
+      sfx.win(r.prize.coins >= 1000 ? 'legendary' : r.prize.coins >= 500 ? 'epic' : 'rare');
+      if(r.prize.coins >= 1000){ flash('legend'); confetti(); }
+    } else {
+      resEl.textContent = `🎁 Выигрыш: ${r.prize.item.icon} ${r.prize.item.name}!`;
+      resEl.className = 'wheel-result win';
+      sfx.win(r.prize.item.rarity);
+      if(r.prize.item.rarity === 'legendary'){ flash('legend'); confetti(); }
+      else flash('epic');
+    }
+    wheelHistory.unshift(r.prize.type === 'coins' ? `+${r.prize.coins}` : r.prize.item.name);
+    if(wheelHistory.length > 8) wheelHistory.pop();
+    document.getElementById('wheelHistory').innerHTML = wheelHistory.map(h => `<div class="wheel-hist-item">${h}</div>`).join('');
+    updateCoinsUI(true); renderAll();
+  } catch(e){ resEl.textContent = '⚠️ ' + e.message; }
+  finally { wheelSpinning = false; btn.disabled = false; }
 }
 
 /* SETTINGS */
@@ -1631,21 +1744,37 @@ document.querySelectorAll('.toggle[data-setting]').forEach(t => {
   });
 });
 
-/* RENDER ALL */
 function renderAll(){
-  renderInventory(); renderMarket(); renderUpgrader(); renderChances(); renderCases(); renderCraft(); renderNews(); renderTapNews();
+  renderInventory(); renderMarket(); renderUpgrader(); renderChances(); renderCases(); renderCraft(); renderNews(); renderTapNews(); renderFriends();
 }
 
-/* INIT */
-window.addEventListener('load', () => {
-  const all = loadAll();
-  if(all.session && all.users && all.users[all.session]){
-    enterGame(all.session);
+(function(){
+  const bg = document.getElementById('bgFx');
+  const count = window.innerWidth < 640 ? 18 : 30;
+  for(let i = 0; i < count; i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random()*100 + '%';
+    p.style.animationDuration = (8 + Math.random()*12) + 's';
+    p.style.animationDelay = (-Math.random()*20) + 's';
+    p.style.background = ['#f0b90b','#e06ebf','#6a8df0'][i%3];
+    bg.appendChild(p);
   }
-  setInterval(() => {
+})();
+
+window.addEventListener('load', async () => {
+  if(authToken){
+    try { await enterGame(0); } catch(e){ localStorage.removeItem('homeup_token'); authToken = null; }
+  }
+  setInterval(async () => {
     if(!currentUser) return;
-    renderMarket(); renderInventory(); renderUpgrader();
-  }, 5000);
+    try { await refreshMarketCache(); renderMarket(); renderInventory(); renderUpgrader(); renderCraft(); } catch(e){}
+  }, 15000);
+  setInterval(async () => {
+    if(!currentUser) return;
+    await refreshNews();
+    await refreshFriends();
+  }, 30000);
 });
 </script>
 </body>
