@@ -8,7 +8,8 @@ const path = require('path');
 const crypto = require('crypto');
 
 const PORT = process.env.PORT || 3000;
-const SECRET = process.env.JWT_SECRET || crypto.randomBytes(48).toString('hex');
+// ИСПРАВЛЕНО: фиксированный секрет, чтобы токены не сбрасывались при перезапуске
+const SECRET = process.env.JWT_SECRET || 'home-up-super-secret-key-2026';
 const DB_FILE = path.join(__dirname, 'data.json');
 const TOKEN_TTL = 90 * 24 * 3600 * 1000;
 const DEVELOPERS = ['baconsigma67656'];
@@ -576,6 +577,12 @@ const server = http.createServer(async (req, res) => {
   if(pathname.startsWith('/api/')) return handleAPI(req, res, pathname, url);
 
   const publicDir = path.join(__dirname, 'public');
+  
+  // ИСПРАВЛЕНО: Создаем папку public, если её нет
+  if (!fs.existsSync(publicDir)) {
+    fs.mkdirSync(publicDir, { recursive: true });
+  }
+  
   const filePath = pathname === '/' ? '/index.html' : pathname;
   const fullPath = path.join(publicDir, filePath);
   if(!fullPath.startsWith(publicDir)){ res.writeHead(403); return res.end('Forbidden'); }
@@ -589,7 +596,8 @@ const server = http.createServer(async (req, res) => {
 });
 
 loadDB();
-server.listen(PORT, () => {
+// ИСПРАВЛЕНО: Добавлен 0.0.0.0 для Render
+server.listen(PORT, '0.0.0.0', () => {
   console.log('\n🚀 HOME UP сервер запущен');
   console.log(`📍 http://localhost:${PORT}`);
   console.log(`👑 Разработчики: ${DEVELOPERS.join(', ')}`);
