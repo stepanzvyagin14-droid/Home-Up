@@ -1,7 +1,6 @@
 /**
  * HOME UP — сервер
  * Запуск: node server.js
- * Требуется: Node.js 18+
  */
 const http = require('http');
 const fs   = require('fs');
@@ -12,9 +11,9 @@ const PORT = process.env.PORT || 3000;
 const SECRET = process.env.JWT_SECRET || crypto.randomBytes(48).toString('hex');
 const DB_FILE = path.join(__dirname, 'data.json');
 const TOKEN_TTL = 90 * 24 * 3600 * 1000;
+const DEVELOPERS = ['baconsigma67656'];
 
-// ============ ХРАНИЛИЩЕ ============
-let db = { users: [], inventory: {}, supply: {}, priceHistory: {} };
+let db = { users: [], inventory: {}, supply: {}, priceHistory: {}, news: [], friendships: [] };
 let dbDirty = false;
 
 function loadDB(){
@@ -25,6 +24,8 @@ function loadDB(){
       db.inventory = p.inventory || {};
       db.supply = p.supply || {};
       db.priceHistory = p.priceHistory || {};
+      db.news = p.news || [];
+      db.friendships = p.friendships || [];
     }
   } catch(e){ console.error('DB load error:', e.message); }
 }
@@ -39,22 +40,19 @@ function markDirty(){
 }
 setInterval(() => { if(dbDirty) saveDB(); }, 5000);
 
-// ============ КРИПТО ============
 function hashPassword(pw){
   const salt = crypto.randomBytes(16).toString('hex');
-  const hash = crypto.scryptSync(pw, salt, 64).toString('hex');
-  return salt + ':' + hash;
+  return salt + ':' + crypto.scryptSync(pw, salt, 64).toString('hex');
 }
 function verifyPassword(pw, stored){
   const [salt, hash] = stored.split(':');
   const test = crypto.scryptSync(pw, salt, 64).toString('hex');
   return crypto.timingSafeEqual(Buffer.from(hash, 'hex'), Buffer.from(test, 'hex'));
 }
-function makeToken(userId){
-  const expires = Date.now() + TOKEN_TTL;
-  const data = userId + '.' + expires;
-  const sig = crypto.createHmac('sha256', SECRET).update(data).digest('hex');
-  return data + '.' + sig;
+function makeToken(id){
+  const exp = Date.now() + TOKEN_TTL;
+  const data = id + '.' + exp;
+  return data + '.' + crypto.createHmac('sha256', SECRET).update(data).digest('hex');
 }
 function verifyToken(token){
   if(!token || typeof token !== 'string') return null;
@@ -62,13 +60,12 @@ function verifyToken(token){
   if(parts.length !== 3) return null;
   const [uid, exp, sig] = parts;
   const data = uid + '.' + exp;
-  const expected = crypto.createHmac('sha256', SECRET).update(data).digest('hex');
-  if(expected !== sig) return null;
+  if(crypto.createHmac('sha256', SECRET).update(data).digest('hex') !== sig) return null;
   if(Date.now() > parseInt(exp)) return null;
   return parseInt(uid);
 }
+function isDev(u){ return u && DEVELOPERS.includes(u.username.toLowerCase()); }
 
-// ============ ИГРОВЫЕ ДАННЫЕ ============
 const RARITIES = {
   common:    { label:'Обычный',     color:'#7a7a88', basePrice:2,    next:'uncommon'  },
   uncommon:  { label:'Необычный',   color:'#6a8df0', basePrice:8,    next:'rare'      },
@@ -129,7 +126,6 @@ const INITIAL_SUPPLY = 100, SELL_SPREAD = 0.85, WHEEL_COST = 100;
 const DAILY_CD = 24*60*60*1000, DAILY_GRACE = 48*60*60*1000;
 const CRAFT_COST = 5;
 
-// ============ ХЕЛПЕРЫ РЫНКА ============
 function getSupply(item){
   if(!db.supply[item]) db.supply[item] = { drops:0, trend:0, updated:Date.now() };
   return db.supply[item];
@@ -170,7 +166,6 @@ setInterval(() => {
   markDirty();
 }, 15000);
 
-// ============ ИНВЕНТАРЬ ============
 function getInv(uid){ return db.inventory[uid] || {}; }
 function addItem(uid, name, c = 1){
   if(!db.inventory[uid]) db.inventory[uid] = {};
@@ -184,7 +179,6 @@ function removeItem(uid, name, c = 1){
   markDirty();
 }
 
-// ============ ИГРОВАЯ ЛОГИКА ============
 function pickByWeights(weights){
   const total = Object.values(weights).reduce((a,b) => a+b, 0);
   let r = Math.random() * total;
@@ -206,8 +200,15 @@ function pickWheelPrize(){
   for(let i = 0; i < WHEEL_PRIZES.length; i++){ if(r < WHEEL_PRIZES[i].weight) return i; r -= WHEEL_PRIZES[i].weight; }
   return 0;
 }
+function getRelationship(a, b){
+  const f1 = db.friendships.find(f => f.fromId === a && f.toId === b);
+  const f2 = db.friendships.find(f => f.fromId === b && f.toId === a);
+  if((f1 && f1.status === 'accepted') || (f2 && f2.status === 'accepted')) return 'friends';
+  if(f1 && f1.status === 'pending') return 'outgoing';
+  if(f2 && f2.status === 'pending') return 'incoming';
+  return 'none';
+}
 
-// ============ HTTP ХЕЛПЕРЫ ============
 function sendJSON(res, code, data){
   res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8' });
   res.end(JSON.stringify(data));
@@ -215,15 +216,14 @@ function sendJSON(res, code, data){
 function readBody(req){
   return new Promise((resolve, reject) => {
     let data = '';
-    req.on('data', c => { data += c; if(data.length > 100000) req.destroy(); });
+    req.on('data', c => { data += c; if(data.length > 200000) req.destroy(); });
     req.on('end', () => { try { resolve(data ? JSON.parse(data) : {}); } catch { reject(new Error('Bad JSON')); } });
     req.on('error', reject);
   });
 }
 function getUser(req){
   const auth = req.headers.authorization || '';
-  const token = auth.replace('Bearer ', '');
-  const uid = verifyToken(token);
+  const uid = verifyToken(auth.replace('Bearer ', ''));
   if(!uid) return null;
   return db.users.find(u => u.id === uid);
 }
@@ -232,13 +232,13 @@ function publicUser(u){
     id: u.id, username: u.username, avatar: u.avatar, coins: u.coins,
     totalTaps: u.totalTaps, lastDaily: u.lastDaily, dailyStreak: u.dailyStreak,
     totalClaimed: u.totalClaimed, created: u.created, inventory: getInv(u.id),
+    isDev: isDev(u),
   };
 }
 
-// ============ API ============
-async function handleAPI(req, res, pathname){
+async function handleAPI(req, res, pathname, url){
   try {
-    // --- REGISTER ---
+    // --- AUTH ---
     if(pathname === '/api/register' && req.method === 'POST'){
       const { username, password } = await readBody(req);
       if(typeof username !== 'string' || typeof password !== 'string') return sendJSON(res, 400, { error:'Неверный формат' });
@@ -259,8 +259,6 @@ async function handleAPI(req, res, pathname){
       markDirty();
       return sendJSON(res, 200, { token: makeToken(user.id), username: user.username });
     }
-
-    // --- LOGIN ---
     if(pathname === '/api/login' && req.method === 'POST'){
       const { username, password } = await readBody(req);
       if(!username || !password) return sendJSON(res, 400, { error:'Заполни поля' });
@@ -269,18 +267,12 @@ async function handleAPI(req, res, pathname){
       if(!verifyPassword(password, user.password)) return sendJSON(res, 400, { error:'Неверный пароль' });
       return sendJSON(res, 200, { token: makeToken(user.id), username: user.username });
     }
-
-    // --- ME ---
     if(pathname === '/api/me' && req.method === 'GET'){
-      const u = getUser(req);
-      if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
       return sendJSON(res, 200, publicUser(u));
     }
-
-    // --- AVATAR ---
     if(pathname === '/api/avatar' && req.method === 'POST'){
-      const u = getUser(req);
-      if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
       const { avatar } = await readBody(req);
       if(!AVATARS.includes(avatar)) return sendJSON(res, 400, { error:'Неверный аватар' });
       u.avatar = avatar; markDirty();
@@ -289,33 +281,28 @@ async function handleAPI(req, res, pathname){
 
     // --- TAP ---
     if(pathname === '/api/tap' && req.method === 'POST'){
-      const u = getUser(req);
-      if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
       if(!u._taps) u._taps = [];
       const now = Date.now();
       while(u._taps.length && now - u._taps[0] > 2000) u._taps.shift();
-      if(u._taps.length >= 15) return sendJSON(res, 429, { error:'Автокликер!', cheater:true });
+      if(u._taps.length >= 15) return sendJSON(res, 429, { error:'Автокликер!' });
       if(u._taps.length && now - u._taps[u._taps.length-1] < 40) return sendJSON(res, 429, { error:'Слишком быстро' });
       u._taps.push(now);
       u.coins += 1; u.totalTaps += 1; markDirty();
       return sendJSON(res, 200, { coins:u.coins });
     }
 
-    // --- CASES / ITEMS / RARITIES ---
+    // --- STATIC DATA ---
     if(pathname === '/api/cases' && req.method === 'GET')
       return sendJSON(res, 200, CASES.map(c => ({ id:c.id, name:c.name, icon:c.icon, price:c.price, color:c.color })));
-    if(pathname === '/api/items' && req.method === 'GET')
-      return sendJSON(res, 200, ITEMS);
-    if(pathname === '/api/rarities' && req.method === 'GET')
-      return sendJSON(res, 200, RARITIES);
+    if(pathname === '/api/items' && req.method === 'GET') return sendJSON(res, 200, ITEMS);
+    if(pathname === '/api/rarities' && req.method === 'GET') return sendJSON(res, 200, RARITIES);
 
     // --- OPEN CASE ---
     if(pathname === '/api/open-case' && req.method === 'POST'){
-      const u = getUser(req);
-      if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
       const { caseId, multi } = await readBody(req);
-      const c = CASES.find(x => x.id === caseId);
-      if(!c) return sendJSON(res, 400, { error:'Кейс не найден' });
+      const c = CASES.find(x => x.id === caseId); if(!c) return sendJSON(res, 400, { error:'Кейс не найден' });
       const m = Math.max(1, Math.min(10, parseInt(multi) || 1));
       const cost = c.price * m;
       if(u.coins < cost) return sendJSON(res, 400, { error:'Недостаточно монет' });
@@ -332,8 +319,7 @@ async function handleAPI(req, res, pathname){
 
     // --- DAILY ---
     if(pathname === '/api/daily' && req.method === 'POST'){
-      const u = getUser(req);
-      if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
       const now = Date.now();
       if(now - u.lastDaily < DAILY_CD) return sendJSON(res, 400, { error:'Ещё рано' });
       let streak = u.dailyStreak || 0;
@@ -343,10 +329,7 @@ async function handleAPI(req, res, pathname){
       let ns = streak + 1; if(ns >= 7) ns = 0;
       u.coins += reward; u.lastDaily = now; u.dailyStreak = ns; u.totalClaimed = (u.totalClaimed||0) + 1;
       markDirty();
-      return sendJSON(res, 200, {
-        reward, day: dayIdx + 1, coins: u.coins,
-        dailyStreak: ns, lastDaily: now, totalClaimed: u.totalClaimed,
-      });
+      return sendJSON(res, 200, { reward, day: dayIdx+1, coins:u.coins, dailyStreak:ns, lastDaily:now, totalClaimed:u.totalClaimed });
     }
 
     // --- MARKET ---
@@ -362,42 +345,30 @@ async function handleAPI(req, res, pathname){
       });
       return sendJSON(res, 200, list);
     }
-
-    // --- BUY ---
     if(pathname === '/api/buy' && req.method === 'POST'){
-      const u = getUser(req);
-      if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
       const { itemName } = await readBody(req);
-      const item = ITEMS.find(i => i.name === itemName);
-      if(!item) return sendJSON(res, 400, { error:'Нет предмета' });
+      if(!ITEMS.find(i => i.name === itemName)) return sendJSON(res, 400, { error:'Нет предмета' });
       const price = getItemPrice(itemName);
       if(u.coins < price) return sendJSON(res, 400, { error:'Недостаточно монет' });
-      u.coins -= price; addItem(u.id, itemName, 1); registerDrop(itemName, 1);
-      markDirty();
+      u.coins -= price; addItem(u.id, itemName, 1); registerDrop(itemName, 1); markDirty();
       return sendJSON(res, 200, { coins:u.coins, inventory:getInv(u.id) });
     }
-
-    // --- SELL ---
     if(pathname === '/api/sell' && req.method === 'POST'){
-      const u = getUser(req);
-      if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
       const { itemName, count = 1 } = await readBody(req);
-      const item = ITEMS.find(i => i.name === itemName);
-      if(!item) return sendJSON(res, 400, { error:'Нет предмета' });
       const inv = getInv(u.id);
       const have = inv[itemName] || 0;
       const cnt = Math.max(1, Math.min(count, have));
       if(have < cnt) return sendJSON(res, 400, { error:'Нет предметов' });
       const total = getSellPrice(itemName) * cnt;
-      u.coins += total; removeItem(u.id, itemName, cnt); unregisterDrop(itemName, cnt);
-      markDirty();
+      u.coins += total; removeItem(u.id, itemName, cnt); unregisterDrop(itemName, cnt); markDirty();
       return sendJSON(res, 200, { coins:u.coins, inventory:getInv(u.id), earned:total });
     }
 
     // --- UPGRADE ---
     if(pathname === '/api/upgrade' && req.method === 'POST'){
-      const u = getUser(req);
-      if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
       const { bet, targetName, chance } = await readBody(req);
       if(!bet || typeof bet !== 'object' || !targetName || typeof chance !== 'number')
         return sendJSON(res, 400, { error:'Неверные данные' });
@@ -407,8 +378,7 @@ async function handleAPI(req, res, pathname){
       const inv = getInv(u.id);
       let betValue = 0;
       for(const [name, cnt] of Object.entries(bet)){
-        const it = ITEMS.find(i => i.name === name);
-        if(!it) return sendJSON(res, 400, { error:'Неизвестный предмет' });
+        if(!ITEMS.find(i => i.name === name)) return sendJSON(res, 400, { error:'Неизвестный предмет' });
         const c = Math.max(0, parseInt(cnt) || 0);
         if(c <= 0) continue;
         if((inv[name] || 0) < c) return sendJSON(res, 400, { error:'Недостаточно ' + name });
@@ -417,7 +387,6 @@ async function handleAPI(req, res, pathname){
       const targetPrice = getItemPrice(targetName);
       const requiredBet = Math.round(targetPrice * chance / 100);
       if(betValue < requiredBet) return sendJSON(res, 400, { error:'Мало вложено' });
-      if(betValue < 1) return sendJSON(res, 400, { error:'Пустая ставка' });
       const success = Math.random() * 100 < chance;
       for(const [name, cnt] of Object.entries(bet)){
         const c = parseInt(cnt) || 0;
@@ -426,28 +395,23 @@ async function handleAPI(req, res, pathname){
       if(success){ addItem(u.id, targetName, 1); registerDrop(targetName, 1); }
       markDirty();
       return sendJSON(res, 200, {
-        success, chance,
-        targetItem:{ name:target.name, icon:target.icon, rarity:target.rarity },
-        betValue, targetPrice,
-        inventory:getInv(u.id), coins:u.coins,
+        success, chance, targetItem:{ name:target.name, icon:target.icon, rarity:target.rarity },
+        betValue, targetPrice, inventory:getInv(u.id), coins:u.coins,
       });
     }
 
-    // --- CRAFT (5 одинаковых → 1 следующей редкости) ---
+    // --- CRAFT ---
     if(pathname === '/api/craft' && req.method === 'POST'){
-      const u = getUser(req);
-      if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
       const { itemName } = await readBody(req);
       const item = ITEMS.find(i => i.name === itemName);
       if(!item) return sendJSON(res, 400, { error:'Предмет не найден' });
       if(!RARITIES[item.rarity].next) return sendJSON(res, 400, { error:'Легендарку нельзя крафтить' });
       const inv = getInv(u.id);
       if((inv[itemName] || 0) < CRAFT_COST) return sendJSON(res, 400, { error:`Нужно ${CRAFT_COST} шт.` });
-      // Выбираем случайный предмет следующей редкости
       const nextRarity = RARITIES[item.rarity].next;
       const pool = ITEMS.filter(i => i.rarity === nextRarity);
       const result = pool[Math.floor(Math.random() * pool.length)];
-      // Транзакция
       removeItem(u.id, itemName, CRAFT_COST);
       unregisterDrop(itemName, CRAFT_COST);
       addItem(u.id, result.name, 1);
@@ -456,23 +420,20 @@ async function handleAPI(req, res, pathname){
       return sendJSON(res, 200, {
         result: { name:result.name, icon:result.icon, rarity:result.rarity, price:getItemPrice(result.name) },
         consumed: { name:item.name, count:CRAFT_COST },
-        inventory: getInv(u.id),
-        coins: u.coins,
+        inventory: getInv(u.id), coins: u.coins,
       });
     }
 
     // --- WHEEL ---
     if(pathname === '/api/wheel' && req.method === 'POST'){
-      const u = getUser(req);
-      if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
       if(u.coins < WHEEL_COST) return sendJSON(res, 400, { error:'Недостаточно монет' });
       const idx = pickWheelPrize();
       const prize = WHEEL_PRIZES[idx];
       u.coins -= WHEEL_COST;
       const payload = { type:prize.type, label:prize.label, index:idx };
-      if(prize.type === 'coins'){
-        u.coins += prize.value; payload.coins = prize.value;
-      } else {
+      if(prize.type === 'coins'){ u.coins += prize.value; payload.coins = prize.value; }
+      else {
         const pool = ITEMS.filter(i => i.rarity === prize.rarity);
         const it = pool[Math.floor(Math.random() * pool.length)];
         addItem(u.id, it.name, 1); registerDrop(it.name, 1);
@@ -485,8 +446,136 @@ async function handleAPI(req, res, pathname){
     // --- LEADERBOARD ---
     if(pathname === '/api/leaderboard' && req.method === 'GET'){
       const top = [...db.users].sort((a,b) => b.coins - a.coins).slice(0, 20)
-        .map(u => ({ username:u.username, avatar:u.avatar, coins:u.coins, totalTaps:u.totalTaps }));
+        .map(u => ({ username:u.username, avatar:u.avatar, coins:u.coins, totalTaps:u.totalTaps, isDev:isDev(u) }));
       return sendJSON(res, 200, top);
+    }
+
+    // === NEWS ===
+    if(pathname === '/api/news' && req.method === 'GET'){
+      const list = [...db.news].sort((a,b) => {
+        if(a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+        return b.createdAt - a.createdAt;
+      });
+      return sendJSON(res, 200, list);
+    }
+    if(pathname === '/api/news' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      if(!isDev(u)) return sendJSON(res, 403, { error:'Только разработчик может делать новости' });
+      const { title, content, pinned } = await readBody(req);
+      if(!title || !content) return sendJSON(res, 400, { error:'Заполни все поля' });
+      const t = String(title).trim().slice(0, 100);
+      const c = String(content).trim().slice(0, 2000);
+      if(t.length < 2) return sendJSON(res, 400, { error:'Заголовок слишком короткий' });
+      if(c.length < 2) return sendJSON(res, 400, { error:'Текст слишком короткий' });
+      const news = {
+        id: Date.now() + Math.floor(Math.random() * 1000),
+        title: t, content: c,
+        author: u.username, authorAvatar: u.avatar,
+        createdAt: Date.now(), pinned: !!pinned,
+      };
+      db.news.push(news);
+      markDirty();
+      return sendJSON(res, 200, news);
+    }
+    if(pathname.startsWith('/api/news/') && req.method === 'DELETE'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      if(!isDev(u)) return sendJSON(res, 403, { error:'Только разработчик' });
+      const id = parseInt(pathname.split('/').pop());
+      const idx = db.news.findIndex(n => n.id === id);
+      if(idx === -1) return sendJSON(res, 404, { error:'Новость не найдена' });
+      db.news.splice(idx, 1);
+      markDirty();
+      return sendJSON(res, 200, { ok: true });
+    }
+    if(pathname === '/api/news/pin' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      if(!isDev(u)) return sendJSON(res, 403, { error:'Только разработчик' });
+      const { id } = await readBody(req);
+      const n = db.news.find(x => x.id === id);
+      if(!n) return sendJSON(res, 404, { error:'Нет новости' });
+      n.pinned = !n.pinned;
+      markDirty();
+      return sendJSON(res, 200, { ok: true, pinned: n.pinned });
+    }
+
+    // === USERS SEARCH ===
+    if(pathname === '/api/users/search' && req.method === 'GET'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const q = (url.searchParams.get('q') || '').toLowerCase().trim();
+      if(q.length < 2) return sendJSON(res, 200, []);
+      const results = db.users
+        .filter(x => x.id !== u.id && x.username.toLowerCase().includes(q))
+        .slice(0, 20)
+        .map(x => ({
+          username: x.username,
+          avatar: x.avatar,
+          coins: x.coins,
+          isDev: isDev(x),
+          relationship: getRelationship(u.id, x.id),
+        }));
+      return sendJSON(res, 200, results);
+    }
+
+    // === FRIENDS ===
+    if(pathname === '/api/friends' && req.method === 'GET'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const friends = [], incoming = [], outgoing = [];
+      for(const f of db.friendships){
+        if(f.fromId !== u.id && f.toId !== u.id) continue;
+        const otherId = f.fromId === u.id ? f.toId : f.fromId;
+        const other = db.users.find(x => x.id === otherId);
+        if(!other) continue;
+        const entry = { username:other.username, avatar:other.avatar, coins:other.coins, isDev:isDev(other) };
+        if(f.status === 'accepted') friends.push(entry);
+        else if(f.status === 'pending' && f.toId === u.id) incoming.push(entry);
+        else if(f.status === 'pending' && f.fromId === u.id) outgoing.push(entry);
+      }
+      return sendJSON(res, 200, { friends, incoming, outgoing });
+    }
+    if(pathname === '/api/friends/request' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const { username } = await readBody(req);
+      const target = db.users.find(x => x.username.toLowerCase() === (username||'').toLowerCase());
+      if(!target) return sendJSON(res, 404, { error:'Игрок не найден' });
+      if(target.id === u.id) return sendJSON(res, 400, { error:'Это ты' });
+      const rel = getRelationship(u.id, target.id);
+      if(rel !== 'none') return sendJSON(res, 400, { error:'Заявка уже есть' });
+      db.friendships.push({ fromId:u.id, toId:target.id, status:'pending', createdAt:Date.now() });
+      markDirty();
+      return sendJSON(res, 200, { ok: true, relationship: 'outgoing' });
+    }
+    if(pathname === '/api/friends/accept' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const { username } = await readBody(req);
+      const target = db.users.find(x => x.username.toLowerCase() === (username||'').toLowerCase());
+      if(!target) return sendJSON(res, 404, { error:'Игрок не найден' });
+      const f = db.friendships.find(x => x.fromId === target.id && x.toId === u.id && x.status === 'pending');
+      if(!f) return sendJSON(res, 400, { error:'Заявки нет' });
+      f.status = 'accepted'; f.acceptedAt = Date.now();
+      markDirty();
+      return sendJSON(res, 200, { ok: true });
+    }
+    if(pathname === '/api/friends/decline' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const { username } = await readBody(req);
+      const target = db.users.find(x => x.username.toLowerCase() === (username||'').toLowerCase());
+      if(!target) return sendJSON(res, 404, { error:'Игрок не найден' });
+      const idx = db.friendships.findIndex(x => x.fromId === target.id && x.toId === u.id && x.status === 'pending');
+      if(idx !== -1) db.friendships.splice(idx, 1);
+      markDirty();
+      return sendJSON(res, 200, { ok: true });
+    }
+    if(pathname === '/api/friends/remove' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const { username } = await readBody(req);
+      const target = db.users.find(x => x.username.toLowerCase() === (username||'').toLowerCase());
+      if(!target) return sendJSON(res, 404, { error:'Игрок не найден' });
+      db.friendships = db.friendships.filter(f => {
+        const isBetween = (f.fromId === u.id && f.toId === target.id) || (f.fromId === target.id && f.toId === u.id);
+        return !isBetween;
+      });
+      markDirty();
+      return sendJSON(res, 200, { ok: true });
     }
 
     return sendJSON(res, 404, { error:'Не найдено' });
@@ -496,30 +585,17 @@ async function handleAPI(req, res, pathname){
   }
 }
 
-// ============ HTTP SERVER ============
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
   const pathname = url.pathname;
+  if(pathname.startsWith('/api/')) return handleAPI(req, res, pathname, url);
 
-  if(pathname.startsWith('/api/')){
-    return handleAPI(req, res, pathname);
-  }
-
-  // Отдаём файлы из public/
   const publicDir = path.join(__dirname, 'public');
-  let filePath = pathname === '/' ? '/index.html' : pathname;
+  const filePath = pathname === '/' ? '/index.html' : pathname;
   const fullPath = path.join(publicDir, filePath);
-
-  // Защита от выхода за пределы папки
-  if(!fullPath.startsWith(publicDir)){
-    res.writeHead(403); return res.end('Forbidden');
-  }
-
+  if(!fullPath.startsWith(publicDir)){ res.writeHead(403); return res.end('Forbidden'); }
   fs.readFile(fullPath, (err, data) => {
-    if(err){
-      res.writeHead(404, { 'Content-Type': 'text/plain' });
-      return res.end('Not found');
-    }
+    if(err){ res.writeHead(404, { 'Content-Type':'text/plain' }); return res.end('Not found'); }
     const ext = path.extname(fullPath);
     const types = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.png':'image/png', '.ico':'image/x-icon', '.svg':'image/svg+xml' };
     res.writeHead(200, { 'Content-Type': types[ext] || 'text/plain' });
@@ -527,19 +603,12 @@ const server = http.createServer(async (req, res) => {
   });
 });
 
-// ============ START ============
 loadDB();
 server.listen(PORT, () => {
   console.log('\n🚀 HOME UP сервер запущен');
   console.log(`📍 http://localhost:${PORT}`);
-  console.log(`🌐 IP в локальной сети — для других устройств`);
-  console.log(`🔒 JWT: ${SECRET.slice(0,16)}...`);
-  console.log(`👥 Пользователей в базе: ${db.users.length}`);
-  console.log(`📁 Клиент должен лежать в: ${path.join(__dirname, 'public')}\n`);
+  console.log(`👑 Разработчики: ${DEVELOPERS.join(', ')}`);
+  console.log(`👥 Пользователей: ${db.users.length}`);
+  console.log(`📰 Новостей: ${db.news.length}\n`);
 });
-
-process.on('SIGINT', () => {
-  console.log('\n💾 Сохраняю базу...');
-  saveDB();
-  process.exit(0);
-});
+process.on('SIGINT', () => { console.log('\n💾 Сохраняю...'); saveDB(); process.exit(0); });
