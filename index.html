@@ -1,1913 +1,595 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Home Up</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{overflow-x:hidden;max-width:100vw;width:100%}
-body{background:#050508;font-family:'Segoe UI',Roboto,sans-serif;color:#e8e8ee;min-height:100vh;min-height:100dvh;padding:8px 8px 88px;user-select:none;font-weight:500}
-@media(min-width:900px){body{padding:14px 14px 20px}}
-.bg-fx{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
-.bg-fx::before{content:'';position:absolute;inset:-50%;background:radial-gradient(circle at 20% 30%,rgba(240,185,11,.1),transparent 40%),radial-gradient(circle at 80% 70%,rgba(230,90,140,.07),transparent 40%);animation:bgShift 30s linear infinite}
-@keyframes bgShift{to{transform:rotate(360deg)}}
-.particle{position:absolute;width:2px;height:2px;border-radius:50%;opacity:.4;animation:float linear infinite}
-@keyframes float{0%{transform:translateY(100vh) scale(0)}10%{opacity:.6}90%{opacity:.6}100%{transform:translateY(-10vh) scale(1);opacity:0}}
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
 
-/* AUTH */
-.auth-screen{position:fixed;inset:0;background:radial-gradient(circle at 50% 30%,#16161c,#050508 70%);z-index:500;display:flex;justify-content:center;align-items:center;padding:16px;overflow-y:auto}
-.auth-screen.hidden{display:none}
-.auth-box{width:100%;max-width:420px;background:linear-gradient(180deg,#16161c,#0b0b10);border:1px solid #23232a;border-radius:20px;padding:26px 22px;box-shadow:0 25px 90px rgba(0,0,0,.9)}
-.auth-logo{text-align:center;font-size:34px;font-weight:900;letter-spacing:4px;background:linear-gradient(90deg,#f0b90b,#ffe488,#f0b90b);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 25px rgba(240,185,11,.5));margin-bottom:4px}
-.auth-tag{text-align:center;color:#666;font-size:11px;letter-spacing:3px;text-transform:uppercase;font-weight:800;margin-bottom:24px}
-.auth-tabs{display:grid;grid-template-columns:1fr 1fr;background:#0e0e14;border-radius:12px;padding:4px;margin-bottom:18px;border:1px solid #1c1c24}
-.auth-tab{padding:10px;text-align:center;border-radius:9px;font-weight:900;font-size:12px;color:#888;cursor:pointer;letter-spacing:.8px;background:none;border:none;font-family:inherit}
-.auth-tab.active{background:linear-gradient(135deg,#f0b90b,#ffd968);color:#1a1a1a;box-shadow:0 4px 15px rgba(240,185,11,.4)}
-.auth-form{display:flex;flex-direction:column;gap:10px}
-.auth-form.hidden{display:none}
-.input-group{position:relative}
-.input-group input{width:100%;background:#0e0e14;border:1.5px solid #23232a;border-radius:12px;padding:13px 42px;color:#fff;font-size:14px;font-weight:600;font-family:inherit;outline:none;transition:all .2s}
-.input-group input:focus{border-color:#f0b90b;box-shadow:0 0 0 3px rgba(240,185,11,.15)}
-.input-group input::placeholder{color:#555}
-.input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;opacity:.6;pointer-events:none}
-.pass-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;opacity:.5;padding:6px;border-radius:6px;color:#fff}
-.pass-toggle:hover,.pass-toggle.on{opacity:1}
-.auth-msg{border-radius:10px;padding:9px 12px;font-size:12px;font-weight:700;display:none;align-items:center;gap:6px}
-.auth-msg.show{display:flex}
-.auth-msg.err{background:rgba(179,45,45,.2);border:1px solid #7a1a1a;color:#f87171}
-.auth-msg.ok{background:rgba(74,222,128,.15);border:1px solid #1d6a3a;color:#4ade80}
-.auth-submit{background:linear-gradient(135deg,#f0b90b,#ffd968);border:none;color:#1a1a1a;font-weight:900;font-size:13px;padding:14px;border-radius:12px;cursor:pointer;letter-spacing:1.5px;text-transform:uppercase;font-family:inherit;box-shadow:0 8px 25px rgba(240,185,11,.35);margin-top:4px}
-.auth-hint{text-align:center;font-size:11px;color:#555;margin-top:12px}
+const PORT = process.env.PORT || 3000;
+const SECRET = process.env.JWT_SECRET || crypto.randomBytes(48).toString('hex');
+const DB_FILE = path.join(__dirname, 'data.json');
+const TOKEN_TTL = 90 * 24 * 3600 * 1000;
+const DEVELOPERS = ['baconsigma67656'];
 
-/* APP */
-.app{max-width:1400px;width:100%;margin:0 auto;position:relative;z-index:1}
-.app.hidden{display:none}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 14px;background:linear-gradient(180deg,#16161c,#0d0d12);border:1px solid #1f1f28;border-radius:14px;margin-bottom:10px}
-.brand{display:flex;align-items:center;gap:10px}
-.brand-logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#f0b90b,#8a6600);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#1a1a1a;box-shadow:0 0 15px rgba(240,185,11,.4)}
-.brand-text b{font-size:14px;letter-spacing:1.5px;font-weight:900;background:linear-gradient(90deg,#f0b90b,#ffe488);-webkit-background-clip:text;background-clip:text;color:transparent}
-.brand-text small{font-size:8px;color:#666;letter-spacing:1.5px;text-transform:uppercase;font-weight:800;display:block;margin-top:2px}
-.topbar-right{display:flex;align-items:center;gap:8px}
-.balance-pill{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#1a1a22,#0f0f14);border:1px solid #2a2a34;padding:7px 14px;border-radius:50px;font-weight:900;font-size:13px;color:#f0b90b;transition:transform .12s}
-.balance-pill.bump{transform:scale(1.08)}
-.profile-btn{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#1e1e26,#0f0f14);border:2px solid #2a2a34;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;position:relative;padding:0;transition:all .18s}
-.profile-btn:hover{border-color:#f0b90b}
-.profile-btn.has-reward::after{content:'';position:absolute;top:-2px;right:-2px;width:10px;height:10px;background:#f0b90b;border-radius:50%;border:2px solid #16161c;animation:pulseDot 1.5s infinite}
-@keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(240,185,11,.6)}50%{box-shadow:0 0 0 6px rgba(240,185,11,0)}}
+let db = { users: [], inventory: {}, supply: {}, priceHistory: {}, news: [], friendships: [] };
+let dbDirty = false;
 
-/* DEV BADGE */
-.dev-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:900;background:linear-gradient(135deg,#ff4444,#ffaa00);color:#fff;padding:2px 7px;border-radius:10px;letter-spacing:.5px;text-transform:uppercase;box-shadow:0 0 10px rgba(255,68,68,.5);white-space:nowrap}
-.dev-badge::before{content:'👑';font-size:10px}
-
-.layout{display:flex;gap:14px;align-items:flex-start}
-.sidebar{display:none}
-.views{flex:1;min-width:0;width:100%}
-.view{display:none}
-.view.active{display:block;animation:viewSlide .35s cubic-bezier(.22,1,.36,1)}
-@keyframes viewSlide{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-
-@media(min-width:900px){
-  .sidebar{display:flex;width:210px;flex-shrink:0;background:linear-gradient(180deg,#16161c,#0d0d12);border:1px solid #1f1f28;border-radius:18px;padding:12px;flex-direction:column;gap:4px;position:sticky;top:14px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
-  .nav-brand{display:flex;align-items:center;gap:10px;padding:10px 8px 14px;border-bottom:1px solid #1c1c24;margin-bottom:8px}
-  .nav-brand-logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#f0b90b,#8a6600);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#1a1a1a}
-  .nav-brand-info b{font-size:14px;font-weight:900;letter-spacing:1.2px;display:block;background:linear-gradient(90deg,#f0b90b,#ffe488);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .nav-brand-info small{font-size:9px;color:#666;letter-spacing:1.2px;text-transform:uppercase;font-weight:800}
-  .nav-section{font-size:9px;color:#4a4a55;text-transform:uppercase;letter-spacing:2px;font-weight:800;padding:12px 14px 6px}
-  .nav-section:first-of-type{padding-top:4px}
-  .nav-btn{display:flex;align-items:center;gap:12px;padding:11px 14px;background:transparent;border:1px solid transparent;border-radius:11px;color:#8a8a98;font-weight:800;font-size:12px;cursor:pointer;text-align:left;width:100%;font-family:inherit;position:relative;transition:all .18s}
-  .nav-btn:hover{background:#1a1a22;color:#ccc;transform:translateX(2px)}
-  .nav-btn.active{background:linear-gradient(135deg,rgba(240,185,11,.18),rgba(240,185,11,.05));color:#f0b90b;border-color:rgba(240,185,11,.35)}
-  .nav-btn.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:60%;background:#f0b90b;border-radius:0 3px 3px 0}
-  .nav-btn .nav-icon{font-size:18px;width:22px;text-align:center;flex-shrink:0}
-  .nav-btn .nav-badge{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:#f0b90b;color:#1a1a1a;font-size:9px;font-weight:900;border-radius:10px;padding:2px 7px;display:none}
-  .nav-btn .nav-badge.show{display:block}
-  .nav-btn .nav-badge.dot{background:#ff4444;width:8px;height:8px;padding:0;border-radius:50%;font-size:0}
-  .bottomnav{display:none}
+function loadDB(){
+  try {
+    if(fs.existsSync(DB_FILE)){
+      const p = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+      db.users = p.users || [];
+      db.inventory = p.inventory || {};
+      db.supply = p.supply || {};
+      db.priceHistory = p.priceHistory || {};
+      db.news = p.news || [];
+      db.friendships = p.friendships || [];
+    }
+  } catch(e){ console.error('DB load error:', e.message); }
 }
-
-.bottomnav{position:fixed;bottom:0;left:0;right:0;width:100%;background:linear-gradient(180deg,rgba(20,20,26,.98),rgba(10,10,14,.98));backdrop-filter:blur(20px);border-top:1px solid #232329;display:flex;padding:6px 2px calc(6px + env(safe-area-inset-bottom,0px));z-index:60;overflow-x:auto;scrollbar-width:none}
-.bottomnav::-webkit-scrollbar{display:none}
-.bnav-btn{flex:1 1 0;min-width:64px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 2px;background:none;border:none;color:#6a6a78;font-weight:800;font-size:9px;cursor:pointer;font-family:inherit;position:relative;white-space:nowrap}
-.bnav-btn .bicon{font-size:18px;width:20px;height:20px;line-height:20px;text-align:center;display:block;transition:transform .2s}
-.bnav-btn.active{color:#f0b90b}
-.bnav-btn.active .bicon{transform:scale(1.18)}
-.bnav-btn.active::before{content:'';position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:20px;height:2px;background:#f0b90b;border-radius:2px;box-shadow:0 0 10px #f0b90b}
-.bnav-badge{position:absolute;top:2px;right:calc(50% - 20px);background:#f0b90b;color:#1a1a1a;font-size:8px;font-weight:900;border-radius:10px;padding:1px 4px;min-width:13px;text-align:center;display:none}
-.bnav-badge.show{display:block}
-.bnav-badge.dot{background:#ff4444;width:7px;height:7px;min-width:7px;padding:0;border-radius:50%}
-
-.card{background:linear-gradient(180deg,#16161c,#0f0f14);border-radius:14px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);border:1px solid #1f1f28;margin-bottom:10px}
-@media(min-width:900px){.card{padding:18px;border-radius:16px;margin-bottom:14px}}
-h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-transform:uppercase;display:flex;align-items:center;gap:6px;font-weight:900;flex-wrap:wrap}
-.badge{font-size:10px;background:#22222a;color:#999;padding:2px 8px;border-radius:10px;font-weight:700;text-transform:none;border:1px solid #2a2a34}
-.badge.gold{background:linear-gradient(135deg,#f0b90b,#ffd968);color:#1a1a1a;border-color:#f0b90b}
-
-/* NEWS */
-.news-card{background:#0b0b10;border:1px solid #1c1c24;border-radius:12px;padding:14px;margin-bottom:10px;position:relative;transition:border-color .2s}
-.news-card.pinned{border-color:rgba(240,185,11,.4);background:linear-gradient(135deg,rgba(240,185,11,.05),#0b0b10)}
-.news-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
-.news-author-avatar{width:36px;height:36px;border-radius:50%;background:#16161c;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.news-author-info{flex:1;min-width:0}
-.news-author-name{font-size:12px;font-weight:900;color:#fff;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.news-date{font-size:10px;color:#666;font-weight:700;margin-top:2px}
-.news-pinned-mark{font-size:10px;color:#f0b90b;font-weight:900;padding:2px 8px;border-radius:10px;background:rgba(240,185,11,.15);border:1px solid rgba(240,185,11,.3)}
-.news-title{font-size:15px;font-weight:900;color:#fff;margin-bottom:6px;line-height:1.3}
-.news-content{font-size:13px;color:#c8c8d0;line-height:1.6;white-space:pre-wrap;word-break:break-word}
-.news-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
-.news-btn{background:#16161c;border:1px solid #2a2a34;color:#bbb;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:800;font-size:10px;font-family:inherit;transition:all .15s;letter-spacing:.3px}
-.news-btn:hover{background:#22222a;color:#fff}
-.news-btn.pin{color:#f0b90b;border-color:rgba(240,185,11,.3)}
-.news-btn.del{color:#f87171;border-color:rgba(248,113,113,.3)}
-.news-btn.del:hover{background:rgba(179,45,45,.2)}
-.news-create-btn{width:100%;background:linear-gradient(135deg,#f0b90b,#ffd968);border:none;color:#1a1a1a;font-weight:900;padding:12px;border-radius:12px;cursor:pointer;font-family:inherit;letter-spacing:1px;text-transform:uppercase;font-size:12px;margin-bottom:14px;box-shadow:0 6px 20px rgba(240,185,11,.35);transition:transform .12s}
-.news-create-btn:active{transform:scale(.98)}
-.news-empty{color:#555;text-align:center;font-size:12px;padding:40px 10px;font-style:italic;font-weight:700}
-.news-textarea, .news-input{width:100%;background:#0e0e14;border:1.5px solid #23232a;border-radius:12px;padding:12px;color:#fff;font-size:13px;font-family:inherit;outline:none;transition:all .2s;resize:vertical}
-.news-textarea:focus, .news-input:focus{border-color:#f0b90b;box-shadow:0 0 0 3px rgba(240,185,11,.15)}
-.news-input{font-weight:800;font-size:14px}
-.news-textarea{min-height:120px;line-height:1.5}
-.news-checkbox-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#0b0b10;border:1px solid #1c1c24;border-radius:10px;cursor:pointer;user-select:none}
-.news-checkbox-row input{width:auto;accent-color:#f0b90b;transform:scale(1.3)}
-.news-checkbox-row label{font-size:12px;font-weight:800;color:#ccc;cursor:pointer;flex:1}
-
-/* FRIENDS */
-.friends-tabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;background:#0b0b10;border-radius:12px;padding:4px;margin-bottom:12px;border:1px solid #1c1c24}
-.ftab{padding:10px;text-align:center;border-radius:9px;font-weight:900;font-size:11px;color:#888;cursor:pointer;background:none;border:none;font-family:inherit;position:relative;letter-spacing:.3px}
-.ftab.active{background:linear-gradient(135deg,#f0b90b,#ffd968);color:#1a1a1a}
-.ftab .ftab-badge{position:absolute;top:2px;right:6px;background:#ff4444;color:#fff;font-size:9px;font-weight:900;border-radius:10px;padding:1px 5px;min-width:14px;text-align:center;display:none}
-.ftab .ftab-badge.show{display:block}
-.search-row{display:flex;gap:8px;margin-bottom:12px}
-.search-row input{flex:1;background:#0e0e14;border:1.5px solid #23232a;border-radius:12px;padding:12px 14px;color:#fff;font-size:14px;font-family:inherit;outline:none;transition:all .2s}
-.search-row input:focus{border-color:#f0b90b;box-shadow:0 0 0 3px rgba(240,185,11,.15)}
-.search-row button{background:linear-gradient(135deg,#f0b90b,#ffd968);border:none;color:#1a1a1a;font-weight:900;font-size:12px;padding:12px 20px;border-radius:12px;cursor:pointer;font-family:inherit;letter-spacing:.8px;text-transform:uppercase;white-space:nowrap}
-.user-card{display:flex;align-items:center;gap:12px;padding:12px;background:#0b0b10;border:1px solid #1c1c24;border-radius:12px;margin-bottom:8px;transition:border-color .15s}
-.user-card:hover{border-color:#2a2a34}
-.user-avatar{width:44px;height:44px;border-radius:50%;background:#16161c;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
-.user-info{flex:1;min-width:0}
-.user-name{font-size:13px;font-weight:900;color:#fff;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.user-meta{font-size:10px;color:#666;font-weight:700;margin-top:2px}
-.user-actions{display:flex;gap:6px;flex-shrink:0}
-.ua-btn{background:#1e1e26;border:1px solid #2a2a34;color:#ddd;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:900;font-size:10px;font-family:inherit;transition:all .15s;letter-spacing:.3px;white-space:nowrap}
-.ua-btn:hover{background:#2a2a34;color:#fff}
-.ua-btn.primary{background:linear-gradient(135deg,#1d6a3a,#228a4a);border-color:#2a9a55;color:#fff}
-.ua-btn.primary:hover{background:linear-gradient(135deg,#228a4a,#2aa85a)}
-.ua-btn.danger{background:rgba(179,45,45,.2);border-color:#7a1a1a;color:#f87171}
-.ua-btn.danger:hover{background:rgba(179,45,45,.35)}
-.ua-btn.gold{background:linear-gradient(135deg,#f0b90b,#ffd968);border:none;color:#1a1a1a}
-.ua-btn:disabled{opacity:.4;cursor:not-allowed}
-.friends-empty{color:#555;text-align:center;font-size:12px;padding:30px 10px;font-style:italic;font-weight:700}
-
-/* TAP */
-.tap-view{display:grid;grid-template-columns:1fr;gap:16px;padding:12px 0;text-align:center}
-@media(min-width:640px){.tap-view{grid-template-columns:1fr 1fr;text-align:left;padding:20px 12px;align-items:center}}
-.tap-balance{display:flex;flex-direction:column;gap:6px;align-items:center}
-@media(min-width:640px){.tap-balance{align-items:flex-start}}
-.tap-balance .lbl{color:#6a6a78;font-size:10px;text-transform:uppercase;letter-spacing:2px;font-weight:800}
-.tap-balance .val{font-size:clamp(38px,10vw,52px);font-weight:900;background:linear-gradient(90deg,#ffe488,#f0b90b,#ffe488);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-2px;line-height:1}
-.tap-stats{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:10px}
-@media(min-width:640px){.tap-stats{justify-content:flex-start}}
-.stat-pill{background:#1a1a22;border:1px solid #2a2a34;border-radius:20px;padding:6px 11px;font-size:10px;font-weight:800;color:#aaa;display:flex;align-items:center;gap:5px}
-.stat-pill b{color:#f0b90b}
-.tap-area2{position:relative;display:flex;justify-content:center;align-items:center;min-height:220px}
-#tapBtn{width:clamp(150px,40vw,190px);height:clamp(150px,40vw,190px);border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe488,#f0b90b 45%,#8a6600 100%);border:none;color:#1a1a1a;font-weight:900;font-size:clamp(18px,5vw,24px);letter-spacing:3px;cursor:pointer;box-shadow:0 10px 0 #5a4400,0 18px 50px rgba(240,185,11,.5),inset 0 -10px 25px rgba(0,0,0,.35),inset 0 10px 25px rgba(255,255,255,.55);touch-action:manipulation;position:relative;transition:transform .07s,box-shadow .07s}
-#tapBtn:active{transform:translateY(6px);box-shadow:0 4px 0 #5a4400,0 8px 25px rgba(240,185,11,.6)}
-#tapBtn .subtext{display:block;font-size:clamp(10px,2.8vw,12px);opacity:.65;margin-top:5px}
-.float-coin{position:absolute;font-weight:900;font-size:clamp(16px,4.5vw,22px);pointer-events:none;animation:floatUp .9s forwards;color:#f0b90b;text-shadow:0 0 12px #f0b90b;z-index:5}
-@keyframes floatUp{0%{transform:translateY(0) scale(.6);opacity:0}20%{transform:translateY(-10px) scale(1.15);opacity:1}100%{transform:translateY(-100px) scale(1);opacity:0}}
-.cheat-banner{background:linear-gradient(90deg,#7a1a1a,#b32d2d);border-radius:10px;padding:9px 14px;font-size:11px;font-weight:800;color:#ffe;display:none;align-items:center;gap:6px;margin-top:10px}
-.cheat-banner.show{display:flex}
-
-.rarity-common{background:linear-gradient(180deg,#464652,#5a5a68);border-bottom-color:#7a7a88}
-.rarity-uncommon{background:linear-gradient(180deg,#2c3d84,#4b69c4);border-bottom-color:#7a9df8}
-.rarity-rare{background:linear-gradient(180deg,#432176,#6b3fa0);border-bottom-color:#a878e0}
-.rarity-epic{background:linear-gradient(180deg,#8a296a,#c74b9b);border-bottom-color:#f088c8}
-.rarity-legendary{background:linear-gradient(180deg,#9a720a,#d4a017);border-bottom-color:#f0c14b;color:#1a1a1a;text-shadow:none}
-
-/* CASES */
-.cases-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-@media(min-width:640px){.cases-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}}
-.case-card{background:linear-gradient(180deg,#1a1a22,#0f0f14);border-radius:14px;padding:12px;border:2px solid #22222a;position:relative;overflow:hidden;cursor:default}
-.case-card:hover{border-color:var(--case-color)}
-.case-card::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 50% 50%,var(--case-color),transparent 40%);opacity:.08;pointer-events:none}
-.case-icon{font-size:clamp(36px,9vw,56px);text-align:center;margin-bottom:6px;filter:drop-shadow(0 0 15px var(--case-color))}
-.case-name{text-align:center;font-size:clamp(12px,3.5vw,15px);font-weight:900;margin-bottom:2px;color:#fff}
-.case-price{text-align:center;font-size:clamp(11px,3vw,13px);color:#f0b90b;font-weight:800;margin-bottom:8px}
-.case-preview{display:flex;gap:3px;justify-content:center;margin-bottom:10px;flex-wrap:wrap;min-height:26px}
-.case-preview .pv{width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;border-bottom:2px solid #555}
-.case-btn{width:100%;background:linear-gradient(135deg,#f0b90b,#ffd968);border:none;color:#1a1a1a;font-weight:900;padding:9px;border-radius:10px;cursor:pointer;font-size:clamp(10px,2.8vw,12px);letter-spacing:1px;text-transform:uppercase;font-family:inherit;touch-action:manipulation}
-.case-btn:active{transform:scale(.97)}
-
-/* CRAFT */
-.craft-info{background:linear-gradient(135deg,rgba(240,185,11,.1),rgba(240,185,11,.02));border:1px solid rgba(240,185,11,.25);border-radius:12px;padding:12px;margin-bottom:14px;font-size:11px;color:#ccc;line-height:1.5;text-align:center}
-.craft-info b{color:#f0b90b}
-.craft-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
-@media(min-width:640px){.craft-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}}
-.craft-item{border-radius:10px;padding:10px 6px;text-align:center;font-size:10px;font-weight:800;color:#fff;text-shadow:1px 1px 2px #000;cursor:pointer;position:relative;min-height:110px;display:flex;flex-direction:column;justify-content:center;align-items:center;border-bottom:3px solid #555;outline:2px solid transparent;outline-offset:-2px;transition:transform .15s,box-shadow .15s;overflow:hidden}
-.craft-item .icon{font-size:32px;margin-bottom:4px;filter:drop-shadow(0 0 8px rgba(0,0,0,.6))}
-.craft-item .cnt{font-size:10px;color:#fff;font-weight:800;margin-top:4px;background:rgba(0,0,0,.4);padding:2px 8px;border-radius:10px}
-.craft-item .need{font-size:9px;color:#888;margin-top:2px;font-weight:700}
-.craft-item.ready{outline-color:#f0b90b;box-shadow:0 0 15px rgba(240,185,11,.4);cursor:pointer;animation:pulseReady 2s ease-in-out infinite}
-.craft-item.ready:hover{transform:translateY(-3px);box-shadow:0 0 25px rgba(240,185,11,.7)}
-@keyframes pulseReady{0%,100%{box-shadow:0 0 12px rgba(240,185,11,.3)}50%{box-shadow:0 0 22px rgba(240,185,11,.6)}}
-.craft-item.not-ready{opacity:.55}
-.craft-item.legendary-locked::after{content:'🔒 МАКС';position:absolute;bottom:4px;font-size:8px;color:#f0c14b;font-weight:900;letter-spacing:1px}
-.craft-item .ready-badge{position:absolute;top:6px;right:6px;background:#f0b90b;color:#1a1a1a;font-size:9px;font-weight:900;border-radius:10px;padding:2px 6px}
-.craft-empty{color:#555;text-align:center;font-size:12px;padding:40px 10px;font-style:italic;font-weight:700}
-
-/* UPGRADER */
-.upg-chances{display:flex;gap:5px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;scrollbar-width:none}
-.upg-chances::-webkit-scrollbar{display:none}
-.upg-chances .ch{flex-shrink:0;background:#16161c;border:1.5px solid #22222a;color:#999;padding:7px 12px;border-radius:10px;font-weight:900;font-size:11px;cursor:pointer;font-family:inherit;transition:all .15s}
-.upg-chances .ch.active{background:linear-gradient(135deg,#1d6a3a,#228a4a);color:#fff;border-color:#2a9a55}
-.gauge-wrap{position:relative;width:min(280px,80vw);aspect-ratio:1;margin:0 auto 16px}
-.gauge-svg{width:100%;height:100%;display:block}
-.gauge-inner{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:70%}
-.gauge-pct{font-size:clamp(34px,10vw,44px);font-weight:900;color:#4ade80;letter-spacing:-2px;line-height:1;transition:color .3s}
-.gauge-pct.medium{color:#f0b90b}
-.gauge-pct.low{color:#f87171}
-.gauge-lbl{font-size:11px;color:#888;text-transform:lowercase;margin-top:4px;font-weight:700}
-.upg-panels{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.upg-panel{background:#0b0b10;border:1.5px solid #1c1c24;border-radius:14px;padding:10px;display:flex;flex-direction:column;height:180px;overflow:hidden}
-.upg-panel-title{font-size:9px;color:#6a6a78;text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-bottom:6px;display:flex;justify-content:space-between}
-.upg-panel-title .c{color:#f0b90b}
-.upg-scroll{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:5px;overflow-y:auto;padding-right:2px;flex:1;align-content:start}
-.upg-item{border-radius:8px;padding:5px 2px;text-align:center;font-size:8px;font-weight:800;color:#fff;text-shadow:1px 1px 2px #000;cursor:pointer;position:relative;min-height:66px;display:flex;flex-direction:column;justify-content:center;align-items:center;border-bottom:3px solid #555;outline:2px solid transparent;outline-offset:-2px}
-.upg-item .icon{font-size:16px;margin-bottom:1px}
-.upg-item .price{font-size:8px;color:#f0b90b;text-shadow:none;font-weight:800;margin-top:1px}
-.upg-item.selected{outline-color:#f0b90b;box-shadow:0 0 12px rgba(240,185,11,.5)}
-.upg-item.selected::after{content:'✓';position:absolute;top:1px;left:3px;color:#f0b90b;font-size:11px;font-weight:900}
-.upg-item.target-sel{outline-color:#4ade80;box-shadow:0 0 12px rgba(74,222,128,.6)}
-.upg-item.target-sel::before{content:'🎯';position:absolute;top:1px;left:3px;font-size:9px}
-.upg-item .bdg{position:absolute;top:1px;right:1px;background:#f0b90b;color:#1a1a1a;font-size:7px;border-radius:6px;padding:1px 3px;font-weight:900}
-.upg-item.dim{opacity:.35}
-.upg-info{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px}
-.upg-info .cell{background:#0b0b10;border:1px solid #1c1c24;border-radius:10px;padding:8px 6px;text-align:center}
-.upg-info .cell .l{font-size:9px;color:#6a6a78;text-transform:uppercase;font-weight:800;margin-bottom:2px}
-.upg-info .cell .v{font-size:13px;color:#f0b90b;font-weight:900}
-.upg-bar{height:6px;background:#0e0e14;border-radius:3px;overflow:hidden;border:1px solid #1c1c24;margin-bottom:12px}
-.upg-bar-fill{height:100%;background:linear-gradient(90deg,#f0b90b,#ffd968);transition:width .3s;width:0}
-.upg-bar-fill.ok{background:linear-gradient(90deg,#4ade80,#22c55e)}
-#upgradeBtn{width:100%;padding:14px;font-size:14px;border-radius:12px}
-.status-tag{text-align:center;font-size:10px;font-weight:800;padding:8px;border-radius:10px;margin-bottom:10px;text-transform:uppercase}
-.status-tag.wait{background:#1e1e26;color:#888}
-.status-tag.ok{background:rgba(42,154,85,.2);color:#4ade80;border:1px solid #1d6a3a}
-.status-tag.bad{background:rgba(179,45,45,.2);color:#f87171;border:1px solid #7a1a1a}
-.status-tag.hint{background:rgba(240,185,11,.15);color:#f0b90b;border:1px solid #7a5e05}
-
-/* MARKET */
-.market-filters,.inv-filters{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:10px;scrollbar-width:none}
-.market-filters::-webkit-scrollbar,.inv-filters::-webkit-scrollbar{display:none}
-.filter-btn{flex-shrink:0;background:#16161c;border:1px solid #2a2a34;color:#888;padding:7px 13px;border-radius:20px;font-weight:800;font-size:10px;cursor:pointer;font-family:inherit;transition:all .15s}
-.filter-btn.active{background:linear-gradient(135deg,#f0b90b,#ffd968);color:#1a1a1a;border-color:#f0b90b}
-.market-grid{display:grid;grid-template-columns:1fr;gap:8px}
-@media(min-width:540px){.market-grid{grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}}
-.market-card{background:#0b0b10;border:1px solid #1c1c24;border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:6px}
-.mc-head{display:flex;align-items:center;gap:8px}
-.mc-icon{font-size:24px}
-.mc-info{flex:1;min-width:0}
-.mc-name{font-size:11px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mc-rarity{font-size:9px;text-transform:uppercase;font-weight:700}
-.mc-price-row{display:flex;align-items:center;justify-content:space-between}
-.mc-price{font-size:14px;font-weight:900;color:#f0b90b}
-.mc-trend{font-size:11px;font-weight:800}
-.trend-up{color:#4ade80}.trend-down{color:#f87171}.trend-flat{color:#888}
-.mc-spark{height:22px;width:100%;display:block}
-.mc-supply{font-size:10px;color:#666;display:flex;justify-content:space-between;font-weight:700}
-.mc-supply b{color:#aaa}
-.mc-actions{display:flex;gap:5px}
-.mc-btn{flex:1;background:#16161c;border:1px solid #2a2a34;color:#ddd;padding:8px 6px;border-radius:8px;cursor:pointer;font-weight:800;font-size:10px;font-family:inherit}
-.mc-btn.sell{background:linear-gradient(135deg,#1d6a3a,#228a4a);border-color:#2a9a55;color:#fff}
-.mc-btn:disabled{opacity:.3;cursor:not-allowed}
-
-/* INVENTORY */
-.inv-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap}
-.inv-total{color:#f0b90b;font-size:11px;font-weight:900}
-.inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px}
-@media(min-width:640px){.inv-grid{grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:10px}}
-.inv-item{border-radius:9px;padding:7px 4px;text-align:center;font-size:9px;font-weight:800;color:#fff;text-shadow:1px 1px 2px #000;cursor:pointer;position:relative;min-height:82px;display:flex;flex-direction:column;justify-content:center;align-items:center;border-bottom:3px solid #555;overflow:hidden;transition:transform .15s}
-.inv-item:hover{transform:translateY(-3px)}
-.inv-item .icon{font-size:20px;margin-bottom:2px}
-.inv-item .inv-price{font-size:8px;color:#f0b90b;margin-top:2px;font-weight:800}
-.inv-item .count-badge{position:absolute;top:3px;right:3px;background:#f0b90b;color:#1a1a1a;font-size:8px;border-radius:10px;padding:1px 5px;font-weight:900}
-.inv-empty{color:#555;text-align:center;font-size:12px;padding:30px 10px;font-style:italic;grid-column:1/-1;font-weight:700}
-
-.chance-row{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:11px;border-bottom:1px solid #1c1c24}
-.chance-dot{width:10px;height:10px;border-radius:50%}
-.chance-label{flex:1;text-transform:uppercase;font-weight:700}
-.chance-value{font-weight:900;color:#f0b90b}
-
-/* PROFILE */
-.profile-hero{display:flex;align-items:center;gap:16px;padding:10px 0 18px;border-bottom:1px solid #1f1f28;margin-bottom:18px;flex-wrap:wrap}
-.profile-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#1e1e26,#0f0f14);border:3px solid #f0b90b;display:flex;align-items:center;justify-content:center;font-size:42px}
-.profile-info{flex:1;min-width:180px}
-.profile-info h3{font-size:22px;font-weight:900;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.profile-info .joined{font-size:11px;color:#888;font-weight:700;margin-top:4px}
-.avatar-picker{display:grid;grid-template-columns:repeat(auto-fill,minmax(48px,1fr));gap:8px;margin-top:8px}
-.avatar-opt{aspect-ratio:1;background:#0b0b10;border:2px solid #1c1c24;border-radius:12px;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;padding:0;transition:all .15s}
-.avatar-opt.active{border-color:#f0b90b;background:rgba(240,185,11,.1)}
-.profile-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:18px}
-.pstat{background:#0b0b10;border:1px solid #1c1c24;border-radius:12px;padding:12px}
-.pstat .lbl{font-size:10px;color:#6a6a78;text-transform:uppercase;font-weight:800}
-.pstat .v{font-size:18px;font-weight:900;color:#f0b90b;margin-top:3px}
-
-/* DAILY */
-.daily-card{background:linear-gradient(135deg,rgba(240,185,11,.08),rgba(240,185,11,.02));border:1.5px solid rgba(240,185,11,.25);border-radius:14px;padding:16px}
-.daily-card.ready{border-color:#f0b90b;box-shadow:0 0 30px rgba(240,185,11,.25)}
-.daily-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap}
-.daily-head h3{font-size:14px;color:#f0b90b;font-weight:900}
-.streak-badge{background:linear-gradient(135deg,#ff6b1a,#ffa500);color:#fff;font-size:10px;font-weight:900;padding:4px 10px;border-radius:12px}
-.daily-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:12px}
-.day-box{background:#0b0b10;border:1.5px solid #1c1c24;border-radius:9px;padding:7px 2px;text-align:center;position:relative;transition:all .2s}
-.day-box .day-num{font-size:9px;color:#666;font-weight:800}
-.day-box .day-ic{font-size:16px;line-height:1;margin:2px 0;filter:grayscale(.4);opacity:.6}
-.day-box .day-val{font-size:9px;color:#888;font-weight:800}
-.day-box.claimed{background:linear-gradient(180deg,#1d6a3a,#155a2e);border-color:#2a9a55}
-.day-box.claimed .day-ic{filter:none;opacity:1}
-.day-box.claimed::after{content:'✓';position:absolute;top:2px;right:3px;font-size:10px;color:#a0e8b8;font-weight:900}
-.day-box.today{border-color:#f0b90b;background:rgba(240,185,11,.15);box-shadow:0 0 15px rgba(240,185,11,.35)}
-.day-box.today .day-ic{filter:none;opacity:1}
-.daily-action{display:flex;justify-content:center;gap:8px;align-items:center;flex-wrap:wrap}
-.claim-btn{background:linear-gradient(135deg,#f0b90b,#ffd968);border:none;color:#1a1a1a;font-weight:900;font-size:13px;padding:13px 34px;border-radius:50px;cursor:pointer;letter-spacing:1.5px;text-transform:uppercase;font-family:inherit;box-shadow:0 8px 25px rgba(240,185,11,.4)}
-.claim-btn:disabled{background:#1a1a22 !important;color:#666 !important;box-shadow:none !important;opacity:.75;cursor:not-allowed;filter:none !important}
-.daily-timer{font-size:12px;color:#888;font-weight:800;background:#0b0b10;padding:9px 16px;border-radius:20px;border:1px solid #1c1c24}
-.daily-timer b{color:#f0b90b}
-
-/* SETTINGS */
-.settings-list{display:flex;flex-direction:column;gap:8px}
-.set-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;background:#0b0b10;border:1px solid #1c1c24;border-radius:12px}
-.set-info{flex:1;min-width:0}
-.set-info b{font-size:13px;font-weight:800;display:block;margin-bottom:2px}
-.set-info small{font-size:10px;color:#777;display:block;line-height:1.4}
-.toggle{position:relative;width:48px;height:28px;background:#22222a;border-radius:14px;cursor:pointer;border:1px solid #2a2a34;flex-shrink:0;transition:background .2s}
-.toggle::after{content:'';position:absolute;top:2px;left:2px;width:22px;height:22px;background:#888;border-radius:50%;transition:all .25s cubic-bezier(.34,1.56,.64,1)}
-.toggle.on{background:linear-gradient(135deg,#1d6a3a,#228a4a);border-color:#2a9a55}
-.toggle.on::after{left:22px;background:#fff}
-.set-btn{background:#1e1e26;border:1px solid #2a2a34;color:#ddd;padding:8px 14px;border-radius:10px;cursor:pointer;font-weight:800;font-size:11px;font-family:inherit}
-.set-btn.danger{background:linear-gradient(135deg,#7a1a1a,#b32d2d);color:#fff;border:none}
-
-/* WHEEL */
-.wheel-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;padding:10px 0}
-.wheel-stage{position:relative;width:min(340px,88vw);aspect-ratio:1;margin:0 auto}
-.wheel-canvas{width:100%;height:100%;display:block}
-.wheel-pointer{position:absolute;top:-8px;left:50%;transform:translateX(-50%);z-index:5;font-size:32px;pointer-events:none}
-.wheel-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:22%;height:22%;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ffe488,#f0b90b 45%,#8a6600 100%);border:3px solid #5a4400;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#1a1a1a;pointer-events:none;z-index:4}
-.wheel-spin-btn{background:linear-gradient(135deg,#f0b90b,#ffd968);border:none;color:#1a1a1a;font-weight:900;font-size:15px;padding:15px 50px;border-radius:50px;cursor:pointer;letter-spacing:2px;text-transform:uppercase;font-family:inherit}
-.wheel-spin-btn:disabled{opacity:.4;cursor:not-allowed;filter:grayscale(.7)}
-.wheel-result{min-height:44px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;text-align:center;padding:0 20px;color:#f0b90b}
-.wheel-result.win{color:#4ade80;text-shadow:0 0 20px #4ade80}
-.wheel-history{display:flex;gap:5px;flex-wrap:wrap;justify-content:center}
-.wheel-hist-item{background:#0b0b10;border:1px solid #1c1c24;border-radius:20px;padding:4px 10px;font-size:10px;font-weight:800;color:#888}
-
-/* MODALS */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;justify-content:center;align-items:center;z-index:400;backdrop-filter:blur(8px);padding:12px;overflow-y:auto}
-.modal-overlay.active{display:flex}
-.modal{background:linear-gradient(180deg,#1a1a22,#0b0b10);padding:18px;border-radius:16px;max-width:520px;width:100%;border:1px solid #2a2a34;position:relative;max-height:92vh;overflow-y:auto;margin:auto}
-.modal .close-btn{position:absolute;top:10px;right:12px;background:#1a1a22;color:#888;font-size:18px;padding:0;width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;font-weight:900;display:flex;align-items:center;justify-content:center;z-index:5}
-.modal h3{text-align:center;margin-bottom:6px;font-size:15px;font-weight:800}
-.primary{background:linear-gradient(135deg,#f0b90b,#ffd968);border:none;color:#1a1a1a;font-weight:900;font-size:12px;padding:12px 20px;border-radius:50px;cursor:pointer;letter-spacing:1.2px;text-transform:uppercase;font-family:inherit;touch-action:manipulation}
-.primary:disabled{opacity:.35;cursor:not-allowed;filter:grayscale(.7)}
-.secondary{background:#1a1a22;color:#bbb;border:1px solid #2a2a34;font-size:11px;padding:8px 14px;border-radius:20px;cursor:pointer;font-weight:800;font-family:inherit}
-
-.roulette-wrapper{position:relative;overflow:hidden;background:#08080c;border-radius:12px;border:2px solid #1f1f26;padding:12px 0;margin:12px 0}
-.roulette-wrapper::before,.roulette-wrapper::after{content:'';position:absolute;top:0;bottom:0;width:50px;z-index:11;pointer-events:none}
-.roulette-wrapper::before{left:0;background:linear-gradient(90deg,#08080c 20%,transparent)}
-.roulette-wrapper::after{right:0;background:linear-gradient(-90deg,#08080c 20%,transparent)}
-.roulette-track{display:flex;will-change:transform}
-.item{flex-shrink:0;width:clamp(88px,22vw,118px);height:clamp(78px,20vw,100px);margin:0 6px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6px;font-weight:800;font-size:9px;color:#fff;text-shadow:1px 1px 3px #000;background:#333;border-bottom:4px solid #555;overflow:hidden}
-.item .icon{font-size:clamp(18px,5vw,24px);margin-bottom:2px}
-.item .price{font-size:8px;color:#f0b90b;margin-top:2px;font-weight:800}
-.pointer{position:absolute;top:0;left:50%;transform:translateX(-50%);width:3px;height:100%;background:linear-gradient(180deg,#f0b90b,#ffe488,#f0b90b);box-shadow:0 0 20px #f0b90b;z-index:12}
-.pointer::before,.pointer::after{content:'';position:absolute;left:50%;transform:translateX(-50%);border-left:8px solid transparent;border-right:8px solid transparent}
-.pointer::before{top:-8px;border-top:11px solid #f0b90b}
-.pointer::after{bottom:-8px;border-bottom:11px solid #f0b90b}
-.result{text-align:center;margin:10px 0;font-size:12px;min-height:22px;color:#f0b90b;font-weight:800}
-.result .win-tag{color:#fff;background:#1a1a22;padding:4px 12px;border-radius:20px;margin:2px;display:inline-block;border:1px solid #333;font-size:11px}
-.case-modal-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:6px}
-.case-modal-actions .primary,.case-modal-actions .secondary{width:100%;padding:11px 6px;font-size:11px;border-radius:12px}
-
-.upgrade-overlay{position:fixed;inset:0;background:rgba(0,0,0,.96);display:none;justify-content:center;align-items:center;z-index:600;backdrop-filter:blur(12px);padding:16px}
-.upgrade-overlay.active{display:flex}
-.upg-stage{max-width:560px;width:100%;text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px}
-.roll-circle{width:140px;height:140px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#1e1e26,#0b0b10);border:3px solid #2a2a34;display:flex;align-items:center;justify-content:center;position:relative;margin:0 auto}
-.roll-circle::before{content:'';position:absolute;inset:-8px;border-radius:50%;border:2px solid transparent;border-top-color:#f0b90b;border-right-color:#f0b90b;animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.roll-num{font-size:36px;font-weight:900;color:#f0b90b;letter-spacing:-2px}
-.roll-label{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:2px;font-weight:800;margin-top:8px}
-.roll-status{font-size:12px;color:#ccc;font-weight:700;margin-top:5px}
-.result-title{font-size:32px;font-weight:900;letter-spacing:2px;line-height:1}
-.result-title.success{color:#4ade80;text-shadow:0 0 40px #4ade80}
-.result-title.fail{color:#f87171;text-shadow:0 0 40px #f87171}
-.result-title.legendary{background:linear-gradient(90deg,#f0b90b,#ffe488,#f0b90b);-webkit-background-clip:text;background-clip:text;color:transparent}
-.result-card{padding:18px 24px;border-radius:16px;min-width:220px;display:flex;flex-direction:column;align-items:center;gap:5px;border-bottom:5px solid #555}
-.result-card .rc-icon{font-size:56px;line-height:1}
-.result-card .rc-name{font-size:14px;font-weight:900;text-shadow:1px 1px 3px #000}
-.result-card .rc-price{font-size:13px;font-weight:900;color:#f0b90b}
-.result-sub{font-size:11px;color:#999;font-weight:700;max-width:95%;padding:0 10px}
-.lost-items{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-top:4px}
-.lost-item{width:56px;height:56px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:8px;font-weight:800;opacity:.55;filter:grayscale(.7);text-decoration:line-through;padding:3px;text-align:center;color:#fff;border-bottom:2px solid #555}
-
-.craft-result-overlay{position:fixed;inset:0;background:rgba(0,0,0,.96);display:none;justify-content:center;align-items:center;z-index:600;backdrop-filter:blur(12px);padding:16px}
-.craft-result-overlay.active{display:flex}
-.craft-result-box{display:flex;flex-direction:column;align-items:center;gap:16px;max-width:440px;width:100%;text-align:center;animation:pop .4s cubic-bezier(.34,1.56,.64,1)}
-@keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
-.craft-result-title{font-size:26px;font-weight:900;letter-spacing:2px;color:#4ade80;text-shadow:0 0 30px #4ade80}
-.craft-result-card{padding:22px 34px;border-radius:16px;display:flex;flex-direction:column;align-items:center;gap:6px;border-bottom:5px solid #555;min-width:220px}
-.craft-result-card .rc-icon{font-size:64px;line-height:1}
-.craft-result-card .rc-name{font-size:15px;font-weight:900;text-shadow:1px 1px 3px #000}
-.craft-result-card .rc-price{font-size:14px;font-weight:900;color:#f0b90b}
-.craft-result-sub{font-size:12px;color:#999;font-weight:700}
-.craft-consumed{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;margin-top:6px}
-.craft-consumed .cc{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;opacity:.4;filter:grayscale(.6)}
-
-.toast{position:fixed;bottom:calc(88px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%) translateY(120px);background:#1a1a22;color:#f0b90b;padding:11px 20px;border-radius:30px;font-weight:800;font-size:12px;transition:transform .35s cubic-bezier(.34,1.56,.64,1);z-index:200;box-shadow:0 12px 40px rgba(0,0,0,.8);border:1px solid #2a2a34;max-width:90%;text-align:center;pointer-events:none}
-@media(min-width:900px){.toast{bottom:26px}}
-.toast.show{transform:translateX(-50%) translateY(0)}
-.flash{position:fixed;inset:0;pointer-events:none;background:#fff;opacity:0;z-index:250;transition:opacity .12s}
-.flash.on{opacity:.85;transition:opacity .05s}
-.flash.legend{background:radial-gradient(circle,#fff,#ffe488 30%,transparent 70%)}
-.flash.epic{background:radial-gradient(circle,#fff,#f088c8 30%,transparent 70%)}
-.confetti{position:fixed;top:-20px;width:8px;height:14px;pointer-events:none;z-index:260;animation:fall linear forwards}
-@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.7}}
-</style>
-</head>
-<body>
-<div class="bg-fx" id="bgFx"></div>
-
-<!-- AUTH -->
-<div class="auth-screen" id="authScreen">
-  <div class="auth-box">
-    <div class="auth-logo">HOME UP</div>
-    <div class="auth-tag">Case Roulette</div>
-    <div class="auth-tabs">
-      <button class="auth-tab active" data-authtab="login">ВХОД</button>
-      <button class="auth-tab" data-authtab="register">РЕГИСТРАЦИЯ</button>
-    </div>
-    <div class="auth-form" id="loginForm">
-      <div class="input-group"><span class="input-icon">👤</span><input type="text" id="loginUser" placeholder="Имя" maxlength="20" autocomplete="username"></div>
-      <div class="input-group"><span class="input-icon">🔒</span><input type="password" id="loginPass" placeholder="Пароль" maxlength="40"><button class="pass-toggle" data-target="loginPass" type="button">👁</button></div>
-      <div class="auth-msg err" id="loginError">⚠️ <span></span></div>
-      <button class="auth-submit" id="loginBtn">Войти</button>
-    </div>
-    <div class="auth-form hidden" id="registerForm">
-      <div class="input-group"><span class="input-icon">👤</span><input type="text" id="regUser" placeholder="Имя (3-20)" maxlength="20" autocomplete="username"></div>
-      <div class="input-group"><span class="input-icon">🔒</span><input type="password" id="regPass" placeholder="Пароль (мин. 4)" maxlength="40"><button class="pass-toggle" data-target="regPass" type="button">👁</button></div>
-      <div class="input-group"><span class="input-icon">🔐</span><input type="password" id="regPass2" placeholder="Повтори пароль" maxlength="40"><button class="pass-toggle" data-target="regPass2" type="button">👁</button></div>
-      <div class="auth-msg err" id="regError">⚠️ <span></span></div>
-      <div class="auth-msg ok" id="regSuccess">✅ <span></span></div>
-      <button class="auth-submit" id="registerBtn">Создать аккаунт</button>
-    </div>
-    <div class="auth-hint">💾 Аккаунт хранится на сервере</div>
-  </div>
-</div>
-
-<!-- APP -->
-<div class="app hidden" id="app">
-  <div class="topbar">
-    <div class="brand"><div class="brand-logo">H</div><div class="brand-text"><b>HOME UP</b><small>Case Roulette</small></div></div>
-    <div class="topbar-right">
-      <div class="balance-pill" id="balancePill"><span>🪙</span><span id="coinsAmount">0</span></div>
-      <button class="profile-btn" id="profileBtn"><span id="topAvatar">🐺</span></button>
-    </div>
-  </div>
-
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="nav-brand">
-        <div class="nav-brand-logo">H</div>
-        <div class="nav-brand-info"><b>HOME UP</b><small>Case Roulette</small></div>
-      </div>
-      <div class="nav-section">Игра</div>
-      <button class="nav-btn active" data-view="tap"><span class="nav-icon">👆</span><span>Тапалка</span></button>
-      <button class="nav-btn" data-view="cases"><span class="nav-icon">🎁</span><span>Кейсы</span></button>
-      <button class="nav-btn" data-view="craft"><span class="nav-icon">⚒️</span><span>Крафт</span></button>
-      <button class="nav-btn" data-view="upgrader"><span class="nav-icon">⚡</span><span>Апгрейдер</span></button>
-      <button class="nav-btn" data-view="wheel"><span class="nav-icon">🎡</span><span>Колесо</span></button>
-      <div class="nav-section">Социальное</div>
-      <button class="nav-btn" data-view="news"><span class="nav-icon">📰</span><span>Новости</span><span class="nav-badge dot" id="newsBadgeDesktop" style="display:none"></span></button>
-      <button class="nav-btn" data-view="friends"><span class="nav-icon">👥</span><span>Друзья</span><span class="nav-badge" id="friendsBadgeDesktop">0</span></button>
-      <div class="nav-section">Экономика</div>
-      <button class="nav-btn" data-view="market"><span class="nav-icon">🏪</span><span>Рынок</span></button>
-      <button class="nav-btn" data-view="inventory"><span class="nav-icon">🎒</span><span>Инвентарь</span><span class="nav-badge" id="invBadgeDesktop">0</span></button>
-      <div class="nav-section">Аккаунт</div>
-      <button class="nav-btn" data-view="profile"><span class="nav-icon">👤</span><span>Профиль</span><span class="nav-badge dot" id="dailyBadgeDesktop" style="display:none"></span></button>
-      <button class="nav-btn" data-view="settings"><span class="nav-icon">⚙️</span><span>Настройки</span></button>
-    </aside>
-
-    <main class="views">
-      <!-- TAP -->
-      <section class="view active" id="view-tap">
-        <div class="card" id="tapNewsCard" style="display:none">
-          <h2>📰 Последняя новость</h2>
-          <div id="tapNewsContent"></div>
-        </div>
-        <div class="card"><div class="tap-view">
-          <div class="tap-balance">
-            <div class="lbl">Баланс</div>
-            <div class="val" id="tapBalance">0</div>
-            <div class="tap-stats">
-              <div class="stat-pill">👆 Всего: <b id="totalTaps">0</b></div>
-              <div class="stat-pill">🔥 Сессия: <b id="sessionTaps">0</b></div>
-            </div>
-            <div class="cheat-banner" id="cheatBanner">🚫 <span>Автокликер! Награды заблокированы</span></div>
-          </div>
-          <div class="tap-area2"><button id="tapBtn">ТАП<span class="subtext">+1 🪙</span></button></div>
-        </div></div>
-      </section>
-
-      <!-- NEWS -->
-      <section class="view" id="view-news">
-        <div class="card">
-          <h2>📰 Новости Home Up</h2>
-          <button class="news-create-btn" id="newsCreateBtn" style="display:none">➕ Написать новость</button>
-          <div id="newsList"></div>
-        </div>
-      </section>
-
-      <!-- FRIENDS -->
-      <section class="view" id="view-friends">
-        <div class="card">
-          <h2>👥 Друзья</h2>
-          <div class="search-row">
-            <input type="text" id="friendSearch" placeholder="Поиск игрока по нику..." maxlength="20">
-            <button id="friendSearchBtn">🔍</button>
-          </div>
-          <div id="searchResults"></div>
-          <div class="friends-tabs">
-            <button class="ftab active" data-ftab="friends">Друзья <span class="ftab-badge" id="friendsCountBadge">0</span></button>
-            <button class="ftab" data-ftab="incoming">Входящие <span class="ftab-badge" id="incomingBadge">0</span></button>
-            <button class="ftab" data-ftab="outgoing">Отправленные <span class="ftab-badge" id="outgoingBadge">0</span></button>
-          </div>
-          <div id="friendsList"></div>
-        </div>
-      </section>
-
-      <!-- CASES -->
-      <section class="view" id="view-cases">
-        <div class="card"><h2>🎁 Кейсы</h2><div class="cases-grid" id="casesGrid"></div></div>
-        <div class="card"><h2>📊 Базовые цены</h2><div id="chancesList"></div></div>
-      </section>
-
-      <!-- CRAFT -->
-      <section class="view" id="view-craft">
-        <div class="card">
-          <h2>⚒️ Крафт</h2>
-          <div class="craft-info">Обменяй <b>5 одинаковых предметов</b> на <b>1 случайный следующей редкости</b>.<br>Обычный → Необычный → Редкий → Эпический → <b>Легендарный</b></div>
-          <div class="craft-grid" id="craftGrid"></div>
-        </div>
-      </section>
-
-      <!-- UPGRADER -->
-      <section class="view" id="view-upgrader">
-        <div class="card">
-          <h2>⚡ Апгрейдер</h2>
-          <div class="upg-chances" id="upgChances">
-            <button class="ch" data-chance="5">5%</button>
-            <button class="ch" data-chance="10">10%</button>
-            <button class="ch" data-chance="15">15%</button>
-            <button class="ch" data-chance="25">25%</button>
-            <button class="ch" data-chance="35">35%</button>
-            <button class="ch active" data-chance="50">50%</button>
-            <button class="ch" data-chance="65">65%</button>
-            <button class="ch" data-chance="75">75%</button>
-          </div>
-          <div class="gauge-wrap">
-            <svg class="gauge-svg" viewBox="0 0 220 220">
-              <defs><linearGradient id="gGrad" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f87171"/><stop offset="50%" stop-color="#f0b90b"/><stop offset="100%" stop-color="#4ade80"/></linearGradient></defs>
-              <circle cx="110" cy="110" r="90" fill="none" stroke="#1a1a22" stroke-width="16" stroke-linecap="round" stroke-dasharray="424.12 565.49" transform="rotate(-225 110 110)"/>
-              <circle id="gaugeFill" cx="110" cy="110" r="90" fill="none" stroke="url(#gGrad)" stroke-width="16" stroke-linecap="round" stroke-dasharray="0 565.49" transform="rotate(-225 110 110)" style="transition:stroke-dasharray .3s"/>
-            </svg>
-            <div class="gauge-inner"><div class="gauge-pct" id="gaugePct">50%</div><div class="gauge-lbl" id="gaugeLbl">шанс</div></div>
-          </div>
-          <div class="upg-panels">
-            <div class="upg-panel"><div class="upg-panel-title">СТАВКА <span class="c" id="upgInvCount">0</span></div><div class="upg-scroll" id="upgInvGrid"></div></div>
-            <div class="upg-panel"><div class="upg-panel-title">ЦЕЛЬ <span class="c" id="upgTargetCount">—</span></div><div class="upg-scroll" id="upgTargetGrid"></div></div>
-          </div>
-          <div class="upg-info">
-            <div class="cell"><div class="l">Ставка</div><div class="v" id="infoBet">🪙 0</div></div>
-            <div class="cell"><div class="l">Нужно</div><div class="v" id="infoReq">—</div></div>
-            <div class="cell"><div class="l">Цель</div><div class="v" id="infoTarget">—</div></div>
-          </div>
-          <div class="upg-bar"><div class="upg-bar-fill" id="upgBarFill"></div></div>
-          <div class="status-tag wait" id="statusTag">Выбери предметы и цель</div>
-          <button class="primary" id="upgradeBtn" disabled style="width:100%">🔒 УЛУЧШИТЬ</button>
-        </div>
-      </section>
-
-      <!-- WHEEL -->
-      <section class="view" id="view-wheel">
-        <div class="card">
-          <h2>🎡 Колесо Фортуны <span class="badge">🪙 100</span></h2>
-          <div class="wheel-wrap">
-            <div class="wheel-stage"><div class="wheel-pointer">▼</div><canvas class="wheel-canvas" id="wheelCanvas" width="700" height="700"></canvas><div class="wheel-center">SPIN</div></div>
-            <div class="wheel-result" id="wheelResult">Нажми «Крутить»!</div>
-            <button class="wheel-spin-btn" id="wheelSpinBtn">КРУТИТЬ 🪙 100</button>
-            <div class="wheel-history" id="wheelHistory"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- MARKET -->
-      <section class="view" id="view-market">
-        <div class="card">
-          <h2>🏪 Рынок <span class="badge">общий</span></h2>
-          <div class="market-filters" id="marketFilters">
-            <button class="filter-btn active" data-filter="all">Все</button>
-            <button class="filter-btn" data-filter="legendary">Легендарные</button>
-            <button class="filter-btn" data-filter="epic">Эпические</button>
-            <button class="filter-btn" data-filter="rare">Редкие</button>
-            <button class="filter-btn" data-filter="uncommon">Необычные</button>
-            <button class="filter-btn" data-filter="common">Обычные</button>
-            <button class="filter-btn" data-filter="owned">Мои</button>
-          </div>
-          <div class="market-grid" id="marketGrid"></div>
-        </div>
-      </section>
-
-      <!-- INVENTORY -->
-      <section class="view" id="view-inventory">
-        <div class="card">
-          <div class="inv-header"><h2>🎒 Инвентарь <span class="badge" id="invCount">0</span> <span class="inv-total" id="invTotal"></span></h2></div>
-          <div class="inv-filters" id="invFilters">
-            <button class="filter-btn active" data-invfilter="all">Все</button>
-            <button class="filter-btn" data-invfilter="legendary">Леген.</button>
-            <button class="filter-btn" data-invfilter="epic">Эпик</button>
-            <button class="filter-btn" data-invfilter="rare">Редкие</button>
-            <button class="filter-btn" data-invfilter="uncommon">Необыч.</button>
-            <button class="filter-btn" data-invfilter="common">Обычные</button>
-          </div>
-          <div class="inv-grid" id="invGrid"></div>
-        </div>
-      </section>
-
-      <!-- PROFILE -->
-      <section class="view" id="view-profile">
-        <div class="card">
-          <h2>👤 Профиль</h2>
-          <div class="profile-hero">
-            <div class="profile-avatar" id="profileAvatar">🐺</div>
-            <div class="profile-info"><h3 id="profileName">Игрок</h3><div class="joined">С нами с <b id="profileJoined">—</b></div></div>
-            <button class="set-btn danger" id="logoutBtn">Выйти</button>
-          </div>
-          <div class="profile-stats">
-            <div class="pstat"><div class="lbl">Баланс</div><div class="v" id="pstatCoins">0</div></div>
-            <div class="pstat"><div class="lbl">Тапов</div><div class="v" id="pstatTaps">0</div></div>
-            <div class="pstat"><div class="lbl">Предметов</div><div class="v" id="pstatItems">0</div></div>
-            <div class="pstat"><div class="lbl">Стоимость</div><div class="v" id="pstatValue">0</div></div>
-            <div class="pstat"><div class="lbl">Серия</div><div class="v" id="pstatStreak">0</div></div>
-            <div class="pstat"><div class="lbl">Наград</div><div class="v" id="pstatClaimed">0</div></div>
-          </div>
-        </div>
-        <div class="card">
-          <h2>🎁 Ежедневная <span class="badge" id="dailyStatusBadge">—</span></h2>
-          <div class="daily-card" id="dailyCard">
-            <div class="daily-head"><h3>🔥 Серия <span class="streak-badge" id="streakBadge">0 / 7</span></h3></div>
-            <div class="daily-grid" id="dailyGrid"></div>
-            <div class="daily-action">
-              <button class="claim-btn" id="claimDailyBtn" disabled>ЗАБРАТЬ</button>
-              <div class="daily-timer" id="dailyTimer">—</div>
-            </div>
-          </div>
-        </div>
-        <div class="card"><h2>😀 Аватар</h2><div class="avatar-picker" id="avatarPicker"></div></div>
-      </section>
-
-      <!-- SETTINGS -->
-      <section class="view" id="view-settings">
-        <div class="card">
-          <h2>⚙️ Настройки</h2>
-          <div class="settings-list">
-            <div class="set-row"><div class="set-info"><b>🔊 Звуки</b><small>Эффекты</small></div><div class="toggle on" data-setting="sound"></div></div>
-            <div class="set-row"><div class="set-info"><b>✨ Частицы</b><small>Фон</small></div><div class="toggle on" data-setting="particles"></div></div>
-            <div class="set-row"><div class="set-info"><b>🚫 Античит</b><small>Всегда включен</small></div><div class="toggle on" data-setting="anticheat"></div></div>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
-</div>
-
-<nav class="bottomnav">
-  <button class="bnav-btn active" data-view="tap"><span class="bicon">👆</span><span>Тап</span></button>
-  <button class="bnav-btn" data-view="news"><span class="bicon">📰</span><span>Новости</span><span class="bnav-badge dot" id="newsBadge" style="display:none"></span></button>
-  <button class="bnav-btn" data-view="friends"><span class="bicon">👥</span><span>Друзья</span><span class="bnav-badge" id="friendsBadge">0</span></button>
-  <button class="bnav-btn" data-view="cases"><span class="bicon">🎁</span><span>Кейсы</span></button>
-  <button class="bnav-btn" data-view="craft"><span class="bicon">⚒️</span><span>Крафт</span></button>
-  <button class="bnav-btn" data-view="upgrader"><span class="bicon">⚡</span><span>Апгрейд</span></button>
-  <button class="bnav-btn" data-view="wheel"><span class="bicon">🎡</span><span>Колесо</span></button>
-  <button class="bnav-btn" data-view="market"><span class="bicon">🏪</span><span>Рынок</span></button>
-  <button class="bnav-btn" data-view="inventory"><span class="bicon">🎒</span><span>Инв.</span><span class="bnav-badge" id="invBadge">0</span></button>
-  <button class="bnav-btn" data-view="profile"><span class="bicon">👤</span><span>Профиль</span><span class="bnav-badge dot" id="dailyBadge" style="display:none"></span></button>
-</nav>
-
-<!-- News create modal -->
-<div class="modal-overlay" id="newsModal"><div class="modal">
-  <button class="close-btn" id="newsModalClose">✕</button>
-  <h3>📰 Новая новость</h3>
-  <div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">
-    <input class="news-input" type="text" id="newsTitleInput" placeholder="Заголовок" maxlength="100">
-    <textarea class="news-textarea" id="newsContentInput" placeholder="Текст новости..." maxlength="2000"></textarea>
-    <div class="news-checkbox-row"><input type="checkbox" id="newsPinnedInput"><label for="newsPinnedInput">📌 Закрепить сверху</label></div>
-    <div class="auth-msg err" id="newsError">⚠️ <span></span></div>
-    <button class="primary" id="newsSubmitBtn" style="width:100%">ОПУБЛИКОВАТЬ</button>
-  </div>
-</div></div>
-
-<div class="modal-overlay" id="modalOverlay"><div class="modal">
-  <button class="close-btn" id="modalClose">✕</button>
-  <div style="font-size:50px;text-align:center;margin-bottom:6px" id="modalIcon">🔫</div>
-  <h3 id="modalName">Предмет</h3>
-  <div style="text-align:center;font-size:10px;text-transform:uppercase;font-weight:900;margin-bottom:10px" id="modalRarity">Редкость</div>
-  <div style="text-align:center;font-size:20px;font-weight:900;color:#f0b90b;margin-bottom:10px" id="modalPrice">🪙 0</div>
-  <div style="display:flex;justify-content:space-between;font-size:11px;padding:6px 10px;background:#0e0e14;border-radius:8px;margin-bottom:4px"><span>Продать:</span><b id="modalSell">0</b></div>
-  <div style="display:flex;justify-content:space-between;font-size:11px;padding:6px 10px;background:#0e0e14;border-radius:8px;margin-bottom:4px"><span>Выпало:</span><b id="modalDrops">0</b></div>
-  <div style="display:flex;justify-content:space-between;font-size:11px;padding:6px 10px;background:#0e0e14;border-radius:8px;margin-bottom:12px"><span>У тебя:</span><b id="modalOwned">0</b></div>
-  <button class="primary" id="modalSellBtn" style="width:100%">ПРОДАТЬ 1</button>
-</div></div>
-
-<div class="modal-overlay" id="caseModal"><div class="modal">
-  <button class="close-btn" id="caseModalClose">✕</button>
-  <h3 id="caseModalTitle">Кейс</h3>
-  <div style="text-align:center;font-size:11px;color:#f0b90b;font-weight:800;margin-bottom:4px" id="caseModalPrice">🪙 50</div>
-  <div class="roulette-wrapper"><div class="pointer"></div><div class="roulette-track" id="track"></div></div>
-  <div class="result" id="caseResult"></div>
-  <div class="case-modal-actions">
-    <button class="primary" id="openOneBtn">x1</button>
-    <button class="secondary" id="openFiveBtn">x5</button>
-    <button class="secondary" id="openTenBtn">x10</button>
-  </div>
-</div></div>
-
-<div class="upgrade-overlay" id="upgradeOverlay"><div class="upg-stage" id="upgStage"></div></div>
-<div class="craft-result-overlay" id="craftOverlay"><div class="craft-result-box" id="craftStage"></div></div>
-<div class="flash" id="flash"></div>
-<div class="toast" id="toast"></div>
-
-<script>
-const API = '/api';
-let authToken = localStorage.getItem('homeup_token') || null;
-
-async function api(path, opts = {}){
-  const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
-  if(authToken) headers['Authorization'] = 'Bearer ' + authToken;
-  const res = await fetch(API + path, { ...opts, headers });
-  const data = await res.json().catch(() => ({}));
-  if(!res.ok) throw new Error(data.error || 'Ошибка');
-  return data;
+function saveDB(){
+  try { fs.writeFileSync(DB_FILE, JSON.stringify(db)); dbDirty = false; }
+  catch(e){ console.error('DB save error:', e.message); }
 }
-const HU = {
-  register:(u,p)=>api('/register',{method:'POST',body:JSON.stringify({username:u,password:p})}),
-  login:(u,p)=>api('/login',{method:'POST',body:JSON.stringify({username:u,password:p})}),
-  me:()=>api('/me'),
-  setAvatar:(a)=>api('/avatar',{method:'POST',body:JSON.stringify({avatar:a})}),
-  tap:()=>api('/tap',{method:'POST'}),
-  openCase:(id,m)=>api('/open-case',{method:'POST',body:JSON.stringify({caseId:id,multi:m})}),
-  daily:()=>api('/daily',{method:'POST'}),
-  market:()=>api('/market'),
-  buy:(n)=>api('/buy',{method:'POST',body:JSON.stringify({itemName:n})}),
-  sell:(n,c)=>api('/sell',{method:'POST',body:JSON.stringify({itemName:n,count:c})}),
-  upgrade:(b,t,c)=>api('/upgrade',{method:'POST',body:JSON.stringify({bet:b,targetName:t,chance:c})}),
-  craft:(n)=>api('/craft',{method:'POST',body:JSON.stringify({itemName:n})}),
-  wheel:()=>api('/wheel',{method:'POST'}),
-  news:()=>api('/news'),
-  createNews:(d)=>api('/news',{method:'POST',body:JSON.stringify(d)}),
-  deleteNews:(id)=>api('/news/'+id,{method:'DELETE'}),
-  pinNews:(id)=>api('/news/pin',{method:'POST',body:JSON.stringify({id})}),
-  searchUsers:(q)=>api('/users/search?q='+encodeURIComponent(q)),
-  getFriends:()=>api('/friends'),
-  sendFriendReq:(u)=>api('/friends/request',{method:'POST',body:JSON.stringify({username:u})}),
-  acceptFriend:(u)=>api('/friends/accept',{method:'POST',body:JSON.stringify({username:u})}),
-  declineFriend:(u)=>api('/friends/decline',{method:'POST',body:JSON.stringify({username:u})}),
-  removeFriend:(u)=>api('/friends/remove',{method:'POST',body:JSON.stringify({username:u})}),
-};
+function markDirty(){
+  dbDirty = true;
+  if(markDirty.t) clearTimeout(markDirty.t);
+  markDirty.t = setTimeout(saveDB, 500);
+}
+setInterval(() => { if(dbDirty) saveDB(); }, 5000);
+
+function hashPassword(pw){
+  const salt = crypto.randomBytes(16).toString('hex');
+  return salt + ':' + crypto.scryptSync(pw, salt, 64).toString('hex');
+}
+function verifyPassword(pw, stored){
+  const [salt, hash] = stored.split(':');
+  const test = crypto.scryptSync(pw, salt, 64).toString('hex');
+  return crypto.timingSafeEqual(Buffer.from(hash, 'hex'), Buffer.from(test, 'hex'));
+}
+function makeToken(id){
+  const exp = Date.now() + TOKEN_TTL;
+  const data = id + '.' + exp;
+  return data + '.' + crypto.createHmac('sha256', SECRET).update(data).digest('hex');
+}
+function verifyToken(token){
+  if(!token || typeof token !== 'string') return null;
+  const parts = token.split('.');
+  if(parts.length !== 3) return null;
+  const [uid, exp, sig] = parts;
+  const data = uid + '.' + exp;
+  if(crypto.createHmac('sha256', SECRET).update(data).digest('hex') !== sig) return null;
+  if(Date.now() > parseInt(exp)) return null;
+  return parseInt(uid);
+}
+function isDev(u){ return u && DEVELOPERS.includes(u.username.toLowerCase()); }
 
 const RARITIES = {
-  common:{label:'Обычный',color:'#7a7a88',basePrice:2,next:'uncommon'},
-  uncommon:{label:'Необычный',color:'#6a8df0',basePrice:8,next:'rare'},
-  rare:{label:'Редкий',color:'#9b6fd0',basePrice:35,next:'epic'},
-  epic:{label:'Эпический',color:'#e06ebf',basePrice:220,next:'legendary'},
-  legendary:{label:'Легендарный',color:'#f0c14b',basePrice:1600,next:null},
+  common:    { label:'Обычный',     color:'#7a7a88', basePrice:2,    next:'uncommon'  },
+  uncommon:  { label:'Необычный',   color:'#6a8df0', basePrice:8,    next:'rare'      },
+  rare:      { label:'Редкий',      color:'#9b6fd0', basePrice:35,   next:'epic'      },
+  epic:      { label:'Эпический',   color:'#e06ebf', basePrice:220,  next:'legendary' },
+  legendary: { label:'Легендарный', color:'#f0c14b', basePrice:1600, next:null        },
 };
-const RARITY_ORDER = {legendary:0,epic:1,rare:2,uncommon:3,common:4};
-const AVATARS = ['🐺','🦊','🐉','🦁','🐯','🦅','🐻','🐼','🦖','👾','🤖','👑','💎','🔥','⚡','🌟'];
-const DAILY_REWARDS = [100,200,350,500,750,1000,2500];
-const DAILY_ICONS = ['🪙','💰','💵','💎','💠','🏆','👑'];
-const WHEEL_PRIZES = [
-  {value:20,color:'#5a5a68',label:'20'},{value:50,color:'#4b69c4',label:'50'},
-  {value:100,color:'#2c3d84',label:'100'},{value:250,color:'#6b3fa0',label:'250'},
-  {value:500,color:'#432176',label:'500'},{value:1000,color:'#c74b9b',label:'1000'},
-  {value:2000,color:'#8a296a',label:'2000'},{value:5000,color:'#d4a017',label:'5000'},
-  {value:0,color:'#e06ebf',label:'EPIC'},{value:0,color:'#f0c14b',label:'LEG'},
+const ITEMS = [
+  { name:'P250 Sand Dune',icon:'🔫',rarity:'common' },
+  { name:'MP9 Storm',icon:'🔫',rarity:'common' },
+  { name:'Nova Predator',icon:'🔫',rarity:'common' },
+  { name:'Dual Berettas Colony',icon:'🔫',rarity:'common' },
+  { name:'Galil AR Cerberus',icon:'🔫',rarity:'common' },
+  { name:'Glock-18 Water Elemental',icon:'🔫',rarity:'uncommon' },
+  { name:'M4A1-S Varicamo',icon:'🔫',rarity:'uncommon' },
+  { name:'USP-S Blueprint',icon:'🔫',rarity:'uncommon' },
+  { name:'P90 Asiimov',icon:'🔫',rarity:'uncommon' },
+  { name:'Five-SeveN Case Hardened',icon:'🔫',rarity:'uncommon' },
+  { name:'AK-47 Redline',icon:'🔫',rarity:'rare' },
+  { name:'AWP Electric Hive',icon:'🔫',rarity:'rare' },
+  { name:'Desert Eagle Code Red',icon:'🔫',rarity:'rare' },
+  { name:'AK-47 Vulcan',icon:'🔫',rarity:'rare' },
+  { name:'M4A1-S Hyper Beast',icon:'🔫',rarity:'rare' },
+  { name:'M4A4 Howl',icon:'🔫',rarity:'epic' },
+  { name:'AWP Asiimov',icon:'🔫',rarity:'epic' },
+  { name:'Karambit Fade',icon:'🔪',rarity:'epic' },
+  { name:'Glock Fade',icon:'🔫',rarity:'epic' },
+  { name:'Deagle Blaze',icon:'🔫',rarity:'epic' },
+  { name:'AWP Dragon Lore',icon:'🔫',rarity:'legendary' },
+  { name:'Butterfly Knife | Gold',icon:'🔪',rarity:'legendary' },
+  { name:'M9 Bayonet | Doppler',icon:'🔪',rarity:'legendary' },
+  { name:'AK-47 Fire Serpent',icon:'🔫',rarity:'legendary' },
+  { name:'AWP Gungnir',icon:'🔫',rarity:'legendary' },
 ];
-const WHEEL_COST = 100;
-const DAILY_CD = 24*60*60*1000;
+const CASES = [
+  { id:'starter', name:'Стартовый', icon:'📦', price:25, color:'#7a7a88', weights:{common:70,uncommon:30}, pool:['common','uncommon'] },
+  { id:'standard',name:'Стандартный',icon:'🎁',price:50, color:'#6a8df0', weights:{common:50,uncommon:30,rare:15,epic:4,legendary:1} },
+  { id:'premium', name:'Премиум',   icon:'💎', price:150,color:'#9b6fd0', weights:{uncommon:40,rare:35,epic:20,legendary:5} },
+  { id:'elite',   name:'Элитный',   icon:'👑', price:500,color:'#e06ebf', weights:{rare:40,epic:45,legendary:15} },
+  { id:'knife',   name:'Ножевой',   icon:'🔪', price:1200,color:'#f0c14b',weights:{epic:75,legendary:25}, filterKnife:true },
+  { id:'dragon',  name:'Драконий',  icon:'🐉', price:3000,color:'#ff4444',weights:{epic:50,legendary:50}, filterDragon:true },
+];
+const WHEEL_PRIZES = [
+  { type:'coins',value:20,  color:'#5a5a68',label:'20',  weight:20 },
+  { type:'coins',value:50,  color:'#4b69c4',label:'50',  weight:18 },
+  { type:'coins',value:100, color:'#2c3d84',label:'100', weight:15 },
+  { type:'coins',value:250, color:'#6b3fa0',label:'250', weight:12 },
+  { type:'coins',value:500, color:'#432176',label:'500', weight:10 },
+  { type:'coins',value:1000,color:'#c74b9b',label:'1000',weight:8  },
+  { type:'coins',value:2000,color:'#8a296a',label:'2000',weight:6  },
+  { type:'coins',value:5000,color:'#d4a017',label:'5000',weight:3  },
+  { type:'item',rarity:'epic',color:'#e06ebf',label:'EPIC',weight:5 },
+  { type:'item',rarity:'legendary',color:'#f0c14b',label:'LEGEND',weight:3 },
+];
+const DAILY_REWARDS = [100, 200, 350, 500, 750, 1000, 2500];
+const AVATARS = ['🐺','🦊','🐉','🦁','🐯','🦅','🐻','🐼','🦖','👾','🤖','👑','💎','🔥','⚡','🌟'];
+const INITIAL_SUPPLY = 100, SELL_SPREAD = 0.85, WHEEL_COST = 100;
+const DAILY_CD = 24*60*60*1000, DAILY_GRACE = 48*60*60*1000;
 const CRAFT_COST = 5;
 
-let currentUser = null;
-let state = {coins:0,inventory:{},supply:{},trend:{},priceHistory:{},totalTaps:0};
-let ITEMS_CACHE = [];
-let CASES_CACHE = [];
-let sessionTaps = 0;
-let newsList = [];
-let newsLastSeen = parseInt(localStorage.getItem('news_last_seen')||'0');
-let friendsData = { friends:[], incoming:[], outgoing:[] };
-let friendsTab = 'friends';
-
-let audioCtx = null;
-function getAudio(){
-  if(!audioCtx){ try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch{ return null; } }
-  if(audioCtx.state === 'suspended') audioCtx.resume();
-  return audioCtx;
-}
-function beep(freq,dur,type='sine',vol=0.06){
-  const ctx = getAudio(); if(!ctx) return;
-  const o = ctx.createOscillator(), g = ctx.createGain();
-  o.type = type; o.frequency.value = freq;
-  g.gain.setValueAtTime(vol, ctx.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur);
-  o.connect(g); g.connect(ctx.destination);
-  o.start(); o.stop(ctx.currentTime + dur);
-}
-const sfx = {
-  tap: () => beep(600 + Math.random()*200, 0.06, 'square', 0.05),
-  click: () => beep(800, 0.05, 'triangle', 0.05),
-  tick: () => beep(1200, 0.03, 'square', 0.04),
-  open: () => { beep(300, 0.08, 'sawtooth', 0.05); setTimeout(()=>beep(500,0.08,'sawtooth',0.05),60); },
-  win: (r) => { const f = { common:[440], uncommon:[523,659], rare:[523,659,784], epic:[523,659,784,1046], legendary:[523,659,784,1046,1318] }; (f[r]||[440]).forEach((fr,i) => setTimeout(()=>beep(fr,0.15,'triangle',0.08), i*80)); },
-  fail: () => { beep(200,0.2,'sawtooth',0.06); setTimeout(()=>beep(150,0.3,'sawtooth',0.06),150); },
-  upg: () => { beep(400,0.06,'square',0.05); setTimeout(()=>beep(600,0.06,'square',0.05),60); setTimeout(()=>beep(800,0.08,'square',0.05),120); },
-  craft: () => { [400,600,800,1000,1200].forEach((f,i) => setTimeout(()=>beep(f,0.08,'triangle',0.06), i*70)); },
-  auth: () => { beep(523,0.1,'triangle',0.07); setTimeout(()=>beep(784,0.15,'triangle',0.07),90); },
-  err: () => beep(200, 0.15, 'sawtooth', 0.06),
-  daily: () => [523,659,784,1046].forEach((f,i)=>setTimeout(()=>beep(f,0.15,'triangle',0.08), i*100)),
-  wheel: () => beep(2000, 0.02, 'square', 0.03),
-};
-
-function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function devBadge(){ return '<span class="dev-badge">Разработчик</span>'; }
-function flash(type=''){ const f=document.getElementById('flash'); f.className='flash '+type+' on'; setTimeout(()=>f.classList.remove('on'), 120); }
-function confetti(){
-  const colors = ['#f0b90b','#e06ebf','#6a8df0','#4ade80','#fff'];
-  for(let i = 0; i < 40; i++){
-    const c = document.createElement('div');
-    c.className = 'confetti';
-    c.style.left = Math.random()*100 + 'vw';
-    c.style.background = colors[Math.floor(Math.random()*colors.length)];
-    c.style.animationDuration = (1.8 + Math.random()*1.5) + 's';
-    document.body.appendChild(c);
-    setTimeout(()=>c.remove(), 3800);
-  }
-}
-let toastTimer;
-function showToast(text){
-  const toast = document.getElementById('toast');
-  toast.textContent = text;
-  toast.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>toast.classList.remove('show'), 2200);
-}
-function updateCoinsUI(bump){
-  const el = document.getElementById('balancePill');
-  document.getElementById('coinsAmount').textContent = state.coins.toLocaleString('ru-RU');
-  document.getElementById('tapBalance').textContent = state.coins.toLocaleString('ru-RU');
-  if(bump){ el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); setTimeout(()=>el.classList.remove('bump'), 120); }
-}
-function updateTapStats(){
-  document.getElementById('totalTaps').textContent = (state.totalTaps||0).toLocaleString('ru-RU');
-  document.getElementById('sessionTaps').textContent = sessionTaps.toLocaleString('ru-RU');
+function getSupply(item){
+  if(!db.supply[item]) db.supply[item] = { drops:0, trend:0, updated:Date.now() };
+  return db.supply[item];
 }
 function getItemPrice(name){
-  const item = ITEMS_CACHE.find(i => i.name === name);
+  const item = ITEMS.find(i => i.name === name);
   if(!item) return 0;
-  const s = state.supply[name] || { drops:0, trend:0 };
+  const s = getSupply(name);
   const base = RARITIES[item.rarity].basePrice;
-  const sf = 100 / (100 + (s.drops || 0));
-  const tm = 1 + (s.trend || 0) * 0.15;
+  const sf = INITIAL_SUPPLY / (INITIAL_SUPPLY + s.drops);
+  const tm = 1 + s.trend * 0.15;
   return Math.max(1, Math.round(base * sf * tm));
 }
-function getSellPrice(name){ return Math.max(1, Math.floor(getItemPrice(name) * 0.85)); }
-
-const authScreen = document.getElementById('authScreen'), appEl = document.getElementById('app');
-document.querySelectorAll('.auth-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.auth-tab').forEach(t => t.classList.toggle('active', t === tab));
-    const isLogin = tab.dataset.authtab === 'login';
-    document.getElementById('loginForm').classList.toggle('hidden', !isLogin);
-    document.getElementById('registerForm').classList.toggle('hidden', isLogin);
-    hideAuthMsgs(); sfx.click();
-  });
-});
-document.querySelectorAll('.pass-toggle').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const t = document.getElementById(btn.dataset.target); if(!t) return;
-    const isPass = t.type === 'password';
-    t.type = isPass ? 'text' : 'password';
-    btn.textContent = isPass ? '🙈' : '👁';
-    sfx.click();
-  });
-});
-function showAuthErr(id, msg){ const el = document.getElementById(id); el.querySelector('span').textContent = msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'), 3000); sfx.err(); }
-function showAuthOk(id, msg){ const el = document.getElementById(id); el.querySelector('span').textContent = msg; el.classList.add('show'); }
-function hideAuthMsgs(){ document.querySelectorAll('.auth-msg').forEach(e=>e.classList.remove('show')); }
-
-document.getElementById('registerBtn').addEventListener('click', async () => {
-  const u = document.getElementById('regUser').value.trim();
-  const p = document.getElementById('regPass').value;
-  const p2 = document.getElementById('regPass2').value;
-  if(u.length < 3 || u.length > 20) return showAuthErr('regError','Имя: 3-20 символов');
-  if(!/^[a-zA-Zа-яА-Я0-9_]+$/.test(u)) return showAuthErr('regError','Только буквы, цифры и _');
-  if(p.length < 4) return showAuthErr('regError','Пароль минимум 4 символа');
-  if(p !== p2) return showAuthErr('regError','Пароли не совпадают');
-  try {
-    const r = await HU.register(u, p);
-    authToken = r.token; localStorage.setItem('homeup_token', authToken);
-    showAuthOk('regSuccess', 'Аккаунт создан!');
-    sfx.auth();
-    setTimeout(()=>enterGame(), 700);
-  } catch(e){ showAuthErr('regError', e.message); }
-});
-document.getElementById('loginBtn').addEventListener('click', async () => {
-  const u = document.getElementById('loginUser').value.trim();
-  const p = document.getElementById('loginPass').value;
-  if(!u || !p) return showAuthErr('loginError','Заполни поля');
-  try {
-    const r = await HU.login(u, p);
-    authToken = r.token; localStorage.setItem('homeup_token', authToken);
-    sfx.auth();
-    await enterGame();
-  } catch(e){ showAuthErr('loginError', e.message); }
-});
-document.getElementById('regPass2').addEventListener('keypress', e => { if(e.key==='Enter') document.getElementById('registerBtn').click(); });
-document.getElementById('loginPass').addEventListener('keypress', e => { if(e.key==='Enter') document.getElementById('loginBtn').click(); });
-
-async function enterGame(){
-  try {
-    const me = await HU.me();
-    currentUser = me;
-    state.coins = me.coins;
-    state.inventory = me.inventory || {};
-    state.totalTaps = me.totalTaps || 0;
-    authScreen.classList.add('hidden');
-    appEl.classList.remove('hidden');
-    await Promise.all([refreshMarketCache(), loadItems(), loadCases(), refreshNews(), refreshFriends()]);
-    refreshProfileUI();
-    updateCoinsUI(false);
-    updateTapStats();
-    renderAll();
-    checkDailyOnLoad();
-    startWheel();
-    updateNewsBadges();
-    showToast(`👋 Привет, ${me.username}!`);
-  } catch(e){
-    localStorage.removeItem('homeup_token'); authToken = null;
-    showToast('Ошибка входа');
+function getSellPrice(n){ return Math.max(1, Math.floor(getItemPrice(n) * SELL_SPREAD)); }
+function pushHistory(name){
+  if(!db.priceHistory[name]) db.priceHistory[name] = [];
+  db.priceHistory[name].push(getItemPrice(name));
+  if(db.priceHistory[name].length > 30) db.priceHistory[name].shift();
+}
+function registerDrop(name, c = 1){
+  const s = getSupply(name);
+  s.drops += c; s.updated = Date.now();
+  for(let i = 0; i < c; i++) pushHistory(name);
+  markDirty();
+}
+function unregisterDrop(name, c = 1){
+  const s = getSupply(name);
+  s.drops = Math.max(0, s.drops - c); s.updated = Date.now();
+  pushHistory(name);
+  markDirty();
+}
+setInterval(() => {
+  for(const item of ITEMS){
+    const s = getSupply(item.name);
+    s.trend = Math.max(-1, Math.min(1, s.trend * 0.7 + (Math.random() - 0.5) * 0.6));
+    pushHistory(item.name);
   }
-}
-async function loadItems(){ const r = await fetch('/api/items'); ITEMS_CACHE = await r.json(); }
-async function loadCases(){ const r = await fetch('/api/cases'); CASES_CACHE = await r.json(); }
-async function refreshMarketCache(){
-  const list = await HU.market();
-  state.supply = {}; state.trend = {}; state.priceHistory = {};
-  for(const it of list){
-    state.supply[it.name] = { drops: it.supply, trend: it.trend };
-    state.trend[it.name] = it.trend;
-    state.priceHistory[it.name] = it.history || [];
-  }
-}
-async function refreshNews(){
-  try { newsList = await HU.news(); } catch(e){ newsList = []; }
-  renderNews();
-  renderTapNews();
-  updateNewsBadges();
-}
-async function refreshFriends(){
-  try { friendsData = await HU.getFriends(); } catch(e){ friendsData = { friends:[], incoming:[], outgoing:[] }; }
-  renderFriends();
-  updateFriendsBadges();
-}
-document.getElementById('logoutBtn').addEventListener('click', () => {
-  if(!confirm('Выйти?')) return;
-  localStorage.removeItem('homeup_token');
-  location.reload();
-});
+  markDirty();
+}, 15000);
 
-function switchView(view){
-  document.querySelectorAll('.nav-btn,.bnav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
-  document.querySelectorAll('.view').forEach(v => {
-    if(v.id === 'view-'+view){ v.classList.remove('active'); void v.offsetWidth; v.classList.add('active'); }
-    else v.classList.remove('active');
-  });
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  if(view === 'profile') renderProfile();
-  if(view === 'craft') renderCraft();
-  if(view === 'news'){ newsLastSeen = Date.now(); localStorage.setItem('news_last_seen', newsLastSeen); updateNewsBadges(); }
-  if(view === 'friends') refreshFriends();
+function getInv(uid){ return db.inventory[uid] || {}; }
+function addItem(uid, name, c = 1){
+  if(!db.inventory[uid]) db.inventory[uid] = {};
+  db.inventory[uid][name] = (db.inventory[uid][name] || 0) + c;
+  markDirty();
 }
-document.querySelectorAll('.sidebar,.bottomnav').forEach(nav => {
-  nav.addEventListener('click', e => {
-    const btn = e.target.closest('.nav-btn,.bnav-btn'); if(!btn) return;
-    switchView(btn.dataset.view); sfx.click();
-  });
-});
-document.getElementById('profileBtn').addEventListener('click', () => { switchView('profile'); sfx.click(); });
+function removeItem(uid, name, c = 1){
+  if(!db.inventory[uid]) return;
+  db.inventory[uid][name] = Math.max(0, (db.inventory[uid][name] || 0) - c);
+  if(db.inventory[uid][name] === 0) delete db.inventory[uid][name];
+  markDirty();
+}
 
-/* TAP */
-let tapTimes = [], blockedUntil = 0, cheatTimer = null;
-async function handleTap(e){
-  if(!currentUser) return;
-  const now = performance.now();
-  if(now < blockedUntil){ showCheatBanner(); return; }
-  if(tapTimes.length && now - tapTimes[tapTimes.length-1] < 40) return;
-  tapTimes.push(now);
-  if(tapTimes.length > 15) tapTimes.shift();
+function pickByWeights(weights){
+  const total = Object.values(weights).reduce((a,b) => a+b, 0);
+  let r = Math.random() * total;
+  for(const [k,v] of Object.entries(weights)){ if(r < v) return k; r -= v; }
+  return Object.keys(weights)[0];
+}
+function rollFromCase(c){
+  const rarity = pickByWeights(c.weights);
+  let pool = ITEMS.filter(i => i.rarity === rarity);
+  if(c.pool) pool = pool.filter(i => c.pool.includes(i.rarity));
+  if(c.filterKnife) pool = pool.filter(i => i.icon === '🔪');
+  if(c.filterDragon) pool = pool.filter(i => i.rarity === 'legendary' || i.name.includes('Dragon') || i.name.includes('Howl'));
+  if(!pool.length) pool = ITEMS.filter(i => i.rarity === rarity);
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+function pickWheelPrize(){
+  const total = WHEEL_PRIZES.reduce((s,p) => s + p.weight, 0);
+  let r = Math.random() * total;
+  for(let i = 0; i < WHEEL_PRIZES.length; i++){ if(r < WHEEL_PRIZES[i].weight) return i; r -= WHEEL_PRIZES[i].weight; }
+  return 0;
+}
+function getRelationship(a, b){
+  const f1 = db.friendships.find(f => f.fromId === a && f.toId === b);
+  const f2 = db.friendships.find(f => f.fromId === b && f.toId === a);
+  if((f1 && f1.status === 'accepted') || (f2 && f2.status === 'accepted')) return 'friends';
+  if(f1 && f1.status === 'pending') return 'outgoing';
+  if(f2 && f2.status === 'pending') return 'incoming';
+  return 'none';
+}
+
+function sendJSON(res, code, data){
+  res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8' });
+  res.end(JSON.stringify(data));
+}
+function readBody(req){
+  return new Promise((resolve, reject) => {
+    let data = '';
+    req.on('data', c => { data += c; if(data.length > 200000) req.destroy(); });
+    req.on('end', () => { try { resolve(data ? JSON.parse(data) : {}); } catch { reject(new Error('Bad JSON')); } });
+    req.on('error', reject);
+  });
+}
+function getUser(req){
+  const auth = req.headers.authorization || '';
+  const uid = verifyToken(auth.replace('Bearer ', ''));
+  if(!uid) return null;
+  return db.users.find(u => u.id === uid);
+}
+function publicUser(u){
+  return {
+    id: u.id, username: u.username, avatar: u.avatar, coins: u.coins,
+    totalTaps: u.totalTaps, lastDaily: u.lastDaily, dailyStreak: u.dailyStreak,
+    totalClaimed: u.totalClaimed, created: u.created, inventory: getInv(u.id),
+    isDev: isDev(u),
+  };
+}
+
+async function handleAPI(req, res, pathname, url){
   try {
-    const r = await HU.tap();
-    state.coins = r.coins;
-    state.totalTaps += 1;
-    sessionTaps += 1;
-    updateCoinsUI(true); updateTapStats();
-    sfx.tap();
-    spawnFloatCoin(e);
-  } catch(err){
-    if(err.message && err.message.includes('Автокликер')){
-      blockedUntil = now + 3000; tapTimes = []; showCheatBanner();
+    if(pathname === '/api/register' && req.method === 'POST'){
+      const { username, password } = await readBody(req);
+      if(typeof username !== 'string' || typeof password !== 'string') return sendJSON(res, 400, { error:'Неверный формат' });
+      const uname = username.trim();
+      if(uname.length < 3 || uname.length > 20) return sendJSON(res, 400, { error:'Имя: 3-20 символов' });
+      if(!/^[a-zA-Zа-яА-Я0-9_]+$/.test(uname)) return sendJSON(res, 400, { error:'Только буквы, цифры и _' });
+      if(password.length < 4) return sendJSON(res, 400, { error:'Пароль минимум 4 символа' });
+      if(db.users.some(u => u.username.toLowerCase() === uname.toLowerCase())) return sendJSON(res, 400, { error:'Имя занято' });
+      const user = {
+        id: Date.now() + Math.floor(Math.random() * 1000),
+        username: uname,
+        password: hashPassword(password),
+        avatar: AVATARS[Math.floor(Math.random() * AVATARS.length)],
+        coins: 100, totalTaps: 0, lastDaily: 0, dailyStreak: 0, totalClaimed: 0,
+        created: Date.now(),
+      };
+      db.users.push(user);
+      markDirty();
+      return sendJSON(res, 200, { token: makeToken(user.id), username: user.username });
     }
-  }
-}
-function showCheatBanner(){
-  const b = document.getElementById('cheatBanner');
-  b.classList.add('show');
-  clearTimeout(cheatTimer);
-  cheatTimer = setTimeout(()=>b.classList.remove('show'), 3000);
-}
-function spawnFloatCoin(e){
-  const btn = document.getElementById('tapBtn');
-  const parent = btn.parentElement;
-  const pr = parent.getBoundingClientRect();
-  let x, y;
-  if(e && (e.clientX || (e.touches && e.touches[0]))){
-    x = (e.clientX || e.touches[0].clientX) - pr.left;
-    y = (e.clientY || e.touches[0].clientY) - pr.top;
-  } else { x = pr.width/2; y = pr.height/2; }
-  const el = document.createElement('div');
-  el.className = 'float-coin';
-  el.textContent = '+1';
-  el.style.left = (x-15)+'px'; el.style.top = (y-15)+'px';
-  parent.appendChild(el);
-  setTimeout(()=>el.remove(), 950);
-}
-document.getElementById('tapBtn').addEventListener('pointerdown', e => { e.preventDefault(); handleTap(e); });
-document.getElementById('tapBtn').addEventListener('contextmenu', e => e.preventDefault());
-
-/* NEWS */
-function updateNewsBadges(){
-  const hasNew = newsList.some(n => n.createdAt > newsLastSeen);
-  const b1 = document.getElementById('newsBadge');
-  const b2 = document.getElementById('newsBadgeDesktop');
-  if(b1) b1.style.display = hasNew ? 'block' : 'none';
-  if(b2) b2.style.display = hasNew ? 'block' : 'none';
-}
-function renderNews(){
-  const list = document.getElementById('newsList'); if(!list) return;
-  const createBtn = document.getElementById('newsCreateBtn');
-  if(currentUser && currentUser.isDev) createBtn.style.display = 'block';
-  else createBtn.style.display = 'none';
-  if(!newsList.length){
-    list.innerHTML = '<div class="news-empty">Новостей пока нет.<br>' + (currentUser && currentUser.isDev ? 'Ты можешь создать первую!' : 'Скоро появятся.') + '</div>';
-    return;
-  }
-  list.innerHTML = newsList.map(n => {
-    const d = new Date(n.createdAt);
-    const dateStr = d.toLocaleDateString('ru-RU', { day:'2-digit', month:'short' }) + ' ' + d.toLocaleTimeString('ru-RU', { hour:'2-digit', minute:'2-digit' });
-    const isDevAuthor = n.author.toLowerCase() === 'baconsigma67656';
-    const devMark = isDevAuthor ? devBadge() : '';
-    const pinnedClass = n.pinned ? 'pinned' : '';
-    const pinMark = n.pinned ? '<span class="news-pinned-mark">📌 Закреплено</span>' : '';
-    const actions = currentUser && currentUser.isDev ? `
-      <div class="news-actions">
-        <button class="news-btn pin" data-pin="${n.id}">${n.pinned ? '📌 Открепить' : '📌 Закрепить'}</button>
-        <button class="news-btn del" data-del="${n.id}">🗑 Удалить</button>
-      </div>` : '';
-    return `<div class="news-card ${pinnedClass}">
-      <div class="news-head">
-        <div class="news-author-avatar">${n.authorAvatar || '🐺'}</div>
-        <div class="news-author-info">
-          <div class="news-author-name">${esc(n.author)} ${devMark} ${pinMark}</div>
-          <div class="news-date">${dateStr}</div>
-        </div>
-      </div>
-      <div class="news-title">${esc(n.title)}</div>
-      <div class="news-content">${esc(n.content)}</div>
-      ${actions}
-    </div>`;
-  }).join('');
-  list.querySelectorAll('[data-del]').forEach(el => el.addEventListener('click', async () => {
-    if(!confirm('Удалить новость?')) return;
-    try { await HU.deleteNews(parseInt(el.dataset.del)); await refreshNews(); showToast('🗑 Удалено'); }
-    catch(e){ showToast(e.message); }
-  }));
-  list.querySelectorAll('[data-pin]').forEach(el => el.addEventListener('click', async () => {
-    try { await HU.pinNews(parseInt(el.dataset.pin)); await refreshNews(); }
-    catch(e){ showToast(e.message); }
-  }));
-}
-function renderTapNews(){
-  const card = document.getElementById('tapNewsCard');
-  const content = document.getElementById('tapNewsContent');
-  if(!card || !content) return;
-  if(!newsList.length){ card.style.display = 'none'; return; }
-  card.style.display = 'block';
-  const n = newsList[0];
-  const devMark = n.author.toLowerCase() === 'baconsigma67656' ? devBadge() : '';
-  content.innerHTML = `
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-      <div class="news-author-avatar" style="width:28px;height:28px;font-size:16px">${n.authorAvatar || '🐺'}</div>
-      <div style="flex:1;font-size:11px;font-weight:800;color:#fff;display:flex;align-items:center;gap:6px;flex-wrap:wrap">${esc(n.author)} ${devMark}</div>
-      ${n.pinned ? '<span style="font-size:10px;color:#f0b90b">📌</span>' : ''}
-    </div>
-    <div style="font-size:14px;font-weight:900;margin-bottom:6px">${esc(n.title)}</div>
-    <div style="font-size:12px;color:#c8c8d0;line-height:1.5;white-space:pre-wrap">${esc(n.content).slice(0,300)}${n.content.length>300?'...':''}</div>`;
-}
-
-document.getElementById('newsCreateBtn').addEventListener('click', () => {
-  document.getElementById('newsTitleInput').value = '';
-  document.getElementById('newsContentInput').value = '';
-  document.getElementById('newsPinnedInput').checked = false;
-  document.getElementById('newsError').classList.remove('show');
-  document.getElementById('newsModal').classList.add('active');
-});
-document.getElementById('newsModalClose').addEventListener('click', () => document.getElementById('newsModal').classList.remove('active'));
-document.getElementById('newsModal').addEventListener('click', e => { if(e.target.id === 'newsModal') e.currentTarget.classList.remove('active'); });
-document.getElementById('newsSubmitBtn').addEventListener('click', async () => {
-  const title = document.getElementById('newsTitleInput').value.trim();
-  const content = document.getElementById('newsContentInput').value.trim();
-  const pinned = document.getElementById('newsPinnedInput').checked;
-  if(title.length < 2 || content.length < 2){
-    const err = document.getElementById('newsError');
-    err.querySelector('span').textContent = 'Заполни заголовок и текст';
-    err.classList.add('show');
-    return;
-  }
-  try {
-    await HU.createNews({ title, content, pinned });
-    document.getElementById('newsModal').classList.remove('active');
-    await refreshNews();
-    showToast('📰 Новость опубликована!');
-    sfx.craft();
-  } catch(e){ showToast(e.message); }
-});
-
-/* FRIENDS */
-function updateFriendsBadges(){
-  const incomingCount = friendsData.incoming.length;
-  const b1 = document.getElementById('friendsBadge');
-  const b2 = document.getElementById('friendsBadgeDesktop');
-  const badgeIncoming = document.getElementById('incomingBadge');
-  const badgeFriends = document.getElementById('friendsCountBadge');
-  const badgeOutgoing = document.getElementById('outgoingBadge');
-  if(b1){ b1.textContent = friendsData.friends.length; b1.classList.toggle('show', friendsData.friends.length > 0); }
-  if(b2){ b2.textContent = friendsData.friends.length; b2.classList.toggle('show', friendsData.friends.length > 0); }
-  if(badgeIncoming){ badgeIncoming.textContent = incomingCount; badgeIncoming.classList.toggle('show', incomingCount > 0); }
-  if(badgeFriends){ badgeFriends.textContent = friendsData.friends.length; badgeFriends.classList.toggle('show', friendsData.friends.length > 0); }
-  if(badgeOutgoing){ badgeOutgoing.textContent = friendsData.outgoing.length; badgeOutgoing.classList.toggle('show', friendsData.outgoing.length > 0); }
-}
-function renderFriends(){
-  updateFriendsBadges();
-  const list = document.getElementById('friendsList'); if(!list) return;
-  let arr = [];
-  if(friendsTab === 'friends') arr = friendsData.friends.map(f => ({...f, rel:'friends'}));
-  else if(friendsTab === 'incoming') arr = friendsData.incoming.map(f => ({...f, rel:'incoming'}));
-  else arr = friendsData.outgoing.map(f => ({...f, rel:'outgoing'}));
-  if(!arr.length){
-    const empty = friendsTab === 'friends' ? 'Пока нет друзей. Найди их через поиск!' :
-                  friendsTab === 'incoming' ? 'Нет входящих заявок' : 'Нет отправленных заявок';
-    list.innerHTML = `<div class="friends-empty">${empty}</div>`;
-    return;
-  }
-  list.innerHTML = arr.map(u => {
-    const dev = u.isDev ? devBadge() : '';
-    let actions = '';
-    if(u.rel === 'friends'){
-      actions = `<button class="ua-btn danger" data-remove="${esc(u.username)}">Удалить</button>`;
-    } else if(u.rel === 'incoming'){
-      actions = `<button class="ua-btn primary" data-accept="${esc(u.username)}">✓ Принять</button>
-                 <button class="ua-btn danger" data-decline="${esc(u.username)}">✕</button>`;
-    } else {
-      actions = `<button class="ua-btn" data-cancel="${esc(u.username)}">Отменить</button>`;
+    if(pathname === '/api/login' && req.method === 'POST'){
+      const { username, password } = await readBody(req);
+      if(!username || !password) return sendJSON(res, 400, { error:'Заполни поля' });
+      const user = db.users.find(u => u.username.toLowerCase() === username.toLowerCase().trim());
+      if(!user) return sendJSON(res, 400, { error:'Пользователь не найден' });
+      if(!verifyPassword(password, user.password)) return sendJSON(res, 400, { error:'Неверный пароль' });
+      return sendJSON(res, 200, { token: makeToken(user.id), username: user.username });
     }
-    return `<div class="user-card">
-      <div class="user-avatar">${u.avatar || '🐺'}</div>
-      <div class="user-info">
-        <div class="user-name">${esc(u.username)} ${dev}</div>
-        <div class="user-meta">🪙 ${(u.coins||0).toLocaleString('ru-RU')}</div>
-      </div>
-      <div class="user-actions">${actions}</div>
-    </div>`;
-  }).join('');
-  list.querySelectorAll('[data-accept]').forEach(el => el.addEventListener('click', async () => {
-    try { await HU.acceptFriend(el.dataset.accept); await refreshFriends(); showToast('✓ Теперь друзья'); sfx.click(); }
-    catch(e){ showToast(e.message); }
-  }));
-  list.querySelectorAll('[data-decline]').forEach(el => el.addEventListener('click', async () => {
-    try { await HU.declineFriend(el.dataset.decline); await refreshFriends(); }
-    catch(e){ showToast(e.message); }
-  }));
-  list.querySelectorAll('[data-remove]').forEach(el => el.addEventListener('click', async () => {
-    if(!confirm('Удалить из друзей?')) return;
-    try { await HU.removeFriend(el.dataset.remove); await refreshFriends(); showToast('Удалено'); }
-    catch(e){ showToast(e.message); }
-  }));
-  list.querySelectorAll('[data-cancel]').forEach(el => el.addEventListener('click', async () => {
-    try { await HU.removeFriend(el.dataset.cancel); await refreshFriends(); }
-    catch(e){ showToast(e.message); }
-  }));
-}
-document.querySelectorAll('.ftab').forEach(t => {
-  t.addEventListener('click', () => {
-    document.querySelectorAll('.ftab').forEach(x => x.classList.toggle('active', x === t));
-    friendsTab = t.dataset.ftab;
-    sfx.click();
-    renderFriends();
-  });
-});
-document.getElementById('friendSearchBtn').addEventListener('click', doSearch);
-document.getElementById('friendSearch').addEventListener('keypress', e => { if(e.key === 'Enter') doSearch(); });
-async function doSearch(){
-  const q = document.getElementById('friendSearch').value.trim();
-  const box = document.getElementById('searchResults');
-  if(q.length < 2){ box.innerHTML = ''; return; }
-  try {
-    const res = await HU.searchUsers(q);
-    if(!res.length){ box.innerHTML = '<div class="friends-empty">Никого не найдено</div>'; return; }
-    box.innerHTML = res.map(u => {
-      const dev = u.isDev ? devBadge() : '';
-      let actionBtn = '';
-      if(u.relationship === 'none') actionBtn = `<button class="ua-btn primary" data-add="${esc(u.username)}">+ Добавить</button>`;
-      else if(u.relationship === 'friends') actionBtn = `<button class="ua-btn" disabled>✓ В друзьях</button>`;
-      else if(u.relationship === 'outgoing') actionBtn = `<button class="ua-btn" disabled>Отправлено</button>`;
-      else if(u.relationship === 'incoming') actionBtn = `<button class="ua-btn primary" data-accept2="${esc(u.username)}">✓ Принять</button>`;
-      return `<div class="user-card">
-        <div class="user-avatar">${u.avatar || '🐺'}</div>
-        <div class="user-info">
-          <div class="user-name">${esc(u.username)} ${dev}</div>
-          <div class="user-meta">🪙 ${(u.coins||0).toLocaleString('ru-RU')}</div>
-        </div>
-        <div class="user-actions">${actionBtn}</div>
-      </div>`;
-    }).join('');
-    box.querySelectorAll('[data-add]').forEach(el => el.addEventListener('click', async () => {
-      try { await HU.sendFriendReq(el.dataset.add); showToast('✓ Заявка отправлена'); doSearch(); await refreshFriends(); }
-      catch(e){ showToast(e.message); }
-    }));
-    box.querySelectorAll('[data-accept2]').forEach(el => el.addEventListener('click', async () => {
-      try { await HU.acceptFriend(el.dataset.accept2); showToast('✓ Теперь друзья'); doSearch(); await refreshFriends(); }
-      catch(e){ showToast(e.message); }
-    }));
-  } catch(e){ box.innerHTML = ''; }
-}
-
-/* CASES */
-function renderCases(){
-  const grid = document.getElementById('casesGrid'); if(!grid) return;
-  grid.innerHTML = CASES_CACHE.map(c => {
-    const icons = ITEMS_CACHE.filter(i => i.rarity === 'legendary').slice(0,3).map(i => `<div class="pv rarity-${i.rarity}">${i.icon}</div>`).join('');
-    return `<div class="case-card" style="--case-color:${c.color}">
-      <div class="case-icon">${c.icon}</div>
-      <div class="case-name">${c.name}</div>
-      <div class="case-price">🪙 ${c.price.toLocaleString('ru-RU')}</div>
-      <div class="case-preview">${icons}</div>
-      <button class="case-btn" data-open="${c.id}">ОТКРЫТЬ</button>
-    </div>`;
-  }).join('');
-  grid.querySelectorAll('.case-btn').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      if(spinning) return;
-      if(document.getElementById('caseModal').classList.contains('active')) return;
-      openCaseModal(btn.dataset.open);
-    });
-  });
-}
-let currentCase = null, spinning = false;
-function openCaseModal(caseId){
-  const c = CASES_CACHE.find(x => x.id === caseId); if(!c) return;
-  currentCase = c;
-  document.getElementById('caseModalTitle').textContent = `${c.icon} ${c.name}`;
-  document.getElementById('caseModalPrice').textContent = `🪙 ${c.price.toLocaleString('ru-RU')} за открытие`;
-  document.getElementById('caseResult').textContent = '';
-  document.getElementById('openOneBtn').textContent = `x1 · ${c.price}`;
-  document.getElementById('openFiveBtn').textContent = `x5 · ${c.price*5}`;
-  document.getElementById('openTenBtn').textContent = `x10 · ${c.price*10}`;
-  document.getElementById('openOneBtn').disabled = false;
-  document.getElementById('openFiveBtn').disabled = false;
-  document.getElementById('openTenBtn').disabled = false;
-  fillTrack();
-  document.getElementById('caseModal').classList.add('active');
-  sfx.click();
-}
-function fillTrack(){
-  const track = document.getElementById('track'); track.innerHTML = '';
-  const frag = document.createDocumentFragment();
-  for(let i = 0; i < 30; i++){
-    const it = ITEMS_CACHE[Math.floor(Math.random() * ITEMS_CACHE.length)];
-    const d = document.createElement('div');
-    d.className = `item rarity-${it.rarity}`;
-    d.innerHTML = `<div class="icon">${it.icon}</div><div>${it.name}</div><div class="price">🪙 ${getItemPrice(it.name)}</div>`;
-    frag.appendChild(d);
-  }
-  track.appendChild(frag);
-}
-document.getElementById('caseModalClose').addEventListener('click', () => { if(spinning) return; document.getElementById('caseModal').classList.remove('active'); });
-document.getElementById('caseModal').addEventListener('click', e => { if(e.target.id === 'caseModal' && !spinning) e.currentTarget.classList.remove('active'); });
-document.getElementById('openOneBtn').addEventListener('click', () => openCase(1));
-document.getElementById('openFiveBtn').addEventListener('click', () => openCase(5));
-document.getElementById('openTenBtn').addEventListener('click', () => openCase(10));
-
-function runSpin(winItem){
-  return new Promise(resolve => {
-    const track = document.getElementById('track'); track.innerHTML = '';
-    const total = window.innerWidth < 640 ? 45 : 60;
-    const winIdx = total - 5;
-    const frag = document.createDocumentFragment();
-    for(let i = 0; i < total; i++){
-      const it = (i === winIdx) ? winItem : ITEMS_CACHE[Math.floor(Math.random()*ITEMS_CACHE.length)];
-      const d = document.createElement('div');
-      d.className = `item rarity-${it.rarity}`;
-      d.innerHTML = `<div class="icon">${it.icon}</div><div>${it.name}</div><div class="price">🪙 ${getItemPrice(it.name)}</div>`;
-      frag.appendChild(d);
+    if(pathname === '/api/me' && req.method === 'GET'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      return sendJSON(res, 200, publicUser(u));
     }
-    track.appendChild(frag);
-    const wrapper = document.querySelector('#caseModal .roulette-wrapper');
-    const first = track.querySelector('.item');
-    const iw = first ? first.offsetWidth + 12 : 122;
-    track.style.transition = 'none';
-    track.style.transform = 'translateX(0)';
-    void track.offsetWidth;
-    const ww = wrapper.clientWidth;
-    const co = ww/2 - iw/2;
-    const ro = (Math.random() - 0.5) * (iw * 0.6);
-    const tx = -(winIdx * iw - co + ro);
-    for(let i = 0; i < 30; i++) setTimeout(()=>sfx.tick(), (i/30) * 4000 * (i/30));
-    track.style.transition = 'transform 4s cubic-bezier(.2,.8,.2,1)';
-    track.style.transform = `translateX(${tx}px)`;
-    setTimeout(resolve, 4100);
-  });
-}
-async function openCase(multi){
-  if(spinning || !currentCase) return;
-  const c = currentCase;
-  const cost = c.price * multi;
-  if(state.coins < cost){ showToast(`Нужно 🪙 ${cost}`); return; }
-  const b1 = document.getElementById('openOneBtn'), b5 = document.getElementById('openFiveBtn'), b10 = document.getElementById('openTenBtn');
-  spinning = true;
-  b1.disabled = b5.disabled = b10.disabled = true;
-  try {
-    const r = await HU.openCase(c.id, multi);
-    const resDiv = document.getElementById('caseResult'); resDiv.textContent = '';
-    sfx.open();
-    const grouped = {};
-    for(const it of r.items){
-      await runSpin(it);
-      if(it.rarity === 'legendary'){ flash('legend'); confetti(); sfx.win('legendary'); }
-      else if(it.rarity === 'epic'){ flash('epic'); sfx.win('epic'); }
-      else sfx.win(it.rarity);
-      grouped[it.name] = (grouped[it.name] || 0) + 1;
-      state.inventory[it.name] = (state.inventory[it.name] || 0) + 1;
+    if(pathname === '/api/avatar' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const { avatar } = await readBody(req);
+      if(!AVATARS.includes(avatar)) return sendJSON(res, 400, { error:'Неверный аватар' });
+      u.avatar = avatar; markDirty();
+      return sendJSON(res, 200, { ok:true });
     }
-    state.coins = r.coins;
-    updateCoinsUI(false);
-    renderInventory(); renderMarket(); renderUpgrader(); renderCraft();
-    if(multi === 1){ const it = r.items[0]; resDiv.innerHTML = `Получено: <span class="win-tag">${it.icon} ${it.name}</span>`; }
-    else { resDiv.innerHTML = 'Получено: ' + Object.entries(grouped).map(([n,c]) => { const it = ITEMS_CACHE.find(i => i.name === n); return `<span class="win-tag">${it.icon} ${n}${c > 1 ? ' x'+c : ''}</span>`; }).join(' '); }
-  } catch(e){ showToast('⚠️ ' + e.message); }
-  finally { spinning = false; b1.disabled = b5.disabled = b10.disabled = false; }
-}
+    if(pathname === '/api/tap' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      if(!u._taps) u._taps = [];
+      const now = Date.now();
+      while(u._taps.length && now - u._taps[0] > 2000) u._taps.shift();
+      if(u._taps.length >= 15) return sendJSON(res, 429, { error:'Автокликер!' });
+      if(u._taps.length && now - u._taps[u._taps.length-1] < 40) return sendJSON(res, 429, { error:'Слишком быстро' });
+      u._taps.push(now);
+      u.coins += 1; u.totalTaps += 1; markDirty();
+      return sendJSON(res, 200, { coins:u.coins });
+    }
+    if(pathname === '/api/cases' && req.method === 'GET')
+      return sendJSON(res, 200, CASES.map(c => ({ id:c.id, name:c.name, icon:c.icon, price:c.price, color:c.color })));
+    if(pathname === '/api/items' && req.method === 'GET') return sendJSON(res, 200, ITEMS);
+    if(pathname === '/api/rarities' && req.method === 'GET') return sendJSON(res, 200, RARITIES);
 
-/* CRAFT */
-function renderCraft(){
-  const grid = document.getElementById('craftGrid'); if(!grid) return;
-  const inv = state.inventory || {};
-  const names = Object.keys(inv).filter(n => inv[n] > 0);
-  if(!names.length){ grid.innerHTML = '<div class="craft-empty">Инвентарь пуст. Открой кейс!</div>'; return; }
-  names.sort((a,b) => { const ia = ITEMS_CACHE.find(i=>i.name===a), ib = ITEMS_CACHE.find(i=>i.name===b); if(!ia || !ib) return 0; return (RARITY_ORDER[ia.rarity]-RARITY_ORDER[ib.rarity]) || a.localeCompare(b); });
-  grid.innerHTML = names.map(name => {
-    const item = ITEMS_CACHE.find(i => i.name === name); if(!item) return '';
-    const count = inv[name];
-    const isMax = !RARITIES[item.rarity].next;
-    const ready = !isMax && count >= CRAFT_COST;
-    const cls = 'craft-item rarity-' + item.rarity + (ready ? ' ready' : ' not-ready') + (isMax ? ' legendary-locked' : '');
-    const badge = ready ? `<span class="ready-badge">⚒️ ${count}/${CRAFT_COST}</span>` : '';
-    const hint = isMax ? 'Максимум' : `${count}/${CRAFT_COST} → ${RARITIES[item.rarity].next ? RARITIES[RARITIES[item.rarity].next].label : ''}`;
-    return `<div class="${cls}" data-name="${name}" data-ready="${ready}">
-      ${badge}<div class="icon">${item.icon}</div><div>${item.name}</div><div class="cnt">x${count}</div><div class="need">${hint}</div>
-    </div>`;
-  }).join('');
-  grid.querySelectorAll('.craft-item').forEach(el => {
-    el.addEventListener('click', () => {
-      if(el.dataset.ready !== 'true'){ showToast('Нужно 5 одинаковых'); return; }
-      performCraft(el.dataset.name);
-    });
-  });
-}
-let crafting = false;
-async function performCraft(name){
-  if(crafting) return;
-  crafting = true;
-  sfx.craft();
-  try {
-    const r = await HU.craft(name);
-    state.inventory = r.inventory;
-    showCraftResult(r.result, r.consumed);
-    renderCraft(); renderInventory(); renderMarket();
-    sfx.win(r.result.rarity);
-    if(r.result.rarity === 'legendary'){ flash('legend'); confetti(); }
-    else if(r.result.rarity === 'epic'){ flash('epic'); }
-  } catch(e){ showToast('⚠️ ' + e.message); }
-  finally { crafting = false; }
-}
-function showCraftResult(result, consumed){
-  const stage = document.getElementById('craftStage');
-  const consumedItem = ITEMS_CACHE.find(i => i.name === consumed.name);
-  stage.innerHTML = `
-    <div class="craft-result-title">⚒️ КРАФТ УСПЕШЕН</div>
-    <div class="craft-result-card rarity-${result.rarity}"><div class="rc-icon">${result.icon}</div><div class="rc-name">${result.name}</div><div class="rc-price">🪙 ${result.price.toLocaleString('ru-RU')}</div></div>
-    <div class="craft-result-sub">Получено за 5 × ${consumedItem.icon} ${consumed.name}</div>
-    <div class="craft-consumed">${Array(5).fill(0).map(() => `<div class="cc rarity-${consumedItem.rarity}">${consumedItem.icon}</div>`).join('')}</div>`;
-  document.getElementById('craftOverlay').classList.add('active');
-  setTimeout(() => document.getElementById('craftOverlay').classList.remove('active'), 2600);
-}
-
-/* DAILY */
-function canClaimDaily(){ return currentUser && Date.now() - (currentUser.lastDaily || 0) >= DAILY_CD; }
-function getTimeUntilDaily(){ return Math.max(0, DAILY_CD - (Date.now() - (currentUser.lastDaily || 0))); }
-function fmtTime(ms){ if(ms <= 0) return 'Готово!'; const t = Math.floor(ms / 1000); return `${String(Math.floor(t/3600)).padStart(2,'0')}:${String(Math.floor((t%3600)/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`; }
-function updateDailyUI(){
-  if(!currentUser) return;
-  const btn = document.getElementById('claimDailyBtn'), timer = document.getElementById('dailyTimer');
-  const badge = document.getElementById('dailyStatusBadge'), card = document.getElementById('dailyCard');
-  const sb = document.getElementById('streakBadge'), grid = document.getElementById('dailyGrid');
-  const streak = currentUser.dailyStreak || 0;
-  const dayIdx = streak % 7;
-  const ready = canClaimDaily();
-  sb.textContent = `${streak} / 7`;
-  badge.textContent = ready ? 'ГОТОВО' : 'ЖДИ';
-  card.classList.toggle('ready', ready);
-  btn.disabled = !ready;
-  btn.textContent = ready ? 'ЗАБРАТЬ НАГРАДУ' : '✅ УЖЕ ПОЛУЧЕНО';
-  timer.innerHTML = ready ? '🎉 Доступно!' : `⏳ <b>${fmtTime(getTimeUntilDaily())}</b>`;
-  grid.innerHTML = DAILY_REWARDS.map((r, i) => {
-    let cls = 'day-box';
-    if(i < streak) cls += ' claimed';
-    else if(i === dayIdx && ready) cls += ' today';
-    return `<div class="${cls}"><div class="day-num">Д${i+1}</div><div class="day-ic">${DAILY_ICONS[i]}</div><div class="day-val">${r}</div></div>`;
-  }).join('');
-}
-function updateDailyBadge(){
-  const show = canClaimDaily();
-  document.getElementById('dailyBadge').style.display = show ? 'block' : 'none';
-  document.getElementById('dailyBadgeDesktop').style.display = show ? 'block' : 'none';
-  document.getElementById('profileBtn').classList.toggle('has-reward', show);
-}
-document.getElementById('claimDailyBtn').addEventListener('click', async () => {
-  if(!canClaimDaily()) return;
-  try {
-    const r = await HU.daily();
-    state.coins = r.coins;
-    currentUser.lastDaily = r.lastDaily;
-    currentUser.dailyStreak = r.dailyStreak;
-    currentUser.totalClaimed = r.totalClaimed;
-    updateCoinsUI(true); renderProfile(); updateDailyUI(); updateDailyBadge();
-    sfx.daily(); flash('legend'); confetti();
-    showToast(`🎁 +${r.reward.toLocaleString('ru-RU')} 🪙`);
-  } catch(e){ showToast('⏳ ' + e.message); }
-});
-let dailyTimer;
-function checkDailyOnLoad(){
-  updateDailyUI(); updateDailyBadge();
-  clearInterval(dailyTimer);
-  dailyTimer = setInterval(() => { if(!currentUser) return; updateDailyUI(); updateDailyBadge(); }, 1000);
-}
-
-/* PROFILE */
-function refreshProfileUI(){
-  if(!currentUser) return;
-  document.getElementById('profileAvatar').textContent = currentUser.avatar || '🐺';
-  document.getElementById('topAvatar').textContent = currentUser.avatar || '🐺';
-}
-function renderProfile(){
-  if(!currentUser) return;
-  refreshProfileUI();
-  const dev = currentUser.isDev ? ' ' + devBadge() : '';
-  document.getElementById('profileName').innerHTML = esc(currentUser.username) + dev;
-  document.getElementById('profileJoined').textContent = new Date(currentUser.created).toLocaleDateString('ru-RU', { day:'2-digit', month:'long', year:'numeric' });
-  document.getElementById('pstatCoins').textContent = '🪙 ' + state.coins.toLocaleString('ru-RU');
-  document.getElementById('pstatTaps').textContent = (state.totalTaps || 0).toLocaleString('ru-RU');
-  let ti = 0, tv = 0;
-  Object.keys(state.inventory).forEach(n => { ti += state.inventory[n]; tv += state.inventory[n] * getSellPrice(n); });
-  document.getElementById('pstatItems').textContent = ti.toLocaleString('ru-RU');
-  document.getElementById('pstatValue').textContent = '🪙 ' + tv.toLocaleString('ru-RU');
-  document.getElementById('pstatStreak').textContent = (currentUser.dailyStreak || 0) + ' / 7';
-  document.getElementById('pstatClaimed').textContent = (currentUser.totalClaimed || 0).toLocaleString('ru-RU');
-  const picker = document.getElementById('avatarPicker');
-  picker.innerHTML = AVATARS.map(a => `<button class="avatar-opt ${a === currentUser.avatar ? 'active' : ''}" data-avatar="${a}">${a}</button>`).join('');
-  picker.querySelectorAll('.avatar-opt').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      try { await HU.setAvatar(btn.dataset.avatar); currentUser.avatar = btn.dataset.avatar; refreshProfileUI(); renderProfile(); sfx.click(); }
-      catch(e){ showToast(e.message); }
-    });
-  });
-  updateDailyUI();
-}
-
-/* INVENTORY */
-let invFilter = 'all';
-function renderInventory(){
-  const grid = document.getElementById('invGrid'); if(!grid) return;
-  let names = Object.keys(state.inventory).filter(n => state.inventory[n] > 0);
-  let tc = 0, tv = 0;
-  names.forEach(n => { tc += state.inventory[n]; tv += state.inventory[n] * getSellPrice(n); });
-  document.getElementById('invCount').textContent = tc;
-  document.getElementById('invTotal').textContent = tv ? `≈ 🪙 ${tv.toLocaleString('ru-RU')}` : '';
-  const b1 = document.getElementById('invBadge');
-  if(b1){ b1.textContent = tc; b1.classList.toggle('show', tc > 0); }
-  const b2 = document.getElementById('invBadgeDesktop');
-  if(b2){ b2.textContent = tc; b2.classList.toggle('show', tc > 0); }
-  if(invFilter !== 'all') names = names.filter(n => { const it = ITEMS_CACHE.find(i => i.name === n); return it && it.rarity === invFilter; });
-  if(!names.length){ grid.innerHTML = '<div class="inv-empty">' + (Object.keys(state.inventory).length ? 'Нет этой редкости' : 'Инвентарь пуст') + '</div>'; return; }
-  names.sort((a,b) => { const ia = ITEMS_CACHE.find(i=>i.name===a), ib = ITEMS_CACHE.find(i=>i.name===b); if(!ia || !ib) return 0; return (RARITY_ORDER[ia.rarity]-RARITY_ORDER[ib.rarity]) || a.localeCompare(b); });
-  grid.innerHTML = names.map(name => {
-    const item = ITEMS_CACHE.find(i => i.name === name); if(!item) return '';
-    const count = state.inventory[name];
-    const badge = count > 1 ? `<span class="count-badge">x${count}</span>` : '';
-    return `<div class="inv-item rarity-${item.rarity}" data-name="${name}">${badge}<div class="icon">${item.icon}</div><div>${item.name}</div><div class="inv-price">🪙 ${getSellPrice(name)}</div></div>`;
-  }).join('');
-  grid.querySelectorAll('.inv-item').forEach(el => {
-    el.addEventListener('click', () => { const item = ITEMS_CACHE.find(i => i.name === el.dataset.name); if(item) showItemModal(item); });
-  });
-}
-document.getElementById('invFilters').addEventListener('click', e => {
-  const btn = e.target.closest('.filter-btn'); if(!btn) return;
-  invFilter = btn.dataset.invfilter;
-  document.querySelectorAll('#invFilters .filter-btn').forEach(b => b.classList.toggle('active', b === btn));
-  sfx.click(); renderInventory();
-});
-
-/* ITEM MODAL */
-let modalItem = null;
-function showItemModal(item){
-  modalItem = item;
-  document.getElementById('modalIcon').textContent = item.icon;
-  document.getElementById('modalName').textContent = item.name;
-  const tag = document.getElementById('modalRarity');
-  tag.textContent = RARITIES[item.rarity].label;
-  tag.style.color = RARITIES[item.rarity].color;
-  document.getElementById('modalPrice').textContent = `🪙 ${getItemPrice(item.name).toLocaleString('ru-RU')}`;
-  document.getElementById('modalSell').textContent = `🪙 ${getSellPrice(item.name).toLocaleString('ru-RU')}`;
-  document.getElementById('modalDrops').textContent = (state.supply[item.name]?.drops) || 0;
-  document.getElementById('modalOwned').textContent = state.inventory[item.name] || 0;
-  document.getElementById('modalSellBtn').disabled = !(state.inventory[item.name] > 0);
-  document.getElementById('modalOverlay').classList.add('active');
-}
-document.getElementById('modalClose').addEventListener('click', () => document.getElementById('modalOverlay').classList.remove('active'));
-document.getElementById('modalOverlay').addEventListener('click', e => { if(e.target.id === 'modalOverlay') e.currentTarget.classList.remove('active'); });
-document.getElementById('modalSellBtn').addEventListener('click', async () => {
-  if(!modalItem) return;
-  if((state.inventory[modalItem.name] || 0) < 1) return;
-  try {
-    const r = await HU.sell(modalItem.name, 1);
-    state.coins = r.coins; state.inventory = r.inventory;
-    updateCoinsUI(true); renderAll();
-    if((state.inventory[modalItem.name] || 0) < 1) document.getElementById('modalOverlay').classList.remove('active');
-    else showItemModal(modalItem);
-    showToast(`Продано за 🪙 ${r.earned}`);
-    beep(700, 0.08, 'triangle', 0.05);
-  } catch(e){ showToast(e.message); }
-});
-
-/* CHANCES */
-function renderChances(){
-  const list = document.getElementById('chancesList'); if(!list) return;
-  list.innerHTML = ['common','uncommon','rare','epic','legendary'].map(k => {
-    const r = RARITIES[k];
-    return `<div class="chance-row"><span class="chance-dot" style="background:${r.color}"></span><span class="chance-label">${r.label}</span><span class="chance-value">🪙 ${r.basePrice}</span></div>`;
-  }).join('');
-}
-
-/* MARKET */
-let marketFilter = 'all';
-document.getElementById('marketFilters').addEventListener('click', e => {
-  const btn = e.target.closest('.filter-btn'); if(!btn) return;
-  marketFilter = btn.dataset.filter;
-  document.querySelectorAll('#marketFilters .filter-btn').forEach(b => b.classList.toggle('active', b === btn));
-  sfx.click(); renderMarket();
-});
-function sparkline(hist, color){
-  const w = 100, h = 22;
-  if(!hist || hist.length < 2) return `<svg class="mc-spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><line x1="0" y1="${h/2}" x2="${w}" y2="${h/2}" stroke="#222"/></svg>`;
-  const mn = Math.min(...hist), mx = Math.max(...hist), rng = (mx - mn) || 1, step = w / (hist.length - 1);
-  const pts = hist.map((v, i) => `${(i*step).toFixed(1)},${(h - ((v-mn)/rng)*h*0.85 - 2).toFixed(1)}`).join(' ');
-  return `<svg class="mc-spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>`;
-}
-function renderMarket(){
-  const grid = document.getElementById('marketGrid'); if(!grid) return;
-  let list = [...ITEMS_CACHE];
-  if(marketFilter === 'owned') list = list.filter(i => (state.inventory[i.name] || 0) > 0);
-  else if(marketFilter !== 'all') list = list.filter(i => i.rarity === marketFilter);
-  list.sort((a,b) => (RARITY_ORDER[a.rarity]-RARITY_ORDER[b.rarity]) || (getItemPrice(b.name)-getItemPrice(a.name)));
-  if(!list.length){ grid.innerHTML = '<div class="inv-empty">Ничего не найдено</div>'; return; }
-  grid.innerHTML = list.map(item => {
-    const price = getItemPrice(item.name);
-    const s = state.supply[item.name] || { drops:0, trend:0 };
-    const trend = s.trend || 0;
-    const cls = trend > 0.1 ? 'trend-up' : trend < -0.1 ? 'trend-down' : 'trend-flat';
-    const arr = trend > 0.1 ? '↗' : trend < -0.1 ? '↘' : '→';
-    const owned = state.inventory[item.name] || 0;
-    const hist = state.priceHistory[item.name] || [price];
-    return `<div class="market-card">
-      <div class="mc-head"><div class="mc-icon">${item.icon}</div><div class="mc-info"><div class="mc-name">${item.name}</div><div class="mc-rarity" style="color:${RARITIES[item.rarity].color}">${RARITIES[item.rarity].label}</div></div></div>
-      ${sparkline(hist, RARITIES[item.rarity].color)}
-      <div class="mc-price-row"><div class="mc-price">🪙 ${price.toLocaleString('ru-RU')}</div><div class="mc-trend ${cls}">${arr} ${(trend*15).toFixed(1)}%</div></div>
-      <div class="mc-supply"><span>Supply: <b>${s.drops || 0}</b></span><span>У тебя: <b>${owned}</b></span></div>
-      <div class="mc-actions"><button class="mc-btn" data-buy="${item.name}" ${price > state.coins ? 'disabled' : ''}>Купить</button><button class="mc-btn sell" data-sell="${item.name}" ${owned < 1 ? 'disabled' : ''}>Продать</button></div>
-    </div>`;
-  }).join('');
-  grid.querySelectorAll('[data-buy]').forEach(el => el.addEventListener('click', () => buyItem(el.dataset.buy)));
-  grid.querySelectorAll('[data-sell]').forEach(el => el.addEventListener('click', () => sellItem(el.dataset.sell, 1)));
-}
-async function buyItem(name){
-  try { const r = await HU.buy(name); state.coins = r.coins; state.inventory = r.inventory; updateCoinsUI(false); renderAll(); showToast(`Куплено: ${name}`); beep(500, 0.08, 'triangle', 0.05); }
-  catch(e){ showToast(e.message); }
-}
-async function sellItem(name, count){
-  try { const r = await HU.sell(name, count); state.coins = r.coins; state.inventory = r.inventory; updateCoinsUI(true); renderAll(); showToast(`Продано за 🪙 ${r.earned}`); beep(700, 0.08, 'triangle', 0.05); }
-  catch(e){ showToast(e.message); }
-}
-
-/* UPGRADER */
-let upgChance = 50, upgBet = {}, upgTarget = null, upgrading = false;
-function validateBet(){ for(const n in upgBet){ const h = state.inventory[n] || 0; if(h <= 0) delete upgBet[n]; else if(upgBet[n] > h) upgBet[n] = h; } }
-document.getElementById('upgChances').addEventListener('click', e => {
-  const btn = e.target.closest('.ch'); if(!btn || upgrading) return;
-  upgChance = parseInt(btn.dataset.chance);
-  document.querySelectorAll('.ch').forEach(b => b.classList.toggle('active', b === btn));
-  sfx.click(); renderUpgrader();
-});
-function getBetValue(){ return Object.entries(upgBet).reduce((s,[n,c]) => s + getItemPrice(n)*c, 0); }
-function getTargetPrice(){ return upgTarget ? getItemPrice(upgTarget) : 0; }
-function getRequiredBet(){ return upgTarget ? Math.round(getTargetPrice() * upgChance / 100) : 0; }
-function isReady(){ const r = getRequiredBet(), b = getBetValue(); return upgTarget && b >= r && r > 0; }
-
-function renderUpgrader(){
-  if(!currentUser) return;
-  validateBet();
-  const invGrid = document.getElementById('upgInvGrid');
-  const names = Object.keys(state.inventory).filter(n => state.inventory[n] > 0);
-  document.getElementById('upgInvCount').textContent = names.reduce((s,n) => s + state.inventory[n], 0);
-  if(!names.length){ invGrid.innerHTML = '<div class="inv-empty" style="grid-column:1/-1;padding:12px;font-size:10px">Нет</div>'; }
-  else {
-    names.sort((a,b) => { const ia = ITEMS_CACHE.find(i=>i.name===a), ib = ITEMS_CACHE.find(i=>i.name===b); if(!ia || !ib) return 0; return (RARITY_ORDER[ia.rarity]-RARITY_ORDER[ib.rarity]) || a.localeCompare(b); });
-    invGrid.innerHTML = names.map(name => {
-      const item = ITEMS_CACHE.find(i => i.name === name);
-      const count = state.inventory[name];
-      const isSel = !!upgBet[name];
-      return `<div class="upg-item rarity-${item.rarity} ${isSel?'selected':''}" data-betname="${name}"><span class="bdg">x${count}</span><div class="icon">${item.icon}</div><div>${item.name}</div><div class="price">🪙 ${getItemPrice(name)}</div></div>`;
-    }).join('');
-    invGrid.querySelectorAll('[data-betname]').forEach(el => {
-      el.addEventListener('click', () => {
-        const name = el.dataset.betname;
-        if(upgBet[name]) delete upgBet[name];
-        else upgBet[name] = state.inventory[name];
-        sfx.click(); renderUpgrader();
+    if(pathname === '/api/open-case' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const { caseId, multi } = await readBody(req);
+      const c = CASES.find(x => x.id === caseId); if(!c) return sendJSON(res, 400, { error:'Кейс не найден' });
+      const m = Math.max(1, Math.min(10, parseInt(multi) || 1));
+      const cost = c.price * m;
+      if(u.coins < cost) return sendJSON(res, 400, { error:'Недостаточно монет' });
+      const results = [];
+      for(let i = 0; i < m; i++) results.push(rollFromCase(c));
+      u.coins -= cost;
+      for(const it of results){ addItem(u.id, it.name, 1); registerDrop(it.name, 1); }
+      markDirty();
+      return sendJSON(res, 200, {
+        items: results.map(i => ({ name:i.name, icon:i.icon, rarity:i.rarity, price:getItemPrice(i.name) })),
+        coins: u.coins,
       });
-    });
-  }
-  const targetGrid = document.getElementById('upgTargetGrid');
-  const req = getRequiredBet();
-  const withElig = ITEMS_CACHE.map(it => { const p = getItemPrice(it.name); const eligible = req > 0 && p <= req * 1.15 && p >= req * 0.5; return { ...it, price:p, eligible }; });
-  withElig.sort((a,b) => { if(a.eligible !== b.eligible) return a.eligible ? -1 : 1; const d = RARITY_ORDER[a.rarity] - RARITY_ORDER[b.rarity]; return d !== 0 ? d : a.price - b.price; });
-  const ec = withElig.filter(i => i.eligible).length;
-  document.getElementById('upgTargetCount').textContent = ec > 0 ? ec + ' ✓' : '—';
-  targetGrid.innerHTML = withElig.map(item => {
-    const isT = upgTarget === item.name;
-    const dim = (req > 0 && !item.eligible) ? 'dim' : '';
-    return `<div class="upg-item rarity-${item.rarity} ${isT?'target-sel':''} ${item.eligible?'elig':''} ${dim}" data-targetname="${item.name}"><div class="icon">${item.icon}</div><div>${item.name}</div><div class="price">🪙 ${item.price}</div></div>`;
-  }).join('');
-  targetGrid.querySelectorAll('[data-targetname]').forEach(el => {
-    el.addEventListener('click', () => {
-      const name = el.dataset.targetname;
-      upgTarget = (upgTarget === name) ? null : name;
-      sfx.click(); renderUpgrader();
-    });
-  });
-  const betValue = getBetValue();
-  const targetPrice = getTargetPrice();
-  const requiredBet = getRequiredBet();
-  document.getElementById('infoBet').textContent = `🪙 ${betValue.toLocaleString('ru-RU')}`;
-  document.getElementById('infoReq').textContent = upgTarget ? `🪙 ${requiredBet.toLocaleString('ru-RU')}` : '—';
-  document.getElementById('infoTarget').textContent = upgTarget ? `🪙 ${targetPrice.toLocaleString('ru-RU')}` : '—';
-  const pctEl = document.getElementById('gaugePct'), lblEl = document.getElementById('gaugeLbl'), fillEl = document.getElementById('gaugeFill');
-  const ARC = 424.12;
-  const chance = upgChance;
-  pctEl.textContent = chance.toFixed(2) + '%';
-  pctEl.classList.remove('medium','low');
-  if(chance < 30){ pctEl.classList.add('low'); lblEl.textContent = 'низкий шанс'; }
-  else if(chance < 65){ pctEl.classList.add('medium'); lblEl.textContent = 'средний шанс'; }
-  else lblEl.textContent = 'высокий шанс';
-  fillEl.setAttribute('stroke-dasharray', `${ARC * chance / 100} 565.49`);
-  const bar = document.getElementById('upgBarFill');
-  const progress = upgTarget && requiredBet > 0 ? Math.min(100, betValue / requiredBet * 100) : 0;
-  bar.style.width = progress + '%';
-  bar.classList.toggle('ok', progress >= 100);
-  const st = document.getElementById('statusTag'), btn = document.getElementById('upgradeBtn');
-  if(!upgTarget){ st.className = 'status-tag wait'; st.textContent = betValue > 0 ? 'Выбери цель →' : 'Выбери предметы и цель'; btn.disabled = true; btn.textContent = '🔒 УЛУЧШИТЬ'; }
-  else if(betValue <= 0){ st.className = 'status-tag hint'; st.textContent = `Нужна ставка 🪙 ${requiredBet.toLocaleString('ru-RU')}`; btn.disabled = true; btn.textContent = '🔒 УЛУЧШИТЬ'; }
-  else if(betValue >= requiredBet){ st.className = 'status-tag ok'; st.textContent = '✓ Готово к апгрейду'; btn.disabled = false; btn.textContent = '⚡ УЛУЧШИТЬ'; }
-  else { const diff = requiredBet - betValue; st.className = 'status-tag bad'; st.textContent = `Не хватает 🪙 ${diff.toLocaleString('ru-RU')}`; btn.disabled = true; btn.textContent = '🔒 УЛУЧШИТЬ'; }
-}
-document.getElementById('upgradeBtn').addEventListener('click', async () => {
-  if(upgrading || !isReady()) return;
-  validateBet();
-  const bet = { ...upgBet };
-  const targetName = upgTarget;
-  const chance = upgChance;
-  const targetItem = ITEMS_CACHE.find(i => i.name === targetName);
-  const betValue = getBetValue();
-  const targetPrice = getTargetPrice();
-  const consumed = Object.entries(bet).map(([n,c]) => ({ name:n, count:c }));
-  upgrading = true;
-  document.getElementById('upgradeBtn').disabled = true;
-  const ov = document.getElementById('upgradeOverlay'), stage = document.getElementById('upgStage');
-  stage.innerHTML = `<div class="roll-circle"><div class="roll-num" id="rollNum">0%</div></div><div class="roll-label">Бросок кубика</div><div class="roll-status">Шанс: ${chance}%</div>`;
-  ov.classList.add('active');
-  sfx.upg();
-  const rn = document.getElementById('rollNum');
-  const st = performance.now();
-  function anim(t){ const p = Math.min(1, (t-st)/1400); const v = (Math.sin(p * Math.PI * 6) * 0.5 + 0.5) * 95 + 5; if(rn) rn.textContent = v.toFixed(1) + '%'; if(p < 1) requestAnimationFrame(anim); }
-  requestAnimationFrame(anim);
-  const ti = setInterval(() => sfx.tick(), 90);
-  try {
-    const r = await HU.upgrade(bet, targetName, chance);
-    clearInterval(ti);
-    state.inventory = r.inventory;
-    state.coins = r.coins;
-    upgBet = {}; upgTarget = null;
-    showUpgradeResult(r.success, targetItem, consumed, betValue, targetPrice, chance);
-  } catch(e){ clearInterval(ti); ov.classList.remove('active'); upgrading = false; showToast('⚠️ ' + e.message); renderUpgrader(); }
-});
-function showUpgradeResult(success, targetItem, consumed, betValue, targetPrice, chance){
-  const stage = document.getElementById('upgStage');
-  if(success){
-    const isRare = targetItem.rarity === 'legendary' || targetItem.rarity === 'epic';
-    const tCls = targetItem.rarity === 'legendary' ? 'result-title legendary' : 'result-title success';
-    const tTxt = targetItem.rarity === 'legendary' ? '★ ЛЕГЕНДА ★' : '✅ УСПЕХ';
-    stage.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;gap:14px"><div class="${tCls}">${tTxt}</div><div class="result-card rarity-${targetItem.rarity}"><div class="rc-icon">${targetItem.icon}</div><div class="rc-name">${targetItem.name}</div><div class="rc-price">🪙 ${targetPrice.toLocaleString('ru-RU')}</div></div><div class="result-sub">Ставка 🪙 ${betValue.toLocaleString('ru-RU')} → выигрыш 🪙 ${targetPrice.toLocaleString('ru-RU')} · шанс ${chance}%</div></div>`;
-    sfx.win(targetItem.rarity);
-    if(isRare){ flash('legend'); confetti(); }
-  } else {
-    stage.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;gap:14px"><div class="result-title fail">❌ ПРОВАЛ</div><div class="result-sub">Предметы сгорели</div><div class="lost-items">${consumed.map(c => { const it = ITEMS_CACHE.find(i => i.name === c.name); return `<div class="lost-item rarity-${it.rarity}"><div style="font-size:16px">${it.icon}</div><div>${it.name}${c.count>1?' x'+c.count:''}</div></div>`; }).join('')}</div><div class="result-sub" style="color:#888">Потрачено: 🪙 ${betValue.toLocaleString('ru-RU')}</div></div>`;
-    sfx.fail(); flash();
-  }
-  setTimeout(() => { document.getElementById('upgradeOverlay').classList.remove('active'); upgrading = false; renderAll(); }, success ? 2600 : 2400);
-}
-
-/* WHEEL */
-let wheelAngle = 0, wheelSpinning = false, wheelHistory = [];
-function startWheel(){
-  drawWheel(0);
-  const btn = document.getElementById('wheelSpinBtn');
-  if(btn && !btn.dataset.bound){ btn.addEventListener('click', spinWheel); btn.dataset.bound = '1'; }
-}
-function drawWheel(rotation){
-  const c = document.getElementById('wheelCanvas'); if(!c) return;
-  const ctx = c.getContext('2d');
-  const w = c.width, h = c.height, cx = w/2, cy = h/2, r = Math.min(w,h)/2 - 20;
-  ctx.clearRect(0,0,w,h);
-  const segs = WHEEL_PRIZES.length, sa = (Math.PI*2)/segs;
-  ctx.beginPath(); ctx.arc(cx,cy,r+12,0,Math.PI*2); ctx.fillStyle='#1a1a22'; ctx.fill();
-  ctx.strokeStyle='#f0b90b'; ctx.lineWidth=6; ctx.stroke();
-  for(let i = 0; i < segs; i++){
-    const s = i*sa + rotation - Math.PI/2, e = s + sa;
-    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,s,e); ctx.closePath();
-    ctx.fillStyle = WHEEL_PRIZES[i].color; ctx.fill();
-    ctx.strokeStyle = 'rgba(0,0,0,.4)'; ctx.lineWidth = 2; ctx.stroke();
-    ctx.save(); ctx.translate(cx,cy); ctx.rotate(s + sa/2);
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillStyle = '#fff'; ctx.font = `bold ${Math.round(r*0.09)}px 'Segoe UI',sans-serif`;
-    ctx.shadowColor = 'rgba(0,0,0,.8)'; ctx.shadowBlur = 4;
-    ctx.fillText(WHEEL_PRIZES[i].label, r*0.72, 0);
-    ctx.restore();
-  }
-}
-async function spinWheel(){
-  if(wheelSpinning) return;
-  if(state.coins < WHEEL_COST){ showToast(`Нужно 🪙 ${WHEEL_COST}`); return; }
-  wheelSpinning = true;
-  const btn = document.getElementById('wheelSpinBtn');
-  btn.disabled = true;
-  const resEl = document.getElementById('wheelResult');
-  resEl.textContent = 'Крутим...'; resEl.className = 'wheel-result';
-  sfx.open();
-  try {
-    const r = await HU.wheel();
-    const prizeIdx = r.prize.index;
-    const segs = WHEEL_PRIZES.length, sa = (Math.PI*2)/segs;
-    const targetRotBase = -prizeIdx*sa - sa/2;
-    const spins = 6 + Math.floor(Math.random()*3);
-    const fullRot = spins * Math.PI*2;
-    const jitter = (Math.random()-.5) * sa * 0.6;
-    const startRot = wheelAngle;
-    const targetRot = startRot + fullRot + (targetRotBase - startRot % (Math.PI*2)) + jitter;
-    const dur = 5000, st = performance.now();
-    let lastTick = st;
-    await new Promise(resolve => {
-      function step(t){
-        const p = Math.min(1, (t-st)/dur);
-        const cur = startRot + (targetRot-startRot) * (1-Math.pow(1-p,3));
-        wheelAngle = cur; drawWheel(cur);
-        if(t - lastTick > 60 && p < 0.95){ sfx.wheel(); lastTick = t; }
-        if(p < 1) requestAnimationFrame(step);
-        else resolve();
-      }
-      requestAnimationFrame(step);
-    });
-    state.coins = r.coins;
-    state.inventory = r.inventory;
-    if(r.prize.type === 'coins'){
-      resEl.textContent = `🎉 Выигрыш: ${r.prize.coins} монет!`;
-      resEl.className = 'wheel-result win';
-      sfx.win(r.prize.coins >= 1000 ? 'legendary' : r.prize.coins >= 500 ? 'epic' : 'rare');
-      if(r.prize.coins >= 1000){ flash('legend'); confetti(); }
-    } else {
-      resEl.textContent = `🎁 Выигрыш: ${r.prize.item.icon} ${r.prize.item.name}!`;
-      resEl.className = 'wheel-result win';
-      sfx.win(r.prize.item.rarity);
-      if(r.prize.item.rarity === 'legendary'){ flash('legend'); confetti(); }
-      else flash('epic');
     }
-    wheelHistory.unshift(r.prize.type === 'coins' ? `+${r.prize.coins}` : r.prize.item.name);
-    if(wheelHistory.length > 8) wheelHistory.pop();
-    document.getElementById('wheelHistory').innerHTML = wheelHistory.map(h => `<div class="wheel-hist-item">${h}</div>`).join('');
-    updateCoinsUI(true);
-    renderAll();
-  } catch(e){ resEl.textContent = '⚠️ ' + e.message; }
-  finally { wheelSpinning = false; btn.disabled = false; }
+
+    if(pathname === '/api/daily' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const now = Date.now();
+      if(now - u.lastDaily < DAILY_CD) return sendJSON(res, 400, { error:'Ещё рано' });
+      let streak = u.dailyStreak || 0;
+      if(u.lastDaily && now - u.lastDaily > DAILY_GRACE) streak = 0;
+      const dayIdx = streak % 7;
+      const reward = DAILY_REWARDS[dayIdx];
+      let ns = streak + 1; if(ns >= 7) ns = 0;
+      u.coins += reward; u.lastDaily = now; u.dailyStreak = ns; u.totalClaimed = (u.totalClaimed||0) + 1;
+      markDirty();
+      return sendJSON(res, 200, { reward, day: dayIdx+1, coins:u.coins, dailyStreak:ns, lastDaily:now, totalClaimed:u.totalClaimed });
+    }
+
+    if(pathname === '/api/market' && req.method === 'GET'){
+      const list = ITEMS.map(item => {
+        const s = getSupply(item.name);
+        return {
+          name:item.name, icon:item.icon, rarity:item.rarity,
+          price:getItemPrice(item.name), sellPrice:getSellPrice(item.name),
+          supply:s.drops, trend:s.trend,
+          history:(db.priceHistory[item.name] || [getItemPrice(item.name)]).slice(-30),
+        };
+      });
+      return sendJSON(res, 200, list);
+    }
+    if(pathname === '/api/buy' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const { itemName } = await readBody(req);
+      if(!ITEMS.find(i => i.name === itemName)) return sendJSON(res, 400, { error:'Нет предмета' });
+      const price = getItemPrice(itemName);
+      if(u.coins < price) return sendJSON(res, 400, { error:'Недостаточно монет' });
+      u.coins -= price; addItem(u.id, itemName, 1); registerDrop(itemName, 1); markDirty();
+      return sendJSON(res, 200, { coins:u.coins, inventory:getInv(u.id) });
+    }
+    if(pathname === '/api/sell' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const { itemName, count = 1 } = await readBody(req);
+      const inv = getInv(u.id);
+      const have = inv[itemName] || 0;
+      const cnt = Math.max(1, Math.min(count, have));
+      if(have < cnt) return sendJSON(res, 400, { error:'Нет предметов' });
+      const total = getSellPrice(itemName) * cnt;
+      u.coins += total; removeItem(u.id, itemName, cnt); unregisterDrop(itemName, cnt); markDirty();
+      return sendJSON(res, 200, { coins:u.coins, inventory:getInv(u.id), earned:total });
+    }
+
+    if(pathname === '/api/upgrade' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const { bet, targetName, chance } = await readBody(req);
+      if(!bet || typeof bet !== 'object' || !targetName || typeof chance !== 'number')
+        return sendJSON(res, 400, { error:'Неверные данные' });
+      if(chance < 5 || chance > 95) return sendJSON(res, 400, { error:'Неверный шанс' });
+      const target = ITEMS.find(i => i.name === targetName);
+      if(!target) return sendJSON(res, 400, { error:'Цели нет' });
+      const inv = getInv(u.id);
+      let betValue = 0;
+      for(const [name, cnt] of Object.entries(bet)){
+        if(!ITEMS.find(i => i.name === name)) return sendJSON(res, 400, { error:'Неизвестный предмет' });
+        const c = Math.max(0, parseInt(cnt) || 0);
+        if(c <= 0) continue;
+        if((inv[name] || 0) < c) return sendJSON(res, 400, { error:'Недостаточно ' + name });
+        betValue += getItemPrice(name) * c;
+      }
+      const targetPrice = getItemPrice(targetName);
+      const requiredBet = Math.round(targetPrice * chance / 100);
+      if(betValue < requiredBet) return sendJSON(res, 400, { error:'Мало вложено' });
+      const success = Math.random() * 100 < chance;
+      for(const [name, cnt] of Object.entries(bet)){
+        const c = parseInt(cnt) || 0;
+        if(c > 0){ removeItem(u.id, name, c); unregisterDrop(name, c); }
+      }
+      if(success){ addItem(u.id, targetName, 1); registerDrop(targetName, 1); }
+      markDirty();
+      return sendJSON(res, 200, {
+        success, chance, targetItem:{ name:target.name, icon:target.icon, rarity:target.rarity },
+        betValue, targetPrice, inventory:getInv(u.id), coins:u.coins,
+      });
+    }
+
+    if(pathname === '/api/craft' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const { itemName } = await readBody(req);
+      const item = ITEMS.find(i => i.name === itemName);
+      if(!item) return sendJSON(res, 400, { error:'Предмет не найден' });
+      if(!RARITIES[item.rarity].next) return sendJSON(res, 400, { error:'Легендарку нельзя крафтить' });
+      const inv = getInv(u.id);
+      if((inv[itemName] || 0) < CRAFT_COST) return sendJSON(res, 400, { error:`Нужно ${CRAFT_COST} шт.` });
+      const nextRarity = RARITIES[item.rarity].next;
+      const pool = ITEMS.filter(i => i.rarity === nextRarity);
+      const result = pool[Math.floor(Math.random() * pool.length)];
+      removeItem(u.id, itemName, CRAFT_COST);
+      unregisterDrop(itemName, CRAFT_COST);
+      addItem(u.id, result.name, 1);
+      registerDrop(result.name, 1);
+      markDirty();
+      return sendJSON(res, 200, {
+        result: { name:result.name, icon:result.icon, rarity:result.rarity, price:getItemPrice(result.name) },
+        consumed: { name:item.name, count:CRAFT_COST },
+        inventory: getInv(u.id), coins: u.coins,
+      });
+    }
+
+    if(pathname === '/api/wheel' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      if(u.coins < WHEEL_COST) return sendJSON(res, 400, { error:'Недостаточно монет' });
+      const idx = pickWheelPrize();
+      const prize = WHEEL_PRIZES[idx];
+      u.coins -= WHEEL_COST;
+      const payload = { type:prize.type, label:prize.label, index:idx };
+      if(prize.type === 'coins'){ u.coins += prize.value; payload.coins = prize.value; }
+      else {
+        const pool = ITEMS.filter(i => i.rarity === prize.rarity);
+        const it = pool[Math.floor(Math.random() * pool.length)];
+        addItem(u.id, it.name, 1); registerDrop(it.name, 1);
+        payload.item = { name:it.name, icon:it.icon, rarity:it.rarity };
+      }
+      markDirty();
+      return sendJSON(res, 200, { prize:payload, coins:u.coins, inventory:getInv(u.id) });
+    }
+
+    if(pathname === '/api/leaderboard' && req.method === 'GET'){
+      const top = [...db.users].sort((a,b) => b.coins - a.coins).slice(0, 20)
+        .map(u => ({ username:u.username, avatar:u.avatar, coins:u.coins, totalTaps:u.totalTaps, isDev:isDev(u) }));
+      return sendJSON(res, 200, top);
+    }
+
+    if(pathname === '/api/news' && req.method === 'GET'){
+      const list = [...db.news].sort((a,b) => {
+        if(a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+        return b.createdAt - a.createdAt;
+      });
+      return sendJSON(res, 200, list);
+    }
+    if(pathname === '/api/news' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      if(!isDev(u)) return sendJSON(res, 403, { error:'Только разработчик может делать новости' });
+      const { title, content, pinned } = await readBody(req);
+      if(!title || !content) return sendJSON(res, 400, { error:'Заполни все поля' });
+      const t = String(title).trim().slice(0, 100);
+      const c = String(content).trim().slice(0, 2000);
+      if(t.length < 2) return sendJSON(res, 400, { error:'Заголовок слишком короткий' });
+      if(c.length < 2) return sendJSON(res, 400, { error:'Текст слишком короткий' });
+      const news = {
+        id: Date.now() + Math.floor(Math.random() * 1000),
+        title: t, content: c,
+        author: u.username, authorAvatar: u.avatar,
+        createdAt: Date.now(), pinned: !!pinned,
+      };
+      db.news.push(news);
+      markDirty();
+      return sendJSON(res, 200, news);
+    }
+    if(pathname.startsWith('/api/news/') && req.method === 'DELETE'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      if(!isDev(u)) return sendJSON(res, 403, { error:'Только разработчик' });
+      const id = parseInt(pathname.split('/').pop());
+      const idx = db.news.findIndex(n => n.id === id);
+      if(idx === -1) return sendJSON(res, 404, { error:'Новость не найдена' });
+      db.news.splice(idx, 1);
+      markDirty();
+      return sendJSON(res, 200, { ok: true });
+    }
+    if(pathname === '/api/news/pin' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      if(!isDev(u)) return sendJSON(res, 403, { error:'Только разработчик' });
+      const { id } = await readBody(req);
+      const n = db.news.find(x => x.id === id);
+      if(!n) return sendJSON(res, 404, { error:'Нет новости' });
+      n.pinned = !n.pinned;
+      markDirty();
+      return sendJSON(res, 200, { ok: true, pinned: n.pinned });
+    }
+
+    if(pathname === '/api/users/search' && req.method === 'GET'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const q = (url.searchParams.get('q') || '').toLowerCase().trim();
+      if(q.length < 2) return sendJSON(res, 200, []);
+      const results = db.users
+        .filter(x => x.id !== u.id && x.username.toLowerCase().includes(q))
+        .slice(0, 20)
+        .map(x => ({
+          username: x.username,
+          avatar: x.avatar,
+          coins: x.coins,
+          isDev: isDev(x),
+          relationship: getRelationship(u.id, x.id),
+        }));
+      return sendJSON(res, 200, results);
+    }
+
+    if(pathname === '/api/friends' && req.method === 'GET'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const friends = [], incoming = [], outgoing = [];
+      for(const f of db.friendships){
+        if(f.fromId !== u.id && f.toId !== u.id) continue;
+        const otherId = f.fromId === u.id ? f.toId : f.fromId;
+        const other = db.users.find(x => x.id === otherId);
+        if(!other) continue;
+        const entry = { username:other.username, avatar:other.avatar, coins:other.coins, isDev:isDev(other) };
+        if(f.status === 'accepted') friends.push(entry);
+        else if(f.status === 'pending' && f.toId === u.id) incoming.push(entry);
+        else if(f.status === 'pending' && f.fromId === u.id) outgoing.push(entry);
+      }
+      return sendJSON(res, 200, { friends, incoming, outgoing });
+    }
+    if(pathname === '/api/friends/request' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const { username } = await readBody(req);
+      const target = db.users.find(x => x.username.toLowerCase() === (username||'').toLowerCase());
+      if(!target) return sendJSON(res, 404, { error:'Игрок не найден' });
+      if(target.id === u.id) return sendJSON(res, 400, { error:'Это ты' });
+      const rel = getRelationship(u.id, target.id);
+      if(rel !== 'none') return sendJSON(res, 400, { error:'Заявка уже есть' });
+      db.friendships.push({ fromId:u.id, toId:target.id, status:'pending', createdAt:Date.now() });
+      markDirty();
+      return sendJSON(res, 200, { ok: true, relationship: 'outgoing' });
+    }
+    if(pathname === '/api/friends/accept' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const { username } = await readBody(req);
+      const target = db.users.find(x => x.username.toLowerCase() === (username||'').toLowerCase());
+      if(!target) return sendJSON(res, 404, { error:'Игрок не найден' });
+      const f = db.friendships.find(x => x.fromId === target.id && x.toId === u.id && x.status === 'pending');
+      if(!f) return sendJSON(res, 400, { error:'Заявки нет' });
+      f.status = 'accepted'; f.acceptedAt = Date.now();
+      markDirty();
+      return sendJSON(res, 200, { ok: true });
+    }
+    if(pathname === '/api/friends/decline' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const { username } = await readBody(req);
+      const target = db.users.find(x => x.username.toLowerCase() === (username||'').toLowerCase());
+      if(!target) return sendJSON(res, 404, { error:'Игрок не найден' });
+      const idx = db.friendships.findIndex(x => x.fromId === target.id && x.toId === u.id && x.status === 'pending');
+      if(idx !== -1) db.friendships.splice(idx, 1);
+      markDirty();
+      return sendJSON(res, 200, { ok: true });
+    }
+    if(pathname === '/api/friends/remove' && req.method === 'POST'){
+      const u = getUser(req); if(!u) return sendJSON(res, 401, { error:'Не авторизован' });
+      const { username } = await readBody(req);
+      const target = db.users.find(x => x.username.toLowerCase() === (username||'').toLowerCase());
+      if(!target) return sendJSON(res, 404, { error:'Игрок не найден' });
+      db.friendships = db.friendships.filter(f => {
+        const isBetween = (f.fromId === u.id && f.toId === target.id) || (f.fromId === target.id && f.toId === u.id);
+        return !isBetween;
+      });
+      markDirty();
+      return sendJSON(res, 200, { ok: true });
+    }
+
+    return sendJSON(res, 404, { error:'Не найдено' });
+  } catch(e){
+    console.error('API error:', e);
+    return sendJSON(res, 500, { error:'Ошибка сервера' });
+  }
 }
 
-/* SETTINGS */
-document.querySelectorAll('.toggle[data-setting]').forEach(t => {
-  const key = t.dataset.setting;
-  t.addEventListener('click', () => {
-    if(key === 'anticheat'){ showToast('Самый умный что ли? 🤨'); sfx.err(); return; }
-    t.classList.toggle('on');
-    if(key === 'particles') document.querySelector('.bg-fx').style.display = t.classList.contains('on') ? '' : 'none';
-    sfx.click();
+const server = http.createServer(async (req, res) => {
+  const url = new URL(req.url, `http://${req.headers.host}`);
+  const pathname = url.pathname;
+  if(pathname.startsWith('/api/')) return handleAPI(req, res, pathname, url);
+
+  const publicDir = path.join(__dirname, 'public');
+  const filePath = pathname === '/' ? '/index.html' : pathname;
+  const fullPath = path.join(publicDir, filePath);
+  if(!fullPath.startsWith(publicDir)){ res.writeHead(403); return res.end('Forbidden'); }
+  fs.readFile(fullPath, (err, data) => {
+    if(err){ res.writeHead(404, { 'Content-Type':'text/plain' }); return res.end('Not found'); }
+    const ext = path.extname(fullPath);
+    const types = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.png':'image/png', '.ico':'image/x-icon', '.svg':'image/svg+xml' };
+    res.writeHead(200, { 'Content-Type': types[ext] || 'text/plain' });
+    res.end(data);
   });
 });
 
-function renderAll(){
-  renderInventory();
-  renderMarket();
-  renderUpgrader();
-  renderChances();
-  renderCases();
-  renderCraft();
-  renderNews();
-  renderTapNews();
-  renderFriends();
-}
-
-(function(){
-  const bg = document.getElementById('bgFx');
-  const count = window.innerWidth < 640 ? 18 : 30;
-  for(let i = 0; i < count; i++){
-    const p = document.createElement('div');
-    p.className = 'particle';
-    p.style.left = Math.random()*100 + '%';
-    p.style.animationDuration = (8 + Math.random()*12) + 's';
-    p.style.animationDelay = (-Math.random()*20) + 's';
-    p.style.background = ['#f0b90b','#e06ebf','#6a8df0'][i%3];
-    bg.appendChild(p);
-  }
-})();
-
-window.addEventListener('load', async () => {
-  if(authToken){
-    try { await enterGame(); }
-    catch(e){ localStorage.removeItem('homeup_token'); authToken = null; }
-  }
-  setInterval(async () => {
-    if(!currentUser) return;
-    try {
-      await refreshMarketCache();
-      renderMarket(); renderInventory(); renderUpgrader(); renderCraft();
-    } catch(e){}
-  }, 15000);
-  setInterval(async () => {
-    if(!currentUser) return;
-    await refreshNews();
-    await refreshFriends();
-  }, 30000);
+loadDB();
+server.listen(PORT, () => {
+  console.log('\n🚀 HOME UP сервер запущен');
+  console.log(`📍 http://localhost:${PORT}`);
+  console.log(`👑 Разработчики: ${DEVELOPERS.join(', ')}`);
+  console.log(`👥 Пользователей: ${db.users.length}`);
+  console.log(`📰 Новостей: ${db.news.length}\n`);
 });
-</script>
-</body>
-</html>
+process.on('SIGINT', () => { console.log('\n💾 Сохраняю...'); saveDB(); process.exit(0); });
