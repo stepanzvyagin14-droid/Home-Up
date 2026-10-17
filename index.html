@@ -6,49 +6,72 @@
   <title>Home Up</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-    body { background: #0a0a0f; color: #fff; padding: 10px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    body { background: #050508; color: #e8e8ee; padding: 10px 10px 80px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
     
-    /* --- Экраны --- */
-    .screen { width: 100%; max-width: 500px; display: none; }
+    /* Экраны */
+    .screen { width: 100%; max-width: 600px; display: none; }
     .screen.active { display: block; }
     
-    /* --- Авторизация --- */
-    .auth-box { background: #1a1a22; padding: 20px; border-radius: 12px; border: 1px solid #333; margin-top: 40px; }
-    .auth-logo { text-align: center; font-size: 28px; font-weight: bold; color: #f0b90b; margin-bottom: 20px; letter-spacing: 2px; }
-    .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-    .tab { flex: 1; padding: 10px; background: #0a0a0f; border: 1px solid #333; color: #888; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; }
-    .tab.active { background: #f0b90b; color: #000; border-color: #f0b90b; }
+    /* Авторизация */
+    .auth-box { background: #16161c; padding: 24px; border-radius: 16px; border: 1px solid #23232a; margin-top: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .auth-logo { text-align: center; font-size: 32px; font-weight: 900; background: linear-gradient(90deg, #f0b90b, #ffe488); -webkit-background-clip: text; color: transparent; margin-bottom: 24px; letter-spacing: 2px; }
+    .tabs { display: flex; gap: 8px; margin-bottom: 24px; background: #0e0e14; padding: 4px; border-radius: 12px; }
+    .tab { flex: 1; padding: 10px; border: none; color: #888; border-radius: 8px; cursor: pointer; font-weight: 800; font-size: 12px; background: transparent; }
+    .tab.active { background: #f0b90b; color: #1a1a1a; }
     .form-group { display: none; flex-direction: column; gap: 12px; }
     .form-group.active { display: flex; }
-    input { padding: 12px; background: #0a0a0f; border: 1px solid #333; color: #fff; border-radius: 8px; font-size: 16px; outline: none; }
-    input:focus { border-color: #f0b90b; }
-    .btn { padding: 14px; background: #f0b90b; color: #000; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; width: 100%; transition: transform 0.1s; }
+    input, select { padding: 14px; background: #0e0e14; border: 1.5px solid #23232a; color: #fff; border-radius: 12px; font-size: 14px; outline: none; }
+    input:focus, select:focus { border-color: #f0b90b; }
+    .btn { padding: 14px; background: #f0b90b; color: #1a1a1a; border: none; border-radius: 12px; font-weight: 900; font-size: 14px; cursor: pointer; width: 100%; text-transform: uppercase; }
     .btn:active { transform: scale(0.98); }
 
-    /* --- Игра --- */
-    .top-bar { display: flex; justify-content: space-between; align-items: center; background: #1a1a22; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #333; }
-    .balance { font-size: 18px; font-weight: bold; color: #f0b90b; }
-    .offline { font-size: 18px; font-weight: bold; color: #a78bfa; }
+    /* Игра */
+    .top-bar { display: flex; justify-content: space-between; align-items: center; background: #16161c; padding: 15px; border-radius: 14px; margin-bottom: 12px; border: 1px solid #1f1f28; }
+    .balance { font-size: 16px; font-weight: 900; color: #f0b90b; }
+    .offline { font-size: 16px; font-weight: 900; color: #a78bfa; }
+    .role-badge { font-size: 10px; font-weight: 900; padding: 2px 6px; border-radius: 6px; margin-left: 5px; text-transform: uppercase; }
+    .role-admin { background: #ff4444; color: #fff; }
+    .role-mod { background: #6a8df0; color: #fff; }
+    .role-user { background: #333; color: #aaa; }
     
-    .nav { display: flex; overflow-x: auto; gap: 8px; margin-bottom: 15px; padding-bottom: 5px; }
+    .nav { display: flex; overflow-x: auto; gap: 6px; margin-bottom: 12px; padding-bottom: 4px; }
     .nav::-webkit-scrollbar { display: none; }
-    .nav-btn { background: #1a1a22; border: 1px solid #333; color: #aaa; padding: 10px 18px; border-radius: 20px; white-space: nowrap; cursor: pointer; font-weight: bold; font-size: 13px; }
-    .nav-btn.active { background: #f0b90b; color: #000; border-color: #f0b90b; }
+    .nav-btn { background: #16161c; border: 1px solid #23232a; color: #888; padding: 10px 16px; border-radius: 20px; white-space: nowrap; cursor: pointer; font-weight: 800; font-size: 12px; }
+    .nav-btn.active { background: #f0b90b; color: #1a1a1a; border-color: #f0b90b; }
     
-    .page { display: none; background: #1a1a22; padding: 15px; border-radius: 12px; border: 1px solid #333; }
+    .page { display: none; background: #16161c; padding: 16px; border-radius: 16px; border: 1px solid #1f1f28; }
     .page.active { display: block; }
-    .page h2 { color: #f0b90b; margin-bottom: 15px; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
+    .page h2 { color: #f0b90b; margin-bottom: 16px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; }
     
-    .tap-btn { width: 170px; height: 170px; border-radius: 50%; background: #f0b90b; border: none; font-size: 24px; font-weight: bold; display: block; margin: 30px auto; cursor: pointer; box-shadow: 0 8px 0 #8a6600; transition: 0.1s; }
-    .tap-btn:active { transform: translateY(8px); box-shadow: none; }
+    .tap-btn { width: 160px; height: 160px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffe488, #f0b90b 45%, #8a6600); border: none; font-size: 24px; font-weight: 900; display: block; margin: 30px auto; cursor: pointer; box-shadow: 0 10px 0 #5a4400; transition: 0.1s; }
+    .tap-btn:active { transform: translateY(10px); box-shadow: none; }
     
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
-    .item-card { background: #0a0a0f; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #333; display: flex; flex-direction: column; justify-content: space-between; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
+    .item-card { background: #0b0b10; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #1c1c24; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
+    .item-img { width: 100%; height: 60px; object-fit: contain; margin-bottom: 5px; display: block; }
     .item-icon { font-size: 32px; margin-bottom: 5px; }
-    .item-name { font-size: 12px; font-weight: bold; margin-bottom: 4px; word-break: break-word; }
-    .item-price { font-size: 12px; color: #f0b90b; margin-bottom: 8px; font-weight: bold; }
-    .btn-small { width: 100%; padding: 8px; font-size: 12px; border-radius: 6px; background: #f0b90b; border: none; font-weight: bold; cursor: pointer; margin-top: auto; }
+    .item-name { font-size: 11px; font-weight: 800; margin-bottom: 4px; word-break: break-word; }
+    .item-price { font-size: 11px; color: #f0b90b; margin-bottom: 8px; font-weight: 800; }
+    .btn-small { width: 100%; padding: 8px; font-size: 11px; border-radius: 8px; background: #f0b90b; border: none; font-weight: 900; cursor: pointer; margin-top: auto; }
     
+    /* Чат */
+    .chat-box { display: flex; flex-direction: column; height: 400px; background: #0b0b10; border-radius: 12px; border: 1px solid #1c1c24; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+    .chat-msg { font-size: 13px; line-height: 1.4; }
+    .chat-msg .author { font-weight: 900; margin-right: 5px; }
+    .chat-input { display: flex; padding: 10px; border-top: 1px solid #1c1c24; gap: 8px; }
+    .chat-input input { flex: 1; padding: 10px; font-size: 13px; border-radius: 8px; }
+    .chat-input button { width: auto; padding: 0 15px; border-radius: 8px; }
+    
+    /* Реклама */
+    .ad-banner { background: #1e1e26; border: 1px solid #333; border-radius: 12px; margin-bottom: 12px; overflow: hidden; position: relative; text-align: center; padding: 10px; }
+    .ad-banner img { max-width: 100%; max-height: 120px; object-fit: contain; border-radius: 8px; cursor: pointer; }
+    .ad-close { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.5); color: #fff; border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-size: 12px; }
+
+    /* 3D модели (эмуляция стилями) */
+    .item-card.rar-epic .item-img { filter: drop-shadow(0 0 10px #e06ebf); }
+    .item-card.rar-legendary .item-img { filter: drop-shadow(0 0 15px #f0c14b); }
+
     /* Редкости */
     .rar-common { border-bottom: 3px solid #7a7a88; }
     .rar-uncommon { border-bottom: 3px solid #7a9df8; }
@@ -56,12 +79,11 @@
     .rar-epic { border-bottom: 3px solid #f088c8; }
     .rar-legendary { border-bottom: 3px solid #f0c14b; }
 
-    #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #f0b90b; color: #000; padding: 12px 24px; border-radius: 30px; font-weight: bold; display: none; z-index: 1000; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+    #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #f0b90b; color: #1a1a1a; padding: 12px 24px; border-radius: 30px; font-weight: 900; display: none; z-index: 1000; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
   </style>
 </head>
 <body>
 
-  <!-- ЭКРАН АВТОРИЗАЦИИ -->
   <div id="screen-auth" class="screen active">
     <div class="auth-box">
       <div class="auth-logo">HOME UP</div>
@@ -69,13 +91,11 @@
         <button class="tab active" id="btn-tab-login">ВХОД</button>
         <button class="tab" id="btn-tab-reg">РЕГИСТРАЦИЯ</button>
       </div>
-      
       <div id="form-login" class="form-group active">
         <input type="text" id="login-user" placeholder="Имя пользователя">
         <input type="password" id="login-pass" placeholder="Пароль">
         <button class="btn" id="btn-do-login">ВОЙТИ</button>
       </div>
-
       <div id="form-reg" class="form-group">
         <input type="text" id="reg-user" placeholder="Имя (от 3 символов)">
         <input type="password" id="reg-pass" placeholder="Пароль (от 4 символов)">
@@ -85,12 +105,18 @@
     </div>
   </div>
 
-  <!-- ЭКРАН ИГРЫ -->
   <div id="screen-game" class="screen">
+    <div id="ad-container"></div> <!-- Место для рекламы -->
+
     <div class="top-bar">
-      <div class="balance">🪙 <span id="ui-coins">0</span></div>
-      <div class="offline">🌙 <span id="ui-offline">0</span></div>
-      <button class="nav-btn" id="btn-logout" style="padding: 8px">Выйти</button>
+      <div>
+        <span class="balance">🪙 <span id="ui-coins">0</span></span>
+        <span class="offline" style="margin-left: 10px;">🌙 <span id="ui-offline">0</span></span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span id="ui-role" class="role-badge role-user">USER</span>
+        <button class="nav-btn" id="btn-logout" style="padding: 8px;">Выйти</button>
+      </div>
     </div>
 
     <div class="nav">
@@ -98,7 +124,9 @@
       <button class="nav-btn" data-page="cases">Кейсы</button>
       <button class="nav-btn" data-page="inv">Инвентарь</button>
       <button class="nav-btn" data-page="market">Рынок</button>
+      <button class="nav-btn" data-page="chat">Чат</button>
       <button class="nav-btn" data-page="shop">Магазин</button>
+      <button class="nav-btn" data-page="admin" id="nav-admin" style="display: none; color: #ff4444;">Админка</button>
     </div>
 
     <div id="page-tap" class="page active">
@@ -121,17 +149,60 @@
       <div class="grid" id="grid-market"></div>
     </div>
 
+    <div id="page-chat" class="page">
+      <h2>Глобальный Чат</h2>
+      <div class="chat-box">
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-input">
+          <input type="text" id="chat-input-text" placeholder="Сообщение..." maxlength="100">
+          <button class="btn" id="btn-send-chat" style="padding: 10px;">➤</button>
+        </div>
+      </div>
+    </div>
+
     <div id="page-shop" class="page">
       <h2>Магазин офлайн-коинов</h2>
       <p style="margin-bottom: 15px; color: #aaa;">Курс обмена: 5 🌙 = 1 🪙</p>
       <button class="btn" id="btn-exchange" style="margin-bottom: 10px;">Обменять ВСЁ</button>
       <button class="btn" id="btn-free" style="background: #22c55e; display: none;">👑 Забрать 1000 🪙</button>
     </div>
+
+    <!-- Админ-панель -->
+    <div id="page-admin" class="page">
+      <h2>Панель Разработчика</h2>
+      
+      <h3 style="color: #fff; font-size: 14px; margin: 15px 0 10px;">Выдать роль</h3>
+      <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <input type="text" id="admin-target-user" placeholder="Имя игрока" style="flex: 1;">
+        <select id="admin-role-select" style="width: 120px;">
+          <option value="user">User</option>
+          <option value="mod">Moderator</option>
+          <option value="admin">Admin</option>
+        </select>
+        <button class="btn" id="btn-set-role" style="width: auto; padding: 0 15px;">Дать</button>
+      </div>
+
+      <h3 style="color: #fff; font-size: 14px; margin: 15px 0 10px;">Установить 3D картинку (URL)</h3>
+      <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <input type="text" id="admin-item-name" placeholder="Название предмета (напр. AK-47)" style="flex: 1;">
+        <input type="text" id="admin-item-img" placeholder="Ссылка на фото" style="flex: 1;">
+        <button class="btn" id="btn-set-skin" style="width: auto; padding: 0 15px;">OK</button>
+      </div>
+
+      <h3 style="color: #fff; font-size: 14px; margin: 15px 0 10px;">Добавить Рекламу (показ всем)</h3>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <input type="text" id="admin-ad-img" placeholder="Ссылка на картинку рекламы (URL)">
+        <input type="text" id="admin-ad-link" placeholder="Ссылка при клике (необязательно)">
+        <button class="btn" id="btn-set-ad">Запустить рекламу</button>
+      </div>
+    </div>
+
   </div>
 
   <div id="toast"></div>
-  <script>
-// --- НАСТРОЙКИ SUPABASE (Твой сервер) ---
+
+<script>
+// --- НАСТРОЙКИ SUPABASE ---
 const SB_URL = 'https://fsxputemwveouteusdsy.supabase.co';
 const SB_KEY = 'sb_publishable_srJqOHjNtODKifwwL3j7Vg_7-ynR2L3';
 const HEADERS = {
@@ -141,7 +212,6 @@ const HEADERS = {
   'Prefer': 'return=representation'
 };
 
-// --- УНИВЕРСАЛЬНЫЙ ЗАПРОС К БАЗЕ ---
 async function db(path, options = {}) {
   const res = await fetch(SB_URL + '/rest/v1' + path, {
     ...options,
@@ -152,7 +222,6 @@ async function db(path, options = {}) {
   return text ? JSON.parse(text) : null;
 }
 
-// --- ХЕШИРОВАНИЕ ПАРОЛЯ ---
 async function hashPass(pass) {
   const msgBuffer = new TextEncoder().encode('salt_hu_' + pass);
   const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -160,10 +229,9 @@ async function hashPass(pass) {
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// --- ИГРОВЫЕ ДАННЫЕ ---
+// --- ДАННЫЕ ---
 const RARITY = {
-  common: { price: 2, next: 'uncommon' }, uncommon: { price: 8, next: 'rare' },
-  rare: { price: 35, next: 'epic' }, epic: { price: 220, next: 'legendary' }, legendary: { price: 1600, next: null }
+  common: { price: 2 }, uncommon: { price: 8 }, rare: { price: 35 }, epic: { price: 220 }, legendary: { price: 1600 }
 };
 
 const ITEMS = [
@@ -180,15 +248,8 @@ const CASES = [
   { id: '3', name: 'Премиум', price: 150, weights: { uncommon: 50, rare: 40, epic: 10 } }
 ];
 
-// --- ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ---
 let user = null;
 let token = localStorage.getItem('hu_tk') || null;
-
-// --- ИНТЕРФЕЙС (UI) ---
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
 
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -202,11 +263,18 @@ function updateUI() {
   if (!user) return;
   document.getElementById('ui-coins').textContent = user.coins || 0;
   document.getElementById('ui-offline').textContent = user.offline_coins || 0;
-  // Показ секретной кнопки для разработчика
+  
+  const r = user.role || 'user';
+  const rEl = document.getElementById('ui-role');
+  rEl.textContent = r;
+  rEl.className = 'role-badge role-' + r;
+  
+  // Показываем админку только разработчику или админу
+  document.getElementById('nav-admin').style.display = (user.username.toLowerCase() === 'baconsigma67656' || r === 'admin') ? 'block' : 'none';
   document.getElementById('btn-free').style.display = (user.username.toLowerCase() === 'baconsigma67656') ? 'block' : 'none';
 }
 
-// --- ПЕРЕКЛЮЧЕНИЕ ТАБОВ ---
+// --- АВТОРИЗАЦИЯ ---
 document.getElementById('btn-tab-login').onclick = () => {
   document.getElementById('btn-tab-login').classList.add('active');
   document.getElementById('btn-tab-reg').classList.remove('active');
@@ -220,7 +288,6 @@ document.getElementById('btn-tab-reg').onclick = () => {
   document.getElementById('form-login').classList.remove('active');
 };
 
-// --- РЕГИСТРАЦИЯ ---
 document.getElementById('btn-do-reg').onclick = async () => {
   const u = document.getElementById('reg-user').value.trim();
   const p = document.getElementById('reg-pass').value;
@@ -258,7 +325,6 @@ document.getElementById('btn-do-reg').onclick = async () => {
   }
 };
 
-// --- ВХОД ---
 document.getElementById('btn-do-login').onclick = async () => {
   const u = document.getElementById('login-user').value.trim();
   const p = document.getElementById('login-pass').value;
@@ -272,7 +338,7 @@ document.getElementById('btn-do-login').onclick = async () => {
     const hashed = await hashPass(p);
     if (res[0].password !== hashed) return showToast('Неверный пароль');
 
-    // Подсчёт офлайн-коинов (5 шт за каждую минуту отсутствия)
+    // Офлайн-коины
     const now = Date.now();
     const gap = now - (res[0].last_seen || now);
     let gain = 0;
@@ -297,28 +363,32 @@ document.getElementById('btn-do-login').onclick = async () => {
   }
 };
 
-// --- ЗАПУСК ИГРЫ ---
 function startGame() {
-  showScreen('screen-game');
+  document.getElementById('screen-auth').classList.remove('active');
+  document.getElementById('screen-game').classList.add('active');
   updateUI();
   renderCases();
   renderInv();
   renderMarket();
+  loadAd();
+  loadChat();
 
-  // Каждые 30 секунд обновляем время онлайна, чтобы офлайн-коины капали корректно
+  // Heartbeat
   setInterval(async () => {
     if (!user) return;
     await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ last_seen: Date.now() }) });
   }, 30000);
+
+  // Обновление чата каждые 3 сек
+  setInterval(loadChat, 3000);
 }
 
-// Кнопка выхода
 document.getElementById('btn-logout').onclick = () => {
   localStorage.removeItem('hu_tk');
   location.reload();
 };
 
-// Навигация по разделам
+// Навигация
 document.querySelectorAll('.nav-btn[data-page]').forEach(btn => {
   btn.onclick = () => {
     document.querySelectorAll('.nav-btn[data-page]').forEach(b => b.classList.remove('active'));
@@ -328,7 +398,7 @@ document.querySelectorAll('.nav-btn[data-page]').forEach(btn => {
   };
 });
 
-// --- ТАПАЛКА ---
+// --- ИГРА ---
 document.getElementById('btn-tap').onclick = async () => {
   if (!user) return;
   user.coins += 1;
@@ -336,7 +406,23 @@ document.getElementById('btn-tap').onclick = async () => {
   await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ coins: user.coins }) });
 };
 
-// --- КЕЙСЫ ---
+// Универсальный рендер предмета (с учетом кастомной картинки)
+function renderItemHTML(item, count = null, actionBtn = '') {
+  const customImg = (user.custom_skins && user.custom_skins[item.name]) ? user.custom_skins[item.name] : null;
+  const imgHTML = customImg 
+    ? `<img src="${customImg}" class="item-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'"><div class="item-icon" style="display:none">${item.icon}</div>`
+    : `<div class="item-icon">${item.icon}</div>`;
+
+  return `
+    <div class="item-card rar-${item.rar}">
+      ${imgHTML}
+      <div class="item-name">${item.name} ${count ? `(x${count})` : ''}</div>
+      <div class="item-price">🪙 ${RARITY[item.rar].price}</div>
+      ${actionBtn}
+    </div>
+  `;
+}
+
 function renderCases() {
   const g = document.getElementById('grid-cases');
   g.innerHTML = CASES.map(c => `
@@ -352,7 +438,6 @@ function renderCases() {
 window.openCase = async (id) => {
   const c = CASES.find(x => x.id === id);
   if (user.coins < c.price) return showToast('Недостаточно монет');
-
   user.coins -= c.price;
   
   let total = Object.values(c.weights).reduce((a, b) => a + b, 0);
@@ -376,26 +461,15 @@ window.openCase = async (id) => {
   renderInv();
 };
 
-// --- ИНВЕНТАРЬ ---
 function renderInv() {
   const g = document.getElementById('grid-inv');
   const keys = Object.keys(user.inventory || {}).filter(k => user.inventory[k] > 0);
-  
-  if (keys.length === 0) {
-    g.innerHTML = '<div style="color:#666; grid-column: 1/-1;">Инвентарь пуст</div>';
-    return;
-  }
+  if (keys.length === 0) { g.innerHTML = '<div style="color:#666; grid-column: 1/-1;">Пусто</div>'; return; }
 
   g.innerHTML = keys.map(name => {
     const it = ITEMS.find(x => x.name === name);
-    return `
-      <div class="item-card rar-${it.rar}">
-        <div class="item-icon">${it.icon}</div>
-        <div class="item-name">${name} (x${user.inventory[name]})</div>
-        <div class="item-price">🪙 ${RARITY[it.rar].price}</div>
-        <button class="btn-small" onclick="sellItem('${name}')">Продать</button>
-      </div>
-    `;
+    if(!it) return '';
+    return renderItemHTML(it, user.inventory[name], `<button class="btn-small" onclick="sellItem('${name}')">Продать</button>`);
   }).join('');
 }
 
@@ -405,52 +479,37 @@ window.sellItem = async (name) => {
   user.inventory[name]--;
   if (user.inventory[name] <= 0) delete user.inventory[name];
   user.coins += RARITY[it.rar].price;
-  
   updateUI();
   await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ coins: user.coins, inventory: user.inventory }) });
   renderInv();
   showToast('Продано');
 };
 
-// --- РЫНОК ---
 function renderMarket() {
   const g = document.getElementById('grid-market');
-  g.innerHTML = ITEMS.map(it => `
-    <div class="item-card rar-${it.rar}">
-      <div class="item-icon">${it.icon}</div>
-      <div class="item-name">${it.name}</div>
-      <div class="item-price">🪙 ${RARITY[it.rar].price}</div>
-      <button class="btn-small" onclick="buyItem('${it.name}')">Купить</button>
-    </div>
-  `).join('');
+  g.innerHTML = ITEMS.map(it => renderItemHTML(it, null, `<button class="btn-small" onclick="buyItem('${it.name}')">Купить</button>`)).join('');
 }
 
 window.buyItem = async (name) => {
   const it = ITEMS.find(x => x.name === name);
   const price = RARITY[it.rar].price;
-  
   if (user.coins < price) return showToast('Недостаточно монет');
-  
   user.coins -= price;
   user.inventory = user.inventory || {};
   user.inventory[name] = (user.inventory[name] || 0) + 1;
-  
   updateUI();
   await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ coins: user.coins, inventory: user.inventory }) });
   renderInv();
   showToast('Куплено');
 };
 
-// --- МАГАЗИН (ОФЛАЙН КОИНЫ) ---
+// --- МАГАЗИН ---
 document.getElementById('btn-exchange').onclick = async () => {
   const oCoins = user.offline_coins || 0;
   const toExch = Math.floor(oCoins / 5) * 5;
-  
   if (toExch < 5) return showToast('Мало офлайн-коинов');
-  
   user.offline_coins -= toExch;
   user.coins += (toExch / 5);
-  
   updateUI();
   await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ offline_coins: user.offline_coins, coins: user.coins }) });
   showToast(`Обменяно ${toExch} 🌙`);
@@ -463,7 +522,82 @@ document.getElementById('btn-free').onclick = async () => {
   showToast('+1000 🪙');
 };
 
-// --- АВТОРИЗАЦИЯ ПРИ ЗАГРУЗКЕ (АВТОВХОД) ---
+// --- АДМИНКА ---
+document.getElementById('btn-set-role').onclick = async () => {
+  const target = document.getElementById('admin-target-user').value.trim();
+  const role = document.getElementById('admin-role-select').value;
+  if (!target) return showToast('Введи имя');
+  try {
+    await db('/players?username=eq.' + target, { method: 'PATCH', body: JSON.stringify({ role: role }) });
+    showToast('Роль выдана!');
+  } catch (e) { showToast('Ошибка'); }
+};
+
+document.getElementById('btn-set-skin').onclick = async () => {
+  const itemName = document.getElementById('admin-item-name').value.trim();
+  const imgUrl = document.getElementById('admin-item-img').value.trim();
+  if (!itemName || !imgUrl) return showToast('Заполни поля');
+  user.custom_skins = user.custom_skins || {};
+  user.custom_skins[itemName] = imgUrl;
+  await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ custom_skins: user.custom_skins }) });
+  showToast('Картинка установлена (видно только тебе пока что)');
+  renderInv(); renderMarket();
+};
+
+document.getElementById('btn-set-ad').onclick = async () => {
+  const img = document.getElementById('admin-ad-img').value.trim();
+  const link = document.getElementById('admin-ad-link').value.trim();
+  if (!img) return showToast('Нужна ссылка на картинку');
+  await db('/ads', { method: 'POST', body: JSON.stringify({ image_url: img, link_url: link, created_at: Date.now() }) });
+  showToast('Реклама запущена!');
+  loadAd();
+};
+
+// --- ЧАТ ---
+async function loadChat() {
+  try {
+    const msgs = await db('/chat?select=*&order=created_at.asc&limit=50');
+    const box = document.getElementById('chat-messages');
+    box.innerHTML = msgs.map(m => {
+      const r = m.role || 'user';
+      return `<div class="chat-msg"><span class="author role-${r}">${m.username}</span>: ${m.message}</div>`;
+    }).join('');
+    box.scrollTop = box.scrollHeight;
+  } catch (e) {}
+}
+
+document.getElementById('btn-send-chat').onclick = async () => {
+  const input = document.getElementById('chat-input-text');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  await db('/chat', {
+    method: 'POST',
+    body: JSON.stringify({ username: user.username, avatar: '🐺', role: user.role || 'user', message: text, created_at: Date.now() })
+  });
+  loadChat();
+};
+
+// --- РЕКЛАМА ---
+async function loadAd() {
+  try {
+    const ads = await db('/ads?select=*&order=created_at.desc&limit=1');
+    const container = document.getElementById('ad-container');
+    if (ads && ads.length > 0) {
+      const ad = ads[0];
+      container.innerHTML = `
+        <div class="ad-banner">
+          <button class="ad-close" onclick="this.parentElement.style.display='none'">✕</button>
+          <img src="${ad.image_url}" onclick="window.open('${ad.link_url || '#'}', '_blank')">
+        </div>
+      `;
+    } else {
+      container.innerHTML = '';
+    }
+  } catch(e) {}
+}
+
+// --- АВТОВХОД ---
 window.onload = async () => {
   if (token) {
     try {
@@ -474,9 +608,9 @@ window.onload = async () => {
       } else {
         localStorage.removeItem('hu_tk');
       }
-    } catch (e) {
-      console.log('Ошибка автовхода', e);
-    }
+    } catch (e) {}
   }
 };
-   </script>
+</script>
+</body>
+</html>
