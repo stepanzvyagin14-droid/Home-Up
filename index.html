@@ -316,12 +316,22 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
 .flash.epic{background:radial-gradient(circle,#fff,#f088c8 30%,transparent 70%)}
 .confetti{position:fixed;top:-20px;width:8px;height:14px;pointer-events:none;z-index:260;animation:fall linear forwards}
 @keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.7}}
-/* Новые стили для админки/чата/рекламы */
 .chat-box { display: flex; flex-direction: column; background: #0b0b10; border-radius: 12px; border: 1px solid #1c1c24; }
 .ad-banner { background: #1e1e26; border: 1px solid #333; border-radius: 12px; margin-bottom: 12px; overflow: hidden; position: relative; text-align: center; padding: 10px; }
 .ad-banner img { max-width: 100%; max-height: 120px; object-fit: contain; border-radius: 8px; cursor: pointer; }
 .ad-close { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.5); color: #fff; border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-size: 12px; }
 .item-img { width: 100%; height: 60px; object-fit: contain; margin-bottom: 5px; display: block; filter: drop-shadow(0 0 10px rgba(240,185,11,0.5)); }
+/* Настройки (добавлено, т.к. в HTML разметка была, а стилей нет) */
+.settings-list{display:flex;flex-direction:column;gap:10px}
+.set-row{display:flex;justify-content:space-between;align-items:center;padding:12px;background:#0b0b10;border:1px solid #1c1c24;border-radius:12px}
+.set-info b{font-size:13px;color:#fff;display:block}
+.set-info small{font-size:11px;color:#888}
+.toggle{width:44px;height:24px;background:#2a2a34;border-radius:12px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.toggle::before{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;background:#888;border-radius:50%;transition:.2s}
+.toggle.on{background:#f0b90b}
+.toggle.on::before{left:22px;background:#1a1a1a}
+.set-btn{background:#1a1a22;color:#bbb;border:1px solid #2a2a34;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:700;font-family:inherit;font-size:12px}
+.set-btn.danger{color:#f87171;border-color:#7a1a1a;background:rgba(179,45,45,.1)}
 </style>
 </head>
 <body>
@@ -458,7 +468,7 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
             <svg class="gauge-svg" viewBox="0 0 220 220">
               <defs><linearGradient id="gGrad" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f87171"/><stop offset="50%" stop-color="#f0b90b"/><stop offset="100%" stop-color="#4ade80"/></linearGradient></defs>
               <circle cx="110" cy="110" r="90" fill="none" stroke="#1a1a22" stroke-width="16" stroke-linecap="round" stroke-dasharray="424.12 565.49" transform="rotate(-225 110 110)"/>
-              <circle id="gaugeFill" cx="110" cy="110" r="90" fill="none" stroke="url(#gGrad)" stroke-width="16" stroke-linecap="round" stroke-dasharray="0 565.49" transform="rotate(-225 110 110)"/>
+              <circle id="gaugeFill" cx="110" cy="110" r="90" fill="none" stroke="url(#gGrad)" stroke-width="16" stroke-linecap="round" stroke-dasharray="212.06 565.49" transform="rotate(-225 110 110)"/>
             </svg>
             <div class="gauge-inner"><div class="gauge-pct" id="gaugePct">50%</div><div class="gauge-lbl" id="gaugeLbl">шанс</div></div>
           </div>
@@ -633,21 +643,40 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
 <div class="flash" id="flash"></div><div class="toast" id="toast"></div>
 
 <script>
+/* ===================== КОНФИГ / БАЗА ===================== */
 const SB_URL = 'https://fsxputemwveouteusdsy.supabase.co';
 const SB_KEY = 'sb_publishable_srJqOHjNtODKifwwL3j7Vg_7-ynR2L3';
 const H = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' };
+
 async function db(path, opts = {}) {
   const res = await fetch(SB_URL + '/rest/v1' + path, { ...opts, headers: { ...H, ...(opts.headers || {}) } });
   const text = await res.text();
   if (!res.ok) throw new Error(text || 'DB Error');
   return text ? JSON.parse(text) : null;
 }
+
 async function hash(pw) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('salt' + pw));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  const data = 'salt' + pw;
+  try {
+    if (window.crypto && crypto.subtle) {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(data));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+  } catch(e) {}
+  // Fallback
+  let h1 = 0xdeadbeef ^ data.length, h2 = 0x41c6ce57 ^ data.length;
+  for (let i = 0; i < data.length; i++) {
+    const ch = data.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ ch, 1597334677);
+  }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return ((h2 >>> 0).toString(16).padStart(8, '0') + (h1 >>> 0).toString(16).padStart(8, '0')).repeat(2);
 }
 
-const R = { common:{p:2,next:'uncommon',l:'Обычный',c:'#7a7a88'}, uncommon:{p:8,next:'rare',l:'Необычный',c:'#6a8df0'}, rare:{p:35,next:'epic',l:'Редкий',c:'#9b6fd0'}, epic:{p:220,next:'legendary',l:'Эпический',c:'#e06ebf'}, legendary:{p:1600,next:null,l:'Легендарный',c:'#f0c14b'} };
+/* ===================== ДАННЫЕ ===================== */
+const R = { common:{p:2,next:'uncommon'}, uncommon:{p:8,next:'rare'}, rare:{p:35,next:'epic'}, epic:{p:220,next:'legendary'}, legendary:{p:1600,next:null} };
 const I = [
   {n:'P250', i:'🔫', r:'common'}, {n:'MP9', i:'🔫', r:'common'}, {n:'Nova', i:'🔫', r:'common'}, {n:'Dual Berettas', i:'🔫', r:'common'},
   {n:'Glock', i:'🔫', r:'uncommon'}, {n:'USP', i:'🔫', r:'uncommon'}, {n:'M4A1', i:'🔫', r:'uncommon'}, {n:'P90', i:'🔫', r:'uncommon'},
@@ -666,296 +695,745 @@ const AV = ['🐺','🦊','🐉','🦁','🐯','🦅','🐻','🐼','🦖','👾
 const DEV = ['baconsigma67656'];
 const WHEEL_COST = 100;
 
-let user = null, token = localStorage.getItem('hu_tk') || null;
-let inv = {}, mkt = {}, newsList = [], wheelAngle = 0, wheelSpinning = false;
+/* ===================== СОСТОЯНИЕ ===================== */
+let user = null;
+let token = localStorage.getItem('hu_tk') || null;
+let inv = {}, mkt = {}, newsList = [], wheelHistoryList = [];
+let wheelSpinning = false;
 let upgChance = 50, upgBet = {}, upgTarget = null, upgrading = false;
-let currentCase = null, spinning = false;
+let currentCase = null, marketFilter = 'all', invFilter = 'all', sessionTaps = 0;
+let chatTimer = null, offTimer = null;
 
 const $ = id => document.getElementById(id);
-function toast(msg) { const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); }
-function flash(type=''){ const f=$('flash'); f.className='flash '+type+' on'; setTimeout(()=>f.classList.remove('on'),120); }
-function confetti(){ const colors=['#f0b90b','#e06ebf','#6a8df0','#4ade80','#fff']; for(let i=0;i<40;i++){ const c=document.createElement('div'); c.className='confetti'; c.style.left=Math.random()*100+'vw'; c.style.background=colors[Math.floor(Math.random()*colors.length)]; c.style.animationDuration=(1.8+Math.random()*1.5)+'s'; document.body.appendChild(c); setTimeout(()=>c.remove(),3800); } }
-function beep(freq,dur,type='sine',vol=0.06){ try{ const ctx=new(window.AudioContext||window.webkitAudioContext)(); const o=ctx.createOscillator(), g=ctx.createGain(); o.type=type; o.frequency.value=freq; g.gain.setValueAtTime(vol,ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+dur); o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+dur); }catch(e){} }
-const sfx = { tap:()=>beep(600+Math.random()*200,0.06,'square',0.05), tick:()=>beep(1200,0.03,'square',0.04), win:(r)=>{const f={common:[440],uncommon:[523,659],rare:[523,659,784],epic:[523,659,784,1046],legendary:[523,659,784,1046,1318]};(f[r]||[440]).forEach((fr,i)=>setTimeout(()=>beep(fr,0.15,'triangle',0.08),i*80));}, fail:()=>{beep(200,0.2,'sawtooth',0.06);setTimeout(()=>beep(150,0.3,'sawtooth',0.06),150);}, coin:()=>{[523,659,784,1046,1318].forEach((f,i)=>setTimeout(()=>beep(f,0.12,'triangle',0.09),i*60));} };
 
-async function refreshMkt(){ const d = await db('/market?select=*'); d.forEach(x => mkt[x.item_name] = { drops: x.drops, trend: x.trend }); }
-function price(n){ const it = I.find(x => x.n === n); if(!it) return 0; const s = mkt[n] || { drops:0, trend:0 }; return Math.max(1, Math.round(R[it.r].p * (100/(100+s.drops)) * (1+s.trend*0.15))); }
+/* ===================== УТИЛИТЫ ===================== */
+function escAttr(s) { return String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
+function toast(msg) { const t = $('toast'); if (!t) return; t.textContent = msg; t.classList.add('show'); clearTimeout(t._tm); t._tm = setTimeout(() => t.classList.remove('show'), 2500); }
+function flash(type='') { const f = $('flash'); if (!f) return; f.className = 'flash ' + type + ' on'; setTimeout(() => f.classList.remove('on'), 120); }
+function confetti() {
+  const colors = ['#f0b90b','#e06ebf','#6a8df0','#4ade80','#fff'];
+  for (let i = 0; i < 40; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random()*100 + 'vw';
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDuration = (1.8 + Math.random()*1.5) + 's';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3800);
+  }
+}
+function beep(freq, dur, type='sine', vol=0.06) {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + dur);
+  } catch(e) {}
+}
+const sfx = {
+  tap: () => beep(600 + Math.random()*200, 0.06, 'square', 0.05),
+  win: (r) => { const f = {common:[440],uncommon:[523,659],rare:[523,659,784],epic:[523,659,784,1046],legendary:[523,659,784,1046,1318]}; (f[r]||[440]).forEach((fr,i) => setTimeout(() => beep(fr, 0.15, 'triangle', 0.08), i*80)); },
+  fail: () => { beep(200, 0.2, 'sawtooth', 0.06); setTimeout(() => beep(150, 0.3, 'sawtooth', 0.06), 150); },
+  coin: () => { [523,659,784,1046,1318].forEach((f,i) => setTimeout(() => beep(f, 0.12, 'triangle', 0.09), i*60)); }
+};
 
-function updateUI(){
-  if(!user) return;
-  $('coinsAmount').textContent = user.coins.toLocaleString();
-  $('tapBalance').textContent = user.coins.toLocaleString();
-  $('offlineAmount').textContent = (user.offline_coins||0).toLocaleString();
-  $('shopOfflineValue').textContent = (user.offline_coins||0).toLocaleString();
-  $('allPreview').textContent = Math.floor((user.offline_coins||0)/5) + ' 🪙';
-  $('freeCoinsBtn').style.display = DEV.includes(user.username.toLowerCase()) ? 'flex' : 'none';
-  $('topAvatar').textContent = user.avatar || '🐺';
-  $('profileAvatar').textContent = user.avatar || '🐺';
-  const isDev = DEV.includes(user.username.toLowerCase()) || user.role === 'admin';
-  $('navAdminDesktop').style.display = isDev ? 'flex' : 'none';
-  $('navAdminMobile').style.display = isDev ? 'flex' : 'none';
-  $('newsCreateBtn').style.display = isDev ? 'block' : 'none';
+async function refreshMkt() {
+  try {
+    const d = await db('/market?select=*');
+    if (Array.isArray(d)) d.forEach(x => { mkt[x.item_name] = { drops: x.drops || 0, trend: x.trend || 0 }; });
+  } catch(e) { console.warn('refreshMkt:', e); }
 }
 
-async function enterGame(offGain=0){
-  try{
-    const d = await db('/players?id=eq.'+user.id+'&select=*'); user = d[0]; inv = user.inventory || {};
-    $('authScreen').classList.add('hidden'); $('app').classList.remove('hidden');
+function price(n) {
+  const it = I.find(x => x.n === n);
+  if (!it) return 0;
+  const s = mkt[n] || { drops: 0, trend: 0 };
+  return Math.max(1, Math.round(R[it.r].p * (100 / (100 + (s.drops || 0))) * (1 + (s.trend || 0) * 0.15)));
+}
+
+async function bumpMarket(name) {
+  try {
+    const cur = await db('/market?item_name=eq.' + encodeURIComponent(name) + '&select=*');
+    if (cur && cur.length) {
+      await db('/market?item_name=eq.' + encodeURIComponent(name), { method: 'PATCH', body: JSON.stringify({ drops: (cur[0].drops || 0) + 1 }) });
+    } else {
+      await db('/market', { method: 'POST', body: JSON.stringify({ item_name: name, drops: 1, trend: 0 }) });
+    }
+  } catch(e) { console.warn('bumpMarket:', e); }
+}
+
+/* ===================== UI ===================== */
+function updateUI() {
+  if (!user) return;
+  const setTxt = (id, v) => { const el = $(id); if (el) el.textContent = v; };
+  setTxt('coinsAmount', (user.coins||0).toLocaleString());
+  setTxt('tapBalance', (user.coins||0).toLocaleString());
+  setTxt('offlineAmount', (user.offline_coins||0).toLocaleString());
+  setTxt('shopOfflineValue', (user.offline_coins||0).toLocaleString());
+  setTxt('allPreview', Math.floor((user.offline_coins||0)/5) + ' 🪙');
+  setTxt('topAvatar', user.avatar || '🐺');
+  setTxt('profileAvatar', user.avatar || '🐺');
+  setTxt('profileName', user.username || 'Игрок');
+  setTxt('pstatCoins', (user.coins||0).toLocaleString());
+  setTxt('pstatOffline', (user.offline_coins||0).toLocaleString());
+  setTxt('pstatTaps', (user.total_taps||0).toLocaleString());
+  setTxt('totalTaps', (user.total_taps||0).toLocaleString());
+  setTxt('sessionTaps', sessionTaps.toLocaleString());
+  const items = Object.values(inv||{}).reduce((a,b)=>a+b,0);
+  setTxt('pstatItems', items);
+  setTxt('invCount', items);
+  setTxt('invBadge', items);
+  setTxt('invBadgeDesktop', items);
+  setTxt('offlineBadge', user.offline_coins || 0);
+  setTxt('offlineBadgeDesktop', user.offline_coins || 0);
+  const joined = user.created ? new Date(user.created).toLocaleDateString('ru-RU') : '—';
+  const pj = $('profileJoined'); if (pj) pj.textContent = joined;
+
+  const isDev = DEV.includes((user.username||'').toLowerCase()) || user.role === 'admin';
+  const fc = $('freeCoinsBtn'); if (fc) fc.style.display = isDev ? 'flex' : 'none';
+  const nad = $('navAdminDesktop'); if (nad) nad.style.display = isDev ? 'flex' : 'none';
+  const nam = $('navAdminMobile'); if (nam) nam.style.display = isDev ? 'flex' : 'none';
+  const ncb = $('newsCreateBtn'); if (ncb) ncb.style.display = isDev ? 'block' : 'none';
+}
+
+function showView(view) {
+  document.querySelectorAll('.nav-btn, .bnav-btn').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.nav-btn[data-view="' + view + '"], .bnav-btn[data-view="' + view + '"]').forEach(x => x.classList.add('active'));
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const v = $('view-' + view);
+  if (v) v.classList.add('active');
+  try {
+    if (view === 'inventory') renderInv();
+    else if (view === 'market') refreshMkt().then(renderMkt);
+    else if (view === 'craft') renderCraft();
+    else if (view === 'upgrader') renderUpgrader();
+    else if (view === 'news') renderNews();
+    else if (view === 'chat') loadChat();
+    else if (view === 'tap') renderTapNews();
+    else if (view === 'shop') updateUI();
+    else if (view === 'profile') renderAvatarPicker();
+  } catch(e) {}
+}
+
+/* ===================== ЗАПУСК ИГРЫ ===================== */
+async function enterGame(offGain = 0) {
+  try {
+    const d = await db('/players?id=eq.' + user.id + '&select=*');
+    if (!d || !d.length) throw new Error('Профиль не найден');
+    user = d[0];
+    inv = user.inventory || {};
+    $('authScreen').classList.add('hidden');
+    $('app').classList.remove('hidden');
     await refreshMkt();
-    updateUI(); renderCases(); renderInv(); renderMkt(); renderNews(); loadChat(); loadAd(); renderCraft(); renderUpgrader(); startWheel();
-    if(offGain > 0 && user.offline_coins > 0){ $('offlineGain').textContent='+'+offGain+' 🌙'; $('offlineModal').classList.add('active'); }
-    setInterval(async()=>{ if(!user) return; await db('/players?id=eq.'+user.id,{method:'PATCH',body:JSON.stringify({last_seen:Date.now()})}); const x=await db('/players?id=eq.'+user.id+'&select=offline_coins'); if(x[0]&&x[0].offline_coins>user.offline_coins){user.offline_coins=x[0].offline_coins;updateUI();} }, 30000);
-    setInterval(loadChat, 3000);
-    toast('👋 Привет, '+user.username);
-  }catch(e){ console.error(e); localStorage.removeItem('hu_tk'); location.reload(); }
+    safe(updateUI);
+    safe(renderCases);
+    safe(renderInv);
+    safe(renderMkt);
+    safe(renderCraft);
+    safe(renderUpgrader);
+    safe(renderAvatarPicker);
+    safe(drawWheel);
+    safe(loadChat);
+    safe(loadAd);
+    await safeAsync(renderNews);
+
+    if (offGain > 0 && (user.offline_coins||0) > 0) {
+      const og = $('offlineGain'); if (og) og.textContent = '+' + offGain + ' 🌙';
+      const om = $('offlineModal'); if (om) om.classList.add('active');
+    }
+
+    if (offTimer) clearInterval(offTimer);
+    offTimer = setInterval(async () => {
+      if (!user) return;
+      try {
+        await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ last_seen: Date.now() }) });
+        const x = await db('/players?id=eq.' + user.id + '&select=offline_coins');
+        if (x && x[0] && (x[0].offline_coins||0) > (user.offline_coins||0)) {
+          user.offline_coins = x[0].offline_coins;
+          updateUI();
+        }
+      } catch(e) {}
+    }, 30000);
+
+    if (chatTimer) clearInterval(chatTimer);
+    chatTimer = setInterval(loadChat, 3000);
+
+    toast('👋 Привет, ' + user.username);
+  } catch(e) {
+    console.error('enterGame:', e);
+    localStorage.removeItem('hu_tk');
+    $('app').classList.add('hidden');
+    $('authScreen').classList.remove('hidden');
+    toast('Ошибка загрузки: ' + e.message);
+  }
 }
+function safe(fn) { try { fn(); } catch(e) { console.warn(fn.name, e); } }
+async function safeAsync(fn) { try { await fn(); } catch(e) { console.warn(fn.name, e); } }
 
-// ВХОД / РЕГИСТРАЦИЯ
-$('registerBtn').onclick = async()=>{
-  const u=$('regUser').value.trim(), p=$('regPass').value, p2=$('regPass2').value;
-  if(u.length<3) return toast('Имя от 3 символов'); if(p.length<4) return toast('Пароль от 4'); if(p!==p2) return toast('Пароли не совпадают');
-  try{
-    const ex=await db('/players?username=eq.'+u); if(ex.length) return toast('Имя занято');
-    const h=await hash(p), tk=crypto.randomUUID();
-    const d=await db('/players',{method:'POST',body:JSON.stringify({username:u,password:h,token:tk,coins:100,inventory:{},created:Date.now(),last_seen:Date.now()})});
-    token=tk; user=d[0]; localStorage.setItem('hu_tk',tk); enterGame(0);
-  }catch(e){ toast('Ошибка: '+e.message); }
-};
-$('loginBtn').onclick = async()=>{
-  const u=$('loginUser').value.trim(), p=$('loginPass').value;
-  try{
-    const d=await db('/players?username=eq.'+u); if(!d.length) return toast('Не найден');
-    const h=await hash(p); if(d[0].password!==h) return toast('Неверный пароль');
-    const now=Date.now(), gap=now-(d[0].last_seen||now); let gain=0;
-    if(gap>60000){ gain=Math.floor(gap/60000)*5; d[0].offline_coins=(d[0].offline_coins||0)+gain; }
-    await db('/players?id=eq.'+d[0].id,{method:'PATCH',body:JSON.stringify({offline_coins:d[0].offline_coins,last_seen:now})});
-    token=d[0].token; user=d[0]; localStorage.setItem('hu_tk',token); enterGame(gain);
-  }catch(e){ toast('Ошибка: '+e.message); }
-};
-
-// НАВИГАЦИЯ
-document.querySelectorAll('.nav-btn, .bnav-btn').forEach(b=>b.onclick=()=>{
-  document.querySelectorAll('.nav-btn, .bnav-btn').forEach(x=>x.classList.remove('active'));
-  b.classList.add('active');
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  $('view-'+b.dataset.view).classList.add('active');
+/* ===================== АВТОРИЗАЦИЯ ===================== */
+document.querySelectorAll('.auth-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const t = tab.dataset.authtab;
+    const lf = $('loginForm'), rf = $('registerForm');
+    if (lf) lf.classList.toggle('hidden', t !== 'login');
+    if (rf) rf.classList.toggle('hidden', t !== 'register');
+  });
+});
+document.querySelectorAll('.pass-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const inp = $(btn.dataset.target);
+    if (!inp) return;
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+  });
 });
 
-// ТАП
-$('tapBtn').onpointerdown = async(e)=>{
-  if(!user) return; user.coins++; updateUI(); beep(600+Math.random()*200,.05,'square');
-  const el=document.createElement('div'); el.className='float-coin'; el.textContent='+1';
-  el.style.left=(e.clientX-15)+'px'; el.style.top=(e.clientY-15)+'px'; document.body.appendChild(el); setTimeout(()=>el.remove(),950);
-  await db('/players?id=eq.'+user.id,{method:'PATCH',body:JSON.stringify({coins:user.coins,total_taps:(user.total_taps||0)+1})});
+$('registerBtn').onclick = async () => {
+  const u = ($('regUser')?.value || '').trim();
+  const p = $('regPass')?.value || '';
+  const p2 = $('regPass2')?.value || '';
+  if (u.length < 3) return toast('Имя от 3 символов');
+  if (p.length < 4) return toast('Пароль от 4');
+  if (p !== p2) return toast('Пароли не совпадают');
+  try {
+    const ex = await db('/players?username=eq.' + encodeURIComponent(u));
+    if (ex && ex.length) return toast('Имя занято');
+    const h = await hash(p);
+    const tk = (crypto.randomUUID && crypto.randomUUID()) || (Date.now().toString(36) + Math.random().toString(36).slice(2));
+    const d = await db('/players', { method: 'POST', body: JSON.stringify({ username: u, password: h, token: tk, coins: 100, inventory: {}, created: Date.now(), last_seen: Date.now() }) });
+    token = tk; user = d[0]; localStorage.setItem('hu_tk', tk);
+    enterGame(0);
+  } catch(e) { console.error(e); toast('Ошибка: ' + e.message); }
 };
 
-// МАГАЗИН
-$('exchangeAllBtn').onclick = async()=>{
-  const c=Math.floor((user.offline_coins||0)/5)*5; if(c<5) return toast('Мало 🌙');
-  user.offline_coins-=c; user.coins+=(c/5); updateUI();
-  await db('/players?id=eq.'+user.id,{method:'PATCH',body:JSON.stringify({offline_coins:user.offline_coins,coins:user.coins})});
+$('loginBtn').onclick = async () => {
+  const u = ($('loginUser')?.value || '').trim();
+  const p = $('loginPass')?.value || '';
+  if (!u || !p) return toast('Введи имя и пароль');
+  try {
+    const d = await db('/players?username=eq.' + encodeURIComponent(u));
+    if (!d || !d.length) return toast('Не найден');
+    const h = await hash(p);
+    if (d[0].password !== h) return toast('Неверный пароль');
+    const now = Date.now(), gap = now - (d[0].last_seen || now);
+    let gain = 0;
+    if (gap > 60000) {
+      gain = Math.floor(gap / 60000) * 5;
+      d[0].offline_coins = (d[0].offline_coins || 0) + gain;
+    }
+    await db('/players?id=eq.' + d[0].id, { method: 'PATCH', body: JSON.stringify({ offline_coins: d[0].offline_coins, last_seen: now }) });
+    token = d[0].token; user = d[0]; localStorage.setItem('hu_tk', token);
+    enterGame(gain);
+  } catch(e) { console.error(e); toast('Ошибка: ' + e.message); }
+};
+
+/* ===================== НАВИГАЦИЯ ===================== */
+document.querySelectorAll('.nav-btn, .bnav-btn').forEach(b => {
+  b.addEventListener('click', () => showView(b.dataset.view));
+});
+$('profileBtn').onclick = () => showView('profile');
+
+/* ===================== ТАП ===================== */
+$('tapBtn').onpointerdown = async (e) => {
+  if (!user) return;
+  user.coins = (user.coins || 0) + 1;
+  user.total_taps = (user.total_taps || 0) + 1;
+  sessionTaps++;
+  updateUI();
+  sfx.tap();
+  const el = document.createElement('div');
+  el.className = 'float-coin'; el.textContent = '+1';
+  el.style.left = (e.clientX - 15) + 'px';
+  el.style.top = (e.clientY - 15) + 'px';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 950);
+  try { await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ coins: user.coins, total_taps: user.total_taps }) }); } catch(e) {}
+};
+
+/* ===================== МАГАЗИН ===================== */
+document.querySelectorAll('.shop-btn[data-exchange]').forEach(b => {
+  b.onclick = async () => {
+    if (!user) return;
+    const need = parseInt(b.dataset.exchange, 10);
+    if ((user.offline_coins || 0) < need) return toast('Мало 🌙');
+    user.offline_coins -= need;
+    user.coins = (user.coins || 0) + Math.floor(need / 5);
+    updateUI();
+    try { await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ offline_coins: user.offline_coins, coins: user.coins }) }); } catch(e) {}
+    toast('Обменяно!'); sfx.coin();
+  };
+});
+$('exchangeAllBtn').onclick = async () => {
+  if (!user) return;
+  const c = Math.floor((user.offline_coins || 0) / 5) * 5;
+  if (c < 5) return toast('Мало 🌙');
+  user.offline_coins -= c;
+  user.coins = (user.coins || 0) + (c / 5);
+  updateUI();
+  try { await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ offline_coins: user.offline_coins, coins: user.coins }) }); } catch(e) {}
   toast('Обменяно!'); sfx.coin();
 };
-$('freeCoinsBtn').onclick = async()=>{ user.coins+=1000; updateUI(); await db('/players?id=eq.'+user.id,{method:'PATCH',body:JSON.stringify({coins:user.coins})}); toast('+1000 🪙'); };
-
-// КЕЙСЫ
-function renderCases(){
-  $('casesGrid').innerHTML = C.map(c=>`<div class="case-card" style="--case-color:${c.color}"><div class="case-icon">${c.icon}</div><div class="case-name">${c.name}</div><div class="case-price">🪙 ${c.price}</div><button class="case-btn" onclick="openCaseModal('${c.id}')">ОТКРЫТЬ</button></div>`).join('');
-}
-window.openCaseModal = (id)=>{
-  const c=C.find(x=>x.id===id); currentCase=c; $('caseModalTitle').textContent=c.name; $('caseModalPrice').textContent='🪙 '+c.price;
-  $('caseModal').classList.add('active'); $('openOneBtn').onclick=()=>buyCase(c,1); $('openFiveBtn').onclick=()=>buyCase(c,5); $('openTenBtn').onclick=()=>buyCase(c,10);
+$('freeCoinsBtn').onclick = async () => {
+  if (!user) return;
+  user.coins = (user.coins || 0) + 1000;
+  updateUI();
+  try { await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ coins: user.coins }) }); } catch(e) {}
+  toast('+1000 🪙');
 };
-async function buyCase(c, m){
-  if(user.coins < c.price*m) return toast('Мало монет');
-  user.coins -= c.price*m; updateUI();
-  for(let i=0;i<m;i++){
-    let tot=Object.values(c.w).reduce((a,b)=>a+b), r=Math.random()*tot, sel='common';
-    for(let [k,v] of Object.entries(c.w)){ if(r<v){sel=k;break;} r-=v; }
-    let pool=I.filter(x=>x.r===sel); const it=pool[Math.floor(Math.random()*pool.length)];
-    inv[it.n] = (inv[it.n]||0)+1;
-    await db('/market',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify({item_name:it.n,drops:1,trend:0})}).catch(async()=>{
-      const cur = (await db('/market?item_name=eq.'+it.n))[0]; if(cur) await db('/market?item_name=eq.'+it.n,{method:'PATCH',body:JSON.stringify({drops:cur.drops+1})});
-    });
-    toast('🎁 '+it.n); sfx.win(it.r);
+$('offlineGoShop').onclick = () => {
+  $('offlineModal').classList.remove('active');
+  showView('shop');
+};
+$('offlineLater').onclick = () => $('offlineModal').classList.remove('active');
+
+/* ===================== КЕЙСЫ ===================== */
+function renderCases() {
+  const g = $('casesGrid'); if (!g) return;
+  g.innerHTML = C.map(c => `<div class="case-card" style="--case-color:${c.color}"><div class="case-icon">${c.icon}</div><div class="case-name">${c.name}</div><div class="case-price">🪙 ${c.price}</div><button class="case-btn" onclick="openCaseModal('${c.id}')">ОТКРЫТЬ</button></div>`).join('');
+}
+window.openCaseModal = (id) => {
+  const c = C.find(x => x.id === id); if (!c) return;
+  currentCase = c;
+  $('caseModalTitle').textContent = c.name;
+  $('caseModalPrice').textContent = '🪙 ' + c.price;
+  $('caseModal').classList.add('active');
+  $('openOneBtn').onclick = () => buyCase(c, 1);
+  $('openFiveBtn').onclick = () => buyCase(c, 5);
+  $('openTenBtn').onclick = () => buyCase(c, 10);
+};
+async function buyCase(c, m) {
+  if (!user) return;
+  if (user.coins < c.price * m) return toast('Мало монет');
+  user.coins -= c.price * m;
+  updateUI();
+  for (let i = 0; i < m; i++) {
+    const tot = Object.values(c.w).reduce((a, b) => a + b, 0);
+    let r = Math.random() * tot, sel = 'common';
+    for (const [k, v] of Object.entries(c.w)) { if (r < v) { sel = k; break; } r -= v; }
+    const pool = I.filter(x => x.r === sel);
+    const it = pool[Math.floor(Math.random() * pool.length)];
+    if (!it) continue;
+    inv[it.n] = (inv[it.n] || 0) + 1;
+    await bumpMarket(it.n);
+    toast('🎁 ' + it.n);
+    sfx.win(it.r);
   }
-  await db('/players?id=eq.'+user.id,{method:'PATCH',body:JSON.stringify({coins:user.coins,inventory:inv})});
-  $('caseModal').classList.remove('active'); renderInv(); refreshMkt(); renderMkt();
+  try { await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ coins: user.coins, inventory: inv }) }); } catch(e) {}
+  $('caseModal').classList.remove('active');
+  renderInv();
+  await refreshMkt();
+  renderMkt();
 }
 
-// ИНВЕНТАРЬ
-function renderInv(){
-  const keys = Object.keys(inv).filter(k=>inv[k]>0);
-  if(!keys.length) return $('invGrid').innerHTML='<div class="inv-empty">Пусто</div>';
-  $('invGrid').innerHTML = keys.map(n=>{
-    const it=I.find(x=>x.n===n); const cust = (user.custom_skins && user.custom_skins[n]) ? user.custom_skins[n] : null;
-    const img = cust ? `<img src="${cust}" class="item-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'"><div class="icon" style="display:none">${it.i}</div>` : `<div class="icon">${it.i}</div>`;
-    return `<div class="inv-item rarity-${it.r}" onclick="sellItem('${n}')">${img}<div>${n} x${inv[n]}</div><div class="inv-price">🪙 ${price(n)}</div></div>`;
+/* ===================== ИНВЕНТАРЬ ===================== */
+document.querySelectorAll('#invFilters .filter-btn').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('#invFilters .filter-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    invFilter = b.dataset.invfilter;
+    renderInv();
+  };
+});
+function renderInv() {
+  const g = $('invGrid'); if (!g) return;
+  let keys = Object.keys(inv || {}).filter(k => inv[k] > 0 && I.find(x => x.n === k));
+  if (invFilter !== 'all') {
+    keys = keys.filter(k => { const it = I.find(x => x.n === k); return it && it.r === invFilter; });
+  }
+  if (!keys.length) { g.innerHTML = '<div class="inv-empty">Пусто</div>'; return; }
+  g.innerHTML = keys.map(n => {
+    const it = I.find(x => x.n === n);
+    const cust = (user && user.custom_skins && user.custom_skins[n]) ? user.custom_skins[n] : null;
+    const img = cust
+      ? `<img src="${cust}" class="item-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="icon" style="display:none">${it.i}</div>`
+      : `<div class="icon">${it.i}</div>`;
+    return `<div class="inv-item rarity-${it.r}" onclick="sellItem('${escAttr(n)}')">${img}<div>${n} x${inv[n]}</div><div class="inv-price">🪙 ${price(n)}</div></div>`;
   }).join('');
 }
-window.sellItem = async(n)=>{
-  if(inv[n]<1) return; inv[n]--; if(inv[n]<=0) delete inv[n];
-  user.coins += price(n); updateUI(); renderInv();
-  await db('/players?id=eq.'+user.id,{method:'PATCH',body:JSON.stringify({coins:user.coins,inventory:inv})});
+window.sellItem = async (n) => {
+  if (!user) return;
+  if (!inv[n] || inv[n] < 1) return;
+  inv[n]--;
+  if (inv[n] <= 0) delete inv[n];
+  user.coins = (user.coins || 0) + price(n);
+  updateUI(); renderInv();
+  try { await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ coins: user.coins, inventory: inv }) }); } catch(e) {}
   toast('Продано');
 };
 
-// РЫНОК
-function renderMkt(){
-  $('marketGrid').innerHTML = I.map(it=>{
-    const p=price(it.n); const cust = (user.custom_skins && user.custom_skins[it.n]) ? user.custom_skins[it.n] : null;
-    const img = cust ? `<img src="${cust}" class="item-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'"><div class="icon" style="display:none">${it.i}</div>` : `<div class="icon">${it.i}</div>`;
-    return `<div class="market-card"><div class="mc-head">${img}<div class="mc-info"><div class="mc-name">${it.n}</div></div></div><div class="mc-price">🪙 ${p}</div><button class="mc-btn" onclick="buyMkt('${it.n}')">Купить</button></div>`;
+/* ===================== РЫНОК ===================== */
+document.querySelectorAll('#marketFilters .filter-btn').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('#marketFilters .filter-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    marketFilter = b.dataset.filter;
+    renderMkt();
+  };
+});
+function renderMkt() {
+  const g = $('marketGrid'); if (!g) return;
+  let items = I;
+  if (marketFilter === 'owned') items = I.filter(it => (inv[it.n] || 0) > 0);
+  else if (marketFilter !== 'all') items = I.filter(it => it.r === marketFilter);
+  if (!items.length) { g.innerHTML = '<div class="inv-empty">Пусто</div>'; return; }
+  g.innerHTML = items.map(it => {
+    const p = price(it.n);
+    const cust = (user && user.custom_skins && user.custom_skins[it.n]) ? user.custom_skins[it.n] : null;
+    const img = cust
+      ? `<img src="${cust}" class="item-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="icon" style="display:none">${it.i}</div>`
+      : `<div class="icon">${it.i}</div>`;
+    return `<div class="market-card"><div class="mc-head">${img}<div class="mc-info"><div class="mc-name">${it.n}</div></div></div><div class="mc-price">🪙 ${p}</div><button class="mc-btn" onclick="buyMkt('${escAttr(it.n)}')">Купить</button></div>`;
   }).join('');
 }
-window.buyMkt = async(n)=>{
-  const p=price(n); if(user.coins<p) return toast('Мало монет');
-  user.coins-=p; inv[n]=(inv[n]||0)+1; updateUI(); renderInv();
-  await db('/players?id=eq.'+user.id,{method:'PATCH',body:JSON.stringify({coins:user.coins,inventory:inv})});
+window.buyMkt = async (n) => {
+  if (!user) return;
+  const p = price(n);
+  if (user.coins < p) return toast('Мало монет');
+  user.coins -= p;
+  inv[n] = (inv[n] || 0) + 1;
+  updateUI(); renderInv();
+  try { await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ coins: user.coins, inventory: inv }) }); } catch(e) {}
   toast('Куплено');
 };
 
-// КРАФТ
-function renderCraft(){
-  const k=Object.keys(inv).filter(n=>inv[n]>0);
-  $('craftGrid').innerHTML=k.map(n=>{const it=I.find(x=>x.n===n);const ok=R[it.r].next&&inv[n]>=5;return `<div class="craft-item rarity-${it.r} ${ok?'ready':''}" onclick="${ok?`craft('${n}')`:''}"><div class="icon">${it.i}</div><div>${n}</div><div class="cnt">x${inv[n]}</div></div>`}).join('') || '<div class="craft-empty">Пусто</div>';
+/* ===================== КРАФТ ===================== */
+function renderCraft() {
+  const g = $('craftGrid'); if (!g) return;
+  const k = Object.keys(inv || {}).filter(n => inv[n] > 0 && I.find(x => x.n === n));
+  if (!k.length) { g.innerHTML = '<div class="craft-empty">Пусто</div>'; return; }
+  g.innerHTML = k.map(n => {
+    const it = I.find(x => x.n === n);
+    const ok = R[it.r].next && inv[n] >= 5;
+    return `<div class="craft-item rarity-${it.r} ${ok ? 'ready' : ''}" onclick="${ok ? `craft('${escAttr(n)}')` : ''}"><div class="icon">${it.i}</div><div>${n}</div><div class="cnt">x${inv[n]}</div></div>`;
+  }).join('');
 }
-window.craft = async(n)=>{
-  const it=I.find(x=>x.n===n);if(!it||!R[it.r].next)return;if(inv[n]<5)return;
-  inv[n]-=5;if(inv[n]<=0)delete inv[n];const pool=I.filter(x=>x.r===R[it.r].next);const res=pool[Math.floor(Math.random()*pool.length)];
-  inv[res.n]=(inv[res.n]||0)+1;
-  await db('/players?id=eq.'+user.id,{method:'PATCH',body:JSON.stringify({inventory:inv})});
-  toast('⚒️ '+res.n);sfx.win(res.r);renderCraft();renderInv();
+window.craft = async (n) => {
+  if (!user) return;
+  const it = I.find(x => x.n === n);
+  if (!it || !R[it.r].next) return;
+  if (!inv[n] || inv[n] < 5) return;
+  inv[n] -= 5;
+  if (inv[n] <= 0) delete inv[n];
+  const pool = I.filter(x => x.r === R[it.r].next);
+  const res = pool[Math.floor(Math.random() * pool.length)];
+  if (!res) return;
+  inv[res.n] = (inv[res.n] || 0) + 1;
+  try { await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ inventory: inv }) }); } catch(e) {}
+  toast('⚒️ ' + res.n);
+  sfx.win(res.r);
+  renderCraft(); renderInv();
 };
 
-// АПГРЕЙДЕР
-function renderUpgrader(){
-  const names = Object.keys(inv).filter(n=>inv[n]>0);
-  $('upgInvGrid').innerHTML = names.map(n=>{const it=I.find(x=>x.n===n);const sel=!!upgBet[n];return `<div class="upg-item rarity-${it.r} ${sel?'selected':''}" onclick="toggleBet('${n}')"><span class="bdg">x${inv[n]}</span><div class="icon">${it.i}</div><div>${n}</div></div>`}).join('');
-  const targetGrid = $('upgTargetGrid');
+/* ===================== АПГРЕЙДЕР ===================== */
+document.querySelectorAll('#upgChances .ch').forEach(ch => {
+  ch.onclick = () => {
+    document.querySelectorAll('#upgChances .ch').forEach(c => c.classList.remove('active'));
+    ch.classList.add('active');
+    upgChance = parseInt(ch.dataset.chance, 10);
+    const gp = $('gaugePct');
+    if (gp) { gp.textContent = upgChance + '%'; gp.className = 'gauge-pct ' + (upgChance <= 30 ? 'low' : upgChance <= 60 ? 'medium' : ''); }
+    const gf = $('gaugeFill');
+    if (gf) gf.setAttribute('stroke-dasharray', (424.12 * upgChance / 100).toFixed(2) + ' 565.49');
+    renderUpgrader();
+  };
+});
+function renderUpgrader() {
+  const ig = $('upgInvGrid'), tg = $('upgTargetGrid');
+  if (!ig || !tg) return;
+  const names = Object.keys(inv || {}).filter(n => inv[n] > 0 && I.find(x => x.n === n));
+  ig.innerHTML = names.length
+    ? names.map(n => {
+        const it = I.find(x => x.n === n);
+        const sel = !!upgBet[n];
+        return `<div class="upg-item rarity-${it.r} ${sel ? 'selected' : ''}" onclick="toggleBet('${escAttr(n)}')"><span class="bdg">x${inv[n]}</span><div class="icon">${it.i}</div><div>${n}</div></div>`;
+      }).join('')
+    : '<div style="grid-column:1/-1;color:#555;text-align:center;font-size:11px;padding:20px">Пусто</div>';
+  tg.innerHTML = I.map(it => `<div class="upg-item rarity-${it.r} ${upgTarget === it.n ? 'target-sel' : ''}" onclick="setTarget('${escAttr(it.n)}')"><div class="icon">${it.i}</div><div>${it.n}</div><div class="price">🪙 ${price(it.n)}</div></div>`).join('');
   const req = upgTarget ? Math.round(price(upgTarget) * upgChance / 100) : 0;
-  targetGrid.innerHTML = I.map(it=>{const isT=upgTarget===it.n;return `<div class="upg-item rarity-${it.r} ${isT?'target-sel':''}" onclick="setTarget('${it.n}')"><div class="icon">${it.i}</div><div>${it.n}</div><div class="price">🪙 ${price(it.n)}</div></div>`}).join('');
-  const betValue = Object.entries(upgBet).reduce((s,[n,c])=>s+price(n)*c,0);
-  $('infoBet').textContent = '🪙 '+betValue;
-  $('infoReq').textContent = upgTarget ? '🪙 '+req : '—';
-  $('infoTarget').textContent = upgTarget ? '🪙 '+price(upgTarget) : '—';
-  const st=$('statusTag'), btn=$('upgradeBtn');
-  if(!upgTarget){st.className='status-tag wait';st.textContent='Выбери цель';btn.disabled=true;}
-  else if(betValue < req){st.className='status-tag bad';st.textContent='Мало вложено';btn.disabled=true;}
-  else {st.className='status-tag ok';st.textContent='Готово!';btn.disabled=false;}
+  const betValue = Object.entries(upgBet).reduce((s, [n, c]) => s + price(n) * c, 0);
+  if ($('infoBet')) $('infoBet').textContent = '🪙 ' + betValue;
+  if ($('infoReq')) $('infoReq').textContent = upgTarget ? '🪙 ' + req : '—';
+  if ($('infoTarget')) $('infoTarget').textContent = upgTarget ? '🪙 ' + price(upgTarget) : '—';
+  if ($('upgInvCount')) $('upgInvCount').textContent = names.reduce((s, n) => s + (upgBet[n] ? 1 : 0), 0);
+  if ($('upgTargetCount')) $('upgTargetCount').textContent = upgTarget || '—';
+  const bar = $('upgBarFill');
+  if (bar) { bar.style.width = (upgTarget && req > 0 ? Math.min(100, betValue / req * 100) : 0) + '%'; bar.classList.toggle('ok', betValue >= req && !!upgTarget); }
+  const st = $('statusTag'), btn = $('upgradeBtn');
+  if (st && btn) {
+    if (!upgTarget) { st.className = 'status-tag wait'; st.textContent = 'Выбери цель'; btn.disabled = true; }
+    else if (betValue < req) { st.className = 'status-tag bad'; st.textContent = 'Мало вложено'; btn.disabled = true; }
+    else { st.className = 'status-tag ok'; st.textContent = 'Готово!'; btn.disabled = false; }
+  }
 }
-window.toggleBet = (n)=>{ if(upgBet[n]) delete upgBet[n]; else upgBet[n]=inv[n]; renderUpgrader(); };
-window.setTarget = (n)=>{ upgTarget = upgTarget===n?null:n; renderUpgrader(); };
-$('upgradeBtn').onclick = async()=>{
-  if(upgrading||!upgTarget) return;
+window.toggleBet = (n) => { if (upgBet[n]) delete upgBet[n]; else upgBet[n] = inv[n]; renderUpgrader(); };
+window.setTarget = (n) => { upgTarget = upgTarget === n ? null : n; renderUpgrader(); };
+
+$('upgradeBtn').onclick = async () => {
+  if (!user) return;
+  if (upgrading || !upgTarget) return;
   const req = Math.round(price(upgTarget) * upgChance / 100);
-  const betValue = Object.entries(upgBet).reduce((s,[n,c])=>s+price(n)*c,0);
-  if(betValue < req) return toast('Мало вложено');
-  upgrading=true; $('upgradeBtn').disabled=true;
-  const targetPrice = price(upgTarget);
-  const success = Math.random()*100 < upgChance;
-  for(const [n,c] of Object.entries(upgBet)){ inv[n]-=c; if(inv[n]<=0) delete inv[n]; }
-  if(success){ inv[upgTarget]=(inv[upgTarget]||0)+1; toast('✅ УСПЕХ!'); sfx.win('epic'); }
+  const betValue = Object.entries(upgBet).reduce((s, [n, c]) => s + price(n) * c, 0);
+  if (betValue < req) return toast('Мало вложено');
+  upgrading = true;
+  $('upgradeBtn').disabled = true;
+  const success = Math.random() * 100 < upgChance;
+  for (const [n, c] of Object.entries(upgBet)) {
+    inv[n] -= c;
+    if (inv[n] <= 0) delete inv[n];
+  }
+  if (success) { inv[upgTarget] = (inv[upgTarget] || 0) + 1; toast('✅ УСПЕХ!'); sfx.win('epic'); flash('epic'); }
   else { toast('❌ Провал'); sfx.fail(); }
-  upgBet={}; upgTarget=null; upgrading=false;
-  await db('/players?id=eq.'+user.id,{method:'PATCH',body:JSON.stringify({inventory:inv})});
+  upgBet = {}; upgTarget = null; upgrading = false;
+  try { await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ inventory: inv }) }); } catch(e) {}
   renderUpgrader(); renderInv();
 };
 
-// КОЛЕСО
-function drawWheel(rotation){
-  const c = $('wheelCanvas'); if(!c) return;
+/* ===================== КОЛЕСО ===================== */
+function drawWheel(rotation = 0) {
+  const c = $('wheelCanvas'); if (!c) return;
   const ctx = c.getContext('2d');
   const w = c.width, h = c.height, cx = w/2, cy = h/2, r = Math.min(w,h)/2 - 20;
-  ctx.clearRect(0,0,w,h); const segs = W.length, sa = (Math.PI*2)/segs;
-  for(let i=0;i<segs;i++){
-    const s = i*sa+rotation-Math.PI/2, e = s+sa;
-    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,s,e);ctx.closePath();
+  ctx.clearRect(0, 0, w, h);
+  const sa = (Math.PI * 2) / W.length;
+  for (let i = 0; i < W.length; i++) {
+    const s = i * sa + rotation - Math.PI/2, e = s + sa;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, r, s, e); ctx.closePath();
     ctx.fillStyle = W[i].c; ctx.fill();
-    ctx.save();ctx.translate(cx,cy);ctx.rotate(s+sa/2);ctx.fillStyle='#fff';ctx.font='bold 20px sans-serif';ctx.fillText(W[i].l,r*0.7,0);ctx.restore();
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(s + sa/2);
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 22px sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText(W[i].l, r * 0.85, 8);
+    ctx.restore();
   }
 }
-function startWheel(){ drawWheel(0); }
-$('wheelSpinBtn').onclick = async()=>{
-  if(wheelSpinning) return;
-  if(user.coins<WHEEL_COST) return toast('Мало монет');
-  user.coins-=WHEEL_COST; updateUI(); wheelSpinning=true; $('wheelSpinBtn').disabled=true;
-  const targetRot = Math.random()*Math.PI*2 + Math.PI*10;
-  let start = performance.now();
-  function anim(t){const p=Math.min(1,(t-start)/4000);drawWheel(targetRot*p);if(p<1)requestAnimationFrame(anim);else{finishWheel();}}requestAnimationFrame(anim);
-};
-async function finishWheel(){
-  wheelSpinning=false;$('wheelSpinBtn').disabled=false;
-  const idx = Math.floor(Math.random()*W.length); const win = W[idx];
-  if(win.v>0){ user.coins+=win.v; toast('🎉 +'+win.v+' 🪙'); }
-  else { const pool=I.filter(x=>x.r===(win.l==='EPIC'?'epic':'legendary')); const it=pool[Math.floor(Math.random()*pool.length)]; inv[it.n]=(inv[it.n]||0)+1; toast('🎁 '+it.n); }
+$('wheelSpinBtn').onclick = async () => {
+  if (!user || wheelSpinning) return;
+  if (user.coins < WHEEL_COST) return toast('Мало монет');
+  user.coins -= WHEEL_COST;
   updateUI();
-  await db('/players?id=eq.'+user.id,{method:'PATCH',body:JSON.stringify({coins:user.coins,inventory:inv})});
+  wheelSpinning = true;
+  $('wheelSpinBtn').disabled = true;
+  const targetRot = Math.random() * Math.PI * 2 + Math.PI * 10;
+  const start = performance.now();
+  function anim(t) {
+    const p = Math.min(1, (t - start) / 4000);
+    drawWheel(targetRot * p);
+    if (p < 1) requestAnimationFrame(anim);
+    else finishWheel();
+  }
+  requestAnimationFrame(anim);
+};
+async function finishWheel() {
+  wheelSpinning = false;
+  $('wheelSpinBtn').disabled = false;
+  const idx = Math.floor(Math.random() * W.length);
+  const win = W[idx];
+  const res = $('wheelResult');
+  if (win.v > 0) {
+    user.coins += win.v;
+    if (res) { res.textContent = '🎉 +' + win.v + ' 🪙'; res.classList.add('win'); }
+    toast('🎉 +' + win.v + ' 🪙');
+  } else {
+    const pool = I.filter(x => x.r === (win.l === 'EPIC' ? 'epic' : 'legendary'));
+    const it = pool[Math.floor(Math.random() * pool.length)];
+    if (it) {
+      inv[it.n] = (inv[it.n] || 0) + 1;
+      if (res) { res.textContent = '🎁 ' + it.n; res.classList.add('win'); }
+      toast('🎁 ' + it.n);
+    }
+  }
+  wheelHistoryList.unshift(win.l);
+  if (wheelHistoryList.length > 12) wheelHistoryList.pop();
+  const hist = $('wheelHistory');
+  if (hist) hist.innerHTML = wheelHistoryList.map(l => `<span class="wheel-hist-item">${l}</span>`).join('');
+  updateUI();
+  try { await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ coins: user.coins, inventory: inv }) }); } catch(e) {}
   renderInv();
 }
 
-// ЧАТ
-async function loadChat(){
+/* ===================== ЧАТ ===================== */
+async function loadChat() {
+  const box = $('chatMessages');
+  if (!box) return;
   try {
     const msgs = await db('/chat?select=*&order=created_at.asc&limit=50');
-    const box = $('chatMessages'); if(!box) return;
-    box.innerHTML = msgs.map(m=>`<div style="font-size:13px;"><span style="font-weight:bold; color:${m.role==='admin'?'#ff4444':'#fff'}; margin-right:5px;">${m.username}</span>: ${m.message}</div>`).join('');
+    if (!msgs) return;
+    box.innerHTML = msgs.map(m => `<div style="font-size:13px;"><span style="font-weight:bold; color:${m.role === 'admin' ? '#ff4444' : '#fff'}; margin-right:5px;">${m.username}</span>: ${m.message}</div>`).join('');
     box.scrollTop = box.scrollHeight;
-  } catch(e){}
+  } catch(e) {}
 }
-$('chatSendBtn').onclick = async()=>{
-  const t = $('chatInput').value.trim(); if(!t) return; $('chatInput').value='';
-  await db('/chat', {method:'POST', body:JSON.stringify({username:user.username, role:user.role||'user', message:t, created_at:Date.now()})});
-  loadChat();
-};
+async function sendChat() {
+  if (!user) return;
+  const inp = $('chatInput');
+  const t = (inp?.value || '').trim();
+  if (!t) return;
+  inp.value = '';
+  try {
+    await db('/chat', { method: 'POST', body: JSON.stringify({ username: user.username, role: user.role || 'user', message: t, created_at: Date.now() }) });
+    loadChat();
+  } catch(e) { toast('Ошибка: ' + e.message); }
+}
+$('chatSendBtn').onclick = sendChat;
+$('chatInput').addEventListener('keypress', e => { if (e.key === 'Enter') sendChat(); });
 
-// АДМИНКА
-$('adminSetRoleBtn').onclick = async()=>{
-  const t = $('adminTargetUser').value.trim(), r = $('adminRoleSelect').value;
-  if(!t) return toast('Введи имя');
-  await db('/players?username=eq.'+t, {method:'PATCH', body:JSON.stringify({role:r})});
-  toast('Роль выдана!');
-};
-$('adminSetSkinBtn').onclick = async()=>{
-  const n = $('adminItemName').value.trim(), img = $('adminItemImg').value.trim();
-  if(!n||!img) return toast('Заполни поля');
-  user.custom_skins = user.custom_skins || {}; user.custom_skins[n] = img;
-  await db('/players?id=eq.'+user.id, {method:'PATCH', body:JSON.stringify({custom_skins:user.custom_skins})});
-  toast('Картинка установлена!'); renderInv(); renderMkt();
-};
-$('adminSetAdBtn').onclick = async()=>{
-  const img = $('adminAdImg').value.trim(), link = $('adminAdLink').value.trim();
-  if(!img) return toast('Нужна ссылка на фото');
-  await db('/ads', {method:'POST', body:JSON.stringify({image_url:img, link_url:link, created_at:Date.now()})});
-  toast('Реклама запущена!'); loadAd();
-};
-
-// РЕКЛАМА
-async function loadAd(){
+/* ===================== РЕКЛАМА ===================== */
+async function loadAd() {
+  const c = $('ad-container');
+  if (!c) return;
   try {
     const ads = await db('/ads?select=*&order=created_at.desc&limit=1');
-    const c = $('ad-container'); if(!c) return;
-    if(ads && ads.length){
-      c.innerHTML = `<div class="ad-banner"><button class="ad-close" onclick="this.parentElement.style.display='none'">✕</button><img src="${ads[0].image_url}" onclick="window.open('${ads[0].link_url||'#'}','_blank')"></div>`;
-    } else c.innerHTML = '';
-  } catch(e){}
+    if (ads && ads.length) {
+      c.innerHTML = `<div class="ad-banner"><button class="ad-close" onclick="this.parentElement.style.display='none'">✕</button><img src="${ads[0].image_url}" onclick="window.open('${ads[0].link_url || '#'}','_blank')"></div>`;
+    } else {
+      c.innerHTML = '';
+    }
+  } catch(e) {}
 }
 
-// НОВОСТИ
-async function renderNews(){
-  newsList = await db('/news?select=*&order=pinned.desc,created_at.desc').catch(()=>[]);
-  $('newsList').innerHTML = newsList.map(n=>`<div class="news-card ${n.pinned?'pinned':''}"><div class="news-head"><b>${n.author}</b></div><div class="news-title">${n.title}</div><div class="news-content">${n.content}</div></div>`).join('') || '<div class="news-empty">Пусто</div>';
-}
-
-// АВТОВХОД
-window.onload = async()=>{
-  if(token){
-    try { const d=await db('/players?token=eq.'+token); if(d.length){ user=d[0]; enterGame(0); } else localStorage.removeItem('hu_tk'); } catch(e){}
+/* ===================== НОВОСТИ ===================== */
+async function renderNews() {
+  const g = $('newsList');
+  try { newsList = await db('/news?select=*&order=pinned.desc,created_at.desc') || []; }
+  catch(e) { newsList = []; }
+  const isDev = user && (DEV.includes((user.username||'').toLowerCase()) || user.role === 'admin');
+  if (g) {
+    if (!newsList.length) g.innerHTML = '<div class="news-empty">Пусто</div>';
+    else {
+      g.innerHTML = newsList.map(n => {
+        const d = n.created_at ? new Date(n.created_at).toLocaleString('ru-RU') : '';
+        const del = isDev ? `<div class="news-actions"><button class="news-btn del" onclick="deleteNews(${n.id})">🗑 Удалить</button></div>` : '';
+        return `<div class="news-card ${n.pinned ? 'pinned' : ''}"><div class="news-head"><div class="news-author-avatar">📰</div><div><div class="news-author-name">${n.author}${n.pinned ? ' 📌' : ''}</div><div class="news-date">${d}</div></div></div><div class="news-title">${n.title}</div><div class="news-content">${n.content}</div>${del}</div>`;
+      }).join('');
+    }
   }
+  renderTapNews();
+}
+function renderTapNews() {
+  const card = $('tapNewsCard'), content = $('tapNewsContent');
+  if (!card || !content) return;
+  if (newsList && newsList.length) {
+    const n = newsList[0];
+    content.innerHTML = `<div class="news-title">${n.title}</div><div class="news-content">${n.content}</div>`;
+    card.style.display = 'block';
+  } else {
+    card.style.display = 'none';
+  }
+}
+window.deleteNews = async (id) => {
+  if (!user) return;
+  const isDev = DEV.includes((user.username||'').toLowerCase()) || user.role === 'admin';
+  if (!isDev) return;
+  try { await db('/news?id=eq.' + id, { method: 'DELETE' }); renderNews(); toast('Удалено'); } catch(e) { toast('Ошибка: ' + e.message); }
 };
-$('logoutBtn').onclick = ()=>{ localStorage.removeItem('hu_tk'); location.reload(); };
-$('modalClose').onclick = $('caseModalClose').onclick = ()=>{ document.querySelectorAll('.modal-overlay').forEach(x=>x.classList.remove('active')); };
-$('offlineLater').onclick = ()=>$('offlineModal').classList.remove('active');
+$('newsCreateBtn').onclick = () => {
+  $('newsTitleInput').value = '';
+  $('newsContentInput').value = '';
+  $('newsPinnedInput').checked = false;
+  $('newsModal').classList.add('active');
+};
+$('newsModalClose').onclick = () => $('newsModal').classList.remove('active');
+$('newsSubmitBtn').onclick = async () => {
+  if (!user) return;
+  const title = ($('newsTitleInput').value || '').trim();
+  const content = ($('newsContentInput').value || '').trim();
+  const pinned = $('newsPinnedInput').checked;
+  if (!title || !content) return toast('Заполни всё');
+  try {
+    await db('/news', { method: 'POST', body: JSON.stringify({ author: user.username, title, content, pinned, created_at: Date.now() }) });
+    $('newsModal').classList.remove('active');
+    await renderNews();
+    toast('Опубликовано');
+  } catch(e) { toast('Ошибка: ' + e.message); }
+};
+
+/* ===================== АВАТАР ===================== */
+function renderAvatarPicker() {
+  const g = $('avatarPicker'); if (!g || !user) return;
+  g.innerHTML = AV.map(a => `<button class="avatar-opt ${user.avatar === a ? 'active' : ''}" onclick="setAvatar('${a}')">${a}</button>`).join('');
+}
+window.setAvatar = async (a) => {
+  if (!user) return;
+  user.avatar = a;
+  updateUI();
+  renderAvatarPicker();
+  try { await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ avatar: a }) }); } catch(e) {}
+  toast('Аватар обновлён');
+};
+
+/* ===================== АДМИНКА ===================== */
+$('adminSetRoleBtn').onclick = async () => {
+  const t = ($('adminTargetUser').value || '').trim();
+  const r = $('adminRoleSelect').value;
+  if (!t) return toast('Введи имя');
+  try { await db('/players?username=eq.' + encodeURIComponent(t), { method: 'PATCH', body: JSON.stringify({ role: r }) }); toast('Роль выдана!'); }
+  catch(e) { toast('Ошибка: ' + e.message); }
+};
+$('adminSetSkinBtn').onclick = async () => {
+  if (!user) return;
+  const n = ($('adminItemName').value || '').trim();
+  const img = ($('adminItemImg').value || '').trim();
+  if (!n || !img) return toast('Заполни поля');
+  user.custom_skins = user.custom_skins || {};
+  user.custom_skins[n] = img;
+  try { await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ custom_skins: user.custom_skins }) }); toast('Картинка установлена!'); renderInv(); renderMkt(); }
+  catch(e) { toast('Ошибка: ' + e.message); }
+};
+$('adminSetAdBtn').onclick = async () => {
+  const img = ($('adminAdImg').value || '').trim();
+  const link = ($('adminAdLink').value || '').trim();
+  if (!img) return toast('Нужна ссылка на фото');
+  try { await db('/ads', { method: 'POST', body: JSON.stringify({ image_url: img, link_url: link, created_at: Date.now() }) }); toast('Реклама запущена!'); loadAd(); }
+  catch(e) { toast('Ошибка: ' + e.message); }
+};
+
+/* ===================== НАСТРОЙКИ ===================== */
+document.querySelectorAll('.toggle[data-setting]').forEach(t => {
+  const saved = localStorage.getItem('hu_set_' + t.dataset.setting);
+  if (saved === '0') t.classList.remove('on');
+  t.addEventListener('click', () => {
+    t.classList.toggle('on');
+    localStorage.setItem('hu_set_' + t.dataset.setting, t.classList.contains('on') ? '1' : '0');
+  });
+});
+
+/* ===================== МОДАЛКИ (закрытие) ===================== */
+document.querySelectorAll('.modal .close-btn').forEach(btn => {
+  btn.onclick = () => { const o = btn.closest('.modal-overlay'); if (o) o.classList.remove('active'); };
+});
+
+/* ===================== ВЫХОД / АВТОВХОД ===================== */
+$('logoutBtn').onclick = () => {
+  if (chatTimer) clearInterval(chatTimer);
+  if (offTimer) clearInterval(offTimer);
+  localStorage.removeItem('hu_tk');
+  location.reload();
+};
+
+window.onload = async () => {
+  if (!token) return;
+  try {
+    const d = await db('/players?token=eq.' + encodeURIComponent(token));
+    if (d && d.length) {
+      user = d[0];
+      // Считаем офлайн-награду как при логине
+      const now = Date.now(), gap = now - (user.last_seen || now);
+      let gain = 0;
+      if (gap > 60000) {
+        gain = Math.floor(gap / 60000) * 5;
+        user.offline_coins = (user.offline_coins || 0) + gain;
+        await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ offline_coins: user.offline_coins, last_seen: now }) });
+      } else {
+        await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ last_seen: now }) }).catch(() => {});
+      }
+      enterGame(gain);
+    } else {
+      localStorage.removeItem('hu_tk');
+    }
+  } catch(e) { console.warn('autologin:', e); localStorage.removeItem('hu_tk'); }
+};
 </script>
 </body>
-  </html>
+    </html>
