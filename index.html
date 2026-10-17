@@ -62,7 +62,7 @@
             color: var(--color-text);
             font-family: var(--font-main);
             min-height: 100vh;
-            padding: 10px 10px 100px 10px; /* Место под нижнее меню */
+            padding: 10px 10px 100px 10px;
             user-select: none;
             overflow-x: hidden;
             font-weight: 500;
@@ -73,7 +73,6 @@
             letter-spacing: 1px;
         }
 
-        /* Кастомный скроллбар */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -90,7 +89,7 @@
         }
 
         /* ==========================================================================
-           2. АНИМАЦИИ И ЭФФЕКТЫ (Загрузка, Бэкграунд)
+           2. АНИМАЦИИ
            ========================================================================== */
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -113,16 +112,37 @@
             100% { box-shadow: 0 0 10px rgba(240, 185, 11, 0.2); }
         }
 
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        /* ==========================================================================
+           3. ЭКРАН ЗАГРУЗКИ (Картинка)
+           ========================================================================== */
         .loading-screen {
             position: fixed;
             inset: 0;
-            background: var(--color-bg);
+            background-color: #000;
+            /* КАРТИНКА ЗАГРУЗКИ (ссылка на твою картинку с кейсом) */
+            background-image: url('https://i.imgur.com/your_loading_image.jpg'); 
+            background-size: cover;
+            background-position: center;
             z-index: 9999;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-end;
             align-items: center;
-            transition: opacity 0.5s ease;
+            padding-bottom: 100px;
+            transition: opacity 0.8s ease;
+        }
+        .loading-screen::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.9) 100%);
+            z-index: 1;
         }
         .loading-screen.hidden {
             opacity: 0;
@@ -131,22 +151,27 @@
         .loading-spinner {
             width: 60px;
             height: 60px;
-            border: 5px solid var(--color-border);
+            border: 5px solid rgba(255, 255, 255, 0.1);
             border-top-color: var(--color-gold);
             border-radius: 50%;
             animation: spin 1s linear infinite;
+            position: relative;
+            z-index: 2;
             margin-bottom: 20px;
         }
         .loading-text {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 900;
             color: var(--color-gold);
-            letter-spacing: 2px;
+            letter-spacing: 4px;
+            position: relative;
+            z-index: 2;
             animation: pulse-glow 2s infinite;
+            text-transform: uppercase;
         }
 
         /* ==========================================================================
-           3. ЭКРАН АВТОРИЗАЦИИ (Вход и Регистрация)
+           4. ЭКРАН АВТОРИЗАЦИИ
            ========================================================================== */
         .auth-screen {
             position: fixed;
@@ -158,9 +183,7 @@
             align-items: center;
             padding: 20px;
         }
-        .auth-screen.hidden {
-            display: none;
-        }
+        .auth-screen.hidden { display: none; }
 
         .auth-box {
             width: 100%;
@@ -317,7 +340,7 @@
         }
 
         /* ==========================================================================
-           4. ОСНОВНОЙ ИНТЕРФЕЙС (Шапка, Меню, Контент)
+           5. ОСНОВНОЙ ИНТЕРФЕЙС
            ========================================================================== */
         .app {
             max-width: 1500px;
@@ -329,7 +352,6 @@
             animation: fadeIn 0.4s ease;
         }
 
-        /* Шапка */
         .topbar {
             display: flex;
             justify-content: space-between;
@@ -393,13 +415,11 @@
             background: rgba(248, 113, 113, 0.2);
         }
 
-        /* Компоновка */
         .layout {
             display: flex;
             gap: 20px;
         }
 
-        /* Боковое меню (ПК) */
         .sidebar {
             display: none;
             width: 260px;
@@ -416,11 +436,7 @@
             top: 20px;
             box-shadow: var(--shadow-md);
         }
-        @media (min-width: 900px) {
-            .sidebar {
-                display: flex;
-            }
-        }
+        @media (min-width: 900px) { .sidebar { display: flex; } }
 
         .nav-section-title {
             font-size: 10px;
@@ -472,9 +488,7 @@
         .nav-btn.active::before {
             opacity: 1;
         }
-        .nav-icon {
-            font-size: 20px;
-        }
+        .nav-icon { font-size: 20px; }
 
         .content-area {
             flex: 1;
@@ -485,9 +499,7 @@
             display: none;
             animation: fadeIn 0.4s ease;
         }
-        .view.active {
-            display: block;
-        }
+        .view.active { display: block; }
 
         .card {
             background: var(--color-card);
@@ -499,7 +511,6 @@
             box-shadow: var(--shadow-sm);
         }
 
-        /* Мобильное меню (Низ) */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -514,11 +525,7 @@
             z-index: 100;
             overflow-x: auto;
         }
-        @media (min-width: 900px) {
-            .bottom-nav {
-                display: none;
-            }
-        }
+        @media (min-width: 900px) { .bottom-nav { display: none; } }
         .bnav-btn {
             background: none;
             border: none;
@@ -534,17 +541,12 @@
             flex-shrink: 0;
             padding: 0 10px;
         }
-        .bnav-btn.active {
-            color: var(--color-gold);
-        }
-        .bnav-btn span {
-            font-size: 22px;
-        }
+        .bnav-btn.active { color: var(--color-gold); }
+        .bnav-btn span { font-size: 22px; }
 
         /* ==========================================================================
-           5. ЭКРАНЫ ИГРЫ (Тапалка, Кейсы, Апгрейдер и т.д.)
+           6. ЭКРАНЫ ИГРЫ
            ========================================================================== */
-        
         /* Тапалка */
         .tap-area {
             display: flex;
@@ -625,7 +627,7 @@
             display: inline-block;
         }
 
-        /* Рулетка (модалка) */
+        /* Рулетка */
         .roulette-container {
             position: relative;
             overflow: hidden;
@@ -793,9 +795,7 @@
             font-size: 15px;
             transition: all 0.2s ease;
         }
-        .chance-btn:hover {
-            background: #2a2a34;
-        }
+        .chance-btn:hover { background: #2a2a34; }
         .chance-btn.active {
             background: linear-gradient(135deg, var(--color-gold), var(--color-gold-hover));
             color: #1a1a1a;
@@ -908,24 +908,10 @@
             object-fit: contain;
             filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5));
         }
-        .auction-info {
-            flex: 1;
-        }
-        .auction-name {
-            font-size: 16px;
-            font-weight: 900;
-            color: white;
-            margin-bottom: 5px;
-        }
-        .auction-seller {
-            font-size: 12px;
-            color: var(--color-text-muted);
-        }
-        .auction-price {
-            font-size: 20px;
-            font-weight: 900;
-            color: var(--color-gold);
-        }
+        .auction-info { flex: 1; }
+        .auction-name { font-size: 16px; font-weight: 900; color: white; margin-bottom: 5px; }
+        .auction-seller { font-size: 12px; color: var(--color-text-muted); }
+        .auction-price { font-size: 20px; font-weight: 900; color: var(--color-gold); }
         .btn-buy-auction {
             background: linear-gradient(135deg, var(--color-green), var(--color-green-dark));
             color: #1a1a1a;
@@ -936,9 +922,7 @@
             cursor: pointer;
             transition: transform 0.2s ease;
         }
-        .btn-buy-auction:hover {
-            transform: scale(1.05);
-        }
+        .btn-buy-auction:hover { transform: scale(1.05); }
 
         /* Инвентарь и Крафт */
         .inv-grid {
@@ -986,9 +970,7 @@
             border-color: var(--color-gold);
             box-shadow: 0 0 15px rgba(240, 185, 11, 0.3);
         }
-        .craft-item.ready:hover {
-            background: rgba(240, 185, 11, 0.1);
-        }
+        .craft-item.ready:hover { background: rgba(240, 185, 11, 0.1); }
 
         /* Лидеры, Друзья, Чат, Поддержка */
         .lb-item {
@@ -1003,26 +985,10 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        .lb-item:hover {
-            background: #111116;
-            border-color: var(--color-border-hover);
-        }
-        .lb-rank {
-            font-size: 20px;
-            font-weight: 900;
-            width: 30px;
-            text-align: center;
-        }
-        .lb-name {
-            flex: 1;
-            font-weight: 800;
-            font-size: 16px;
-        }
-        .lb-coins {
-            font-weight: 900;
-            color: var(--color-gold);
-            font-size: 16px;
-        }
+        .lb-item:hover { background: #111116; border-color: var(--color-border-hover); }
+        .lb-rank { font-size: 20px; font-weight: 900; width: 30px; text-align: center; }
+        .lb-name { flex: 1; font-weight: 800; font-size: 16px; }
+        .lb-coins { font-weight: 900; color: var(--color-gold); font-size: 16px; }
         .chat-box {
             display: flex;
             flex-direction: column;
@@ -1031,141 +997,64 @@
             border-radius: var(--radius-md);
             border: 1px solid #1c1c24;
         }
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .chat-input-row {
-            display: flex;
-            padding: 10px;
-            border-top: 1px solid #1c1c24;
-            gap: 10px;
-        }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .chat-input-row { display: flex; padding: 10px; border-top: 1px solid #1c1c24; gap: 10px; }
         .chat-input-row input {
-            flex: 1;
-            padding: 12px;
-            border-radius: var(--radius-sm);
-            background: #0e0e14;
-            border: 1px solid var(--color-border);
-            color: white;
-            outline: none;
+            flex: 1; padding: 12px; border-radius: var(--radius-sm);
+            background: #0e0e14; border: 1px solid var(--color-border); color: white; outline: none;
         }
         .friend-card {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #0b0b10;
-            padding: 15px;
-            border-radius: var(--radius-md);
-            border: 1px solid #1c1c24;
-            margin-bottom: 10px;
+            display: flex; align-items: center; justify-content: space-between;
+            background: #0b0b10; padding: 15px; border-radius: var(--radius-md);
+            border: 1px solid #1c1c24; margin-bottom: 10px;
         }
 
         /* Модалки */
         .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(10px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 500;
-            padding: 20px;
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(10px); display: none; justify-content: center;
+            align-items: center; z-index: 500; padding: 20px;
         }
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display: flex; }
         .modal {
             background: linear-gradient(180deg, #16161c, #0b0b10);
             border: 1px solid var(--color-border-hover);
-            border-radius: var(--radius-lg);
-            padding: 30px;
-            width: 100%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: var(--shadow-lg);
-            transform: scale(0.95);
-            transition: transform 0.3s var(--transition-smooth);
+            border-radius: var(--radius-lg); padding: 30px;
+            width: 100%; max-width: 500px; max-height: 90vh;
+            overflow-y: auto; position: relative; box-shadow: var(--shadow-lg);
+            transform: scale(0.95); transition: transform 0.3s var(--transition-smooth);
         }
-        .modal-overlay.active .modal {
-            transform: scale(1);
-        }
+        .modal-overlay.active .modal { transform: scale(1); }
         .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: #1a1a24;
-            color: var(--color-text-muted);
-            border: none;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-weight: 900;
-            transition: all 0.2s ease;
+            position: absolute; top: 15px; right: 15px; background: #1a1a24;
+            color: var(--color-text-muted); border: none; width: 35px; height: 35px;
+            border-radius: 50%; cursor: pointer; font-weight: 900; transition: all 0.2s ease;
         }
-        .close-btn:hover {
-            background: var(--color-red);
-            color: white;
-        }
+        .close-btn:hover { background: var(--color-red); color: white; }
 
-        /* Оверлей тех. работ */
+        /* Тех. Работы Оверлей */
         .maint-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(5,5,8,0.98);
-            z-index: 10000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            backdrop-filter: blur(10px);
-            text-align: center;
-            padding: 20px;
+            position: fixed; inset: 0; background: rgba(5,5,8,0.98);
+            z-index: 10000; display: none; justify-content: center; align-items: center;
+            flex-direction: column; backdrop-filter: blur(10px); text-align: center; padding: 20px;
         }
-        .maint-overlay.active {
-            display: flex;
-        }
+        .maint-overlay.active { display: flex; }
         .maint-timer {
-            font-size: 64px;
-            font-weight: 900;
-            color: var(--color-gold);
-            margin-top: 20px;
-            font-variant-numeric: tabular-nums;
+            font-size: 64px; font-weight: 900; color: var(--color-gold);
+            margin-top: 20px; font-variant-numeric: tabular-nums;
             filter: drop-shadow(0 0 20px rgba(240,185,11,0.5));
         }
 
         /* Уведомления */
         .toast {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
+            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
             background: linear-gradient(135deg, var(--color-gold), var(--color-gold-hover));
-            color: #1a1a1a;
-            padding: 15px 30px;
-            border-radius: var(--radius-xl);
-            font-weight: 900;
-            font-size: 15px;
-            transition: all 0.4s var(--transition-smooth);
-            z-index: 10001;
-            opacity: 0;
-            visibility: hidden;
-            white-space: nowrap;
+            color: #1a1a1a; padding: 15px 30px; border-radius: var(--radius-xl);
+            font-weight: 900; font-size: 15px; transition: all 0.4s var(--transition-smooth);
+            z-index: 10001; opacity: 0; visibility: hidden; white-space: nowrap;
             box-shadow: 0 10px 30px rgba(240,185,11,0.4);
         }
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-            visibility: visible;
-        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; visibility: visible; }
 
         /* Редкости */
         .rarity-common { border-bottom: 4px solid #7a7a88; }
@@ -1174,36 +1063,37 @@
         .rarity-epic { border-bottom: 4px solid #e06ebf; }
         .rarity-legendary { border-bottom: 4px solid #f0c14b; box-shadow: 0 0 20px rgba(240,193,75,.2); }
 
-        /* Админка */
+        /* Админка (Abuse) */
         .abuse-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 10px;
-            margin-top: 15px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px; margin-top: 15px;
         }
         .abuse-btn {
-            background: #1a1a24;
-            border: 1px solid var(--color-border-hover);
-            color: white;
-            padding: 15px;
-            border-radius: var(--radius-md);
-            font-weight: 800;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            font-size: 12px;
-            transition: all 0.2s ease;
+            background: #1a1a24; border: 1px solid var(--color-border-hover);
+            color: white; padding: 15px; border-radius: var(--radius-md);
+            font-weight: 800; cursor: pointer; display: flex; flex-direction: column;
+            align-items: center; gap: 10px; font-size: 12px; transition: all 0.2s ease;
         }
         .abuse-btn:hover {
-            background: #2a2a34;
-            border-color: var(--color-red);
-            color: var(--color-red);
-            transform: translateY(-3px);
+            background: #2a2a34; border-color: var(--color-red);
+            color: var(--color-red); transform: translateY(-3px);
         }
-        .abuse-btn span {
-            font-size: 24px;
+        .abuse-btn span { font-size: 24px; }
+
+        /* Видео реклама */
+        .ad-container video {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 15px;
+        }
+        .ad-container img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 15px;
         }
     </style>
 </head>
@@ -1212,7 +1102,7 @@
     <!-- ЭКРАН ЗАГРУЗКИ -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-spinner"></div>
-        <div class="loading-text">ЗАГРУЗКА HOME UP...</div>
+        <div class="loading-text">HOME UP</div>
     </div>
 
     <!-- ОВЕРЛЕЙ ТЕХ. РАБОТ -->
@@ -1264,7 +1154,7 @@
     <div class="app" id="app">
         
         <!-- Реклама -->
-        <div id="ad-container"></div>
+        <div id="ad-container" class="ad-container"></div>
 
         <!-- Шапка -->
         <div class="topbar">
@@ -1318,7 +1208,9 @@
                 <section class="view" id="view-cases">
                     <div class="card">
                         <h2 style="margin-bottom:30px;color:var(--color-gold)">🎁 КЕЙСЫ</h2>
-                        <div class="cases-grid" id="casesGrid"></div>
+                        <div class="cases-grid" id="casesGrid">
+                            <!-- Сюда будут рендериться кейсы -->
+                        </div>
                     </div>
                 </section>
 
@@ -1501,8 +1393,8 @@
                         <input type="text" id="admAnn" class="form-input" placeholder="Текст объявления (пусто = скрыть)">
                         <button class="btn-primary" id="admAnnBtn" style="margin-bottom:20px">СОХРАНИТЬ</button>
                         
-                        <h3 style="color:white;margin:15px 0 10px">🖼 Реклама (Загрузка файла)</h3>
-                        <input type="file" id="admAdFile" class="form-input" accept="image/*" style="padding:10px">
+                        <h3 style="color:white;margin:15px 0 10px">🖼 Реклама (Картинка или Видео)</h3>
+                        <input type="file" id="admAdFile" class="form-input" accept="image/*,video/*" style="padding:10px">
                         <button class="btn-primary" id="admAdBtn" style="margin-bottom:20px">ЗАГРУЗИТЬ РЕКЛАМУ</button>
                         
                         <h3 style="color:white;margin:15px 0 10px">🛠 Тех. Перерыв</h3>
@@ -1531,7 +1423,7 @@
                     </div>
 
                     <div class="card" style="border-color:rgba(248,113,113,.3)">
-                        <h2 style="margin-bottom:20px;color:var(--color-red)">💀 ADMIN ABUSE</h2>
+                        <h2 style="margin-bottom:20px;color:var(--color-red)">💀 ADMIN ABUSE (30 функций)</h2>
                         <input type="text" id="abuseTarget" class="form-input" placeholder="🎯 Введите ник игрока (или ALL)" style="max-width:400px;margin-bottom:15px">
                         <div class="abuse-grid" id="abuseGrid"></div>
                     </div>
@@ -1658,6 +1550,9 @@
         };
         
         let isCaseRolling = false;
+        
+        // Для отслеживания спама в чате
+        let chatHistory = []; 
 
         const $ = id => document.getElementById(id);
 
@@ -1671,25 +1566,14 @@
             'шмара', 'курва', 'лох', 'чмо'
         ];
 
-        // Очистка текста от символов, пробелов и замена цифр на буквы
         function normalizeString(str) {
             let normalized = str.toLowerCase();
             
-            // Замена популярных цифр и символов на буквы (leet speak)
             const leetMap = {
-                '0': 'о', 'o': 'о',
-                '1': 'и', 'i': 'и', 'l': 'и',
-                '3': 'з', 'e': 'е',
-                '4': 'ч', 'a': 'а',
-                '5': 'с', 's': 'с',
-                '6': 'б', 'b': 'б',
-                '7': 'т', 't': 'т',
-                '8': 'в',
-                '9': 'д',
-                '@': 'а',
-                '$': 'с',
-                'y': 'у', 'u': 'у',
-                'k': 'к', 'x': 'х', 'h': 'х'
+                '0': 'о', 'o': 'о', '1': 'и', 'i': 'и', 'l': 'и',
+                '3': 'з', 'e': 'е', '4': 'ч', 'a': 'а', '5': 'с', 's': 'с',
+                '6': 'б', 'b': 'б', '7': 'т', 't': 'т', '8': 'в', '9': 'д',
+                '@': 'а', '$': 'с', 'y': 'у', 'u': 'у', 'k': 'к', 'x': 'х', 'h': 'х'
             };
 
             let result = '';
@@ -1702,12 +1586,10 @@
                 }
             }
 
-            // Оставляем только буквы
             result = result.replace(/[^а-яёa-z]/g, '');
             return result;
         }
 
-        // Проверка на наличие мата (для никнейма)
         function checkNicknameBadWords(nickname) {
             const normalizedNick = normalizeString(nickname);
             return BAD_WORDS.some(badWord => {
@@ -1716,11 +1598,9 @@
             });
         }
 
-        // Фильтрация текста (для чата)
         function filterText(text) {
             let filtered = text;
             BAD_WORDS.forEach(word => {
-                // Регулярное выражение для поиска слова с возможными пробелами/символами между буквами
                 let regexStr = word.split('').join('[\\s\\W_]*');
                 const regex = new RegExp(regexStr, 'gi');
                 filtered = filtered.replace(regex, '####');
@@ -1752,7 +1632,7 @@
         ];
 
         // ==========================================================================
-        // 4. ХЕШИРОВАНИЕ ПАРОЛЕЙ (Безопасность)
+        // 4. ХЕШИРОВАНИЕ ПАРОЛЕЙ
         // ==========================================================================
         function sha256Raw(bytes) {
             const K = [0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
@@ -1791,11 +1671,7 @@
         }
 
         function hashSHA256(password) {
-            try {
-                return sha256Raw(new TextEncoder().encode('salt' + password));
-            } catch (e) {
-                return null;
-            }
+            try { return sha256Raw(new TextEncoder().encode('salt' + password)); } catch (e) { return null; }
         }
 
         function hashFallback(password) {
@@ -1821,9 +1697,7 @@
                 headers: { ...HEADERS, ...(options.headers || {}) }
             });
             const text = await response.text();
-            if (!response.ok) {
-                throw new Error(text || 'Ошибка БД');
-            }
+            if (!response.ok) throw new Error(text || 'Ошибка БД');
             return text ? JSON.parse(text) : null;
         }
 
@@ -1832,9 +1706,7 @@
             toast.textContent = message;
             toast.classList.add('show');
             clearTimeout(toast.hideTimeout);
-            toast.hideTimeout = setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+            toast.hideTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
         function closeModals() {
@@ -1847,26 +1719,20 @@
         async function saveConfig(key, value) {
             const existing = await dbRequest(`/config?key=eq.${key}&select=key`);
             if (existing && existing.length > 0) {
-                await dbRequest(`/config?key=eq.${key}`, {
-                    method: 'PATCH',
-                    body: JSON.stringify({ value })
-                });
+                await dbRequest(`/config?key=eq.${key}`, { method: 'PATCH', body: JSON.stringify({ value }) });
             } else {
-                await dbRequest('/config', {
-                    method: 'POST',
-                    body: JSON.stringify({ key, value })
-                });
+                await dbRequest('/config', { method: 'POST', body: JSON.stringify({ key, value }) });
             }
         }
 
         // ==========================================================================
-        // 6. ЗАГРУЗКА ДАННЫХ ИГРЫ (Кейсы, Предметы, Тех. перерыв)
+        // 6. ЗАГРУЗКА ДАННЫХ ИГРЫ
         // ==========================================================================
         async function loadGameData() {
             try {
                 const configs = await dbRequest('/config?select=*') || [];
                 
-                // Загрузка предметов (жесткая проверка)
+                // Предметы
                 let itemsConfig = configs.find(c => c.key === 'items_data');
                 if (!itemsConfig || !itemsConfig.value || itemsConfig.value === '[]') {
                     gameItems = [...INITIAL_ITEMS];
@@ -1875,7 +1741,7 @@
                     gameItems = JSON.parse(itemsConfig.value);
                 }
                 
-                // Загрузка кейсов (жесткая проверка)
+                // Кейсы (ФОРСИРОВАННАЯ ЗАГРУЗКА)
                 let casesConfig = configs.find(c => c.key === 'cases_data');
                 if (!casesConfig || !casesConfig.value || casesConfig.value === '[]') {
                     gameCases = [...DEFAULT_CASES];
@@ -1897,7 +1763,6 @@
                 // Тех. перерыв
                 const maintConfig = configs.find(c => c.key === 'maintenance');
                 const maintTime = configs.find(c => c.key === 'maintenance_time');
-                
                 if (maintConfig && maintConfig.value === '1' && maintTime && maintTime.value) {
                     startMaintenanceTimer(parseInt(maintTime.value));
                 }
@@ -1947,7 +1812,6 @@
             };
         });
 
-        // Живая проверка ника
         $('regUser').addEventListener('input', async (e) => {
             const val = e.target.value.trim();
             const hint = $('regUserHint');
@@ -1958,7 +1822,6 @@
                 return;
             }
             
-            // Проверка мата
             if (checkNicknameBadWords(val)) {
                 e.target.className = 'form-input invalid';
                 hint.style.color = 'var(--color-red)';
@@ -1966,7 +1829,6 @@
                 return;
             }
             
-            // Проверка занятости
             try {
                 const existing = await dbRequest(`/players?username=ilike.${encodeURIComponent(val)}&select=id`);
                 if (existing && existing.length > 0) {
@@ -1997,7 +1859,6 @@
                     const fh = hashFallback(p);
                     
                     if (storedPw === sh || storedPw === fh || storedPw === p) {
-                        // Офлайн заработок
                         const now = Date.now();
                         const lastSeen = usr.last_seen || now;
                         const diffMins = Math.floor((now - lastSeen) / 60000);
@@ -2028,9 +1889,7 @@
                 } else {
                     showToast('Игрок не найден');
                 }
-            } catch(e) {
-                showToast('Ошибка сети');
-            }
+            } catch(e) { showToast('Ошибка сети'); }
         };
 
         $('regBtn').onclick = async () => {
@@ -2052,27 +1911,17 @@
                 const token = 'token_' + Date.now() + Math.floor(Math.random() * 1000);
                 
                 const newUser = {
-                    username: u,
-                    password: hashedPass,
-                    token: token,
-                    coins: 1000,
-                    offline_coins: 0,
-                    inventory: {},
-                    role: 'user',
-                    last_seen: Date.now()
+                    username: u, password: hashedPass, token: token,
+                    coins: 1000, offline_coins: 0, inventory: {},
+                    role: 'user', last_seen: Date.now()
                 };
                 
-                const result = await dbRequest('/players', {
-                    method: 'POST',
-                    body: JSON.stringify(newUser)
-                });
+                const result = await dbRequest('/players', { method: 'POST', body: JSON.stringify(newUser) });
                 
-                // Системное сообщение в чат
                 await dbRequest('/chat', {
                     method: 'POST',
                     body: JSON.stringify({
-                        username: 'Система',
-                        role: 'system',
+                        username: 'Система', role: 'system',
                         message: 'Новый игрок зарегистрировался: ' + u,
                         created_at: Date.now()
                     })
@@ -2082,9 +1931,7 @@
                 userInventory = {};
                 localStorage.setItem('hu_token', token);
                 startGame();
-            } catch(e) {
-                showToast('Ошибка при создании');
-            }
+            } catch(e) { showToast('Ошибка при создании'); }
         };
 
         $('googleBtn').onclick = () => {
@@ -2107,12 +1954,8 @@
                         if (email === 'stepanzvyagin14@gmail.com') newName = 'BaconSIGMA67656';
                         
                         const newUser = {
-                            username: newName,
-                            email: email,
-                            token: 'token_' + Date.now(),
-                            coins: 1000,
-                            offline_coins: 0,
-                            inventory: {},
+                            username: newName, email: email, token: 'token_' + Date.now(),
+                            coins: 1000, offline_coins: 0, inventory: {},
                             last_seen: Date.now(),
                             role: email === 'stepanzvyagin14@gmail.com' ? 'admin' : 'user'
                         };
@@ -2122,8 +1965,7 @@
                         await dbRequest('/chat', {
                             method: 'POST',
                             body: JSON.stringify({
-                                username: 'Система',
-                                role: 'system',
+                                username: 'Система', role: 'system',
                                 message: 'Новый игрок через Google: ' + newName,
                                 created_at: Date.now()
                             })
@@ -2231,9 +2073,17 @@
         // 9. КЕЙСЫ
         // ==========================================================================
         function renderCases() {
-            $('casesGrid').innerHTML = gameCases.map(c => `
+            const grid = $('casesGrid');
+            if (!grid) return;
+            
+            if (!gameCases || gameCases.length === 0) {
+                grid.innerHTML = '<div style="color:#555;text-align:center;grid-column:1/-1">Ошибка: кейсы не загружены. Обновите страницу.</div>';
+                return;
+            }
+            
+            grid.innerHTML = gameCases.map(c => `
                 <div class="case-card" onclick="openCase('${c.id}')">
-                    <div class="case-icon">${c.icon}</div>
+                    <div class="case-icon">${c.icon || '📦'}</div>
                     <div class="case-name">${c.name}</div>
                     <div class="case-price">${c.price} 🪙</div>
                 </div>
@@ -2256,7 +2106,6 @@
             track.style.transition = 'none';
             track.style.transform = 'translateX(0)';
             
-            // Выбор победителя на основе шансов
             let weights = c.w || {common:80, uncommon:20, rare:0, epic:0, legendary:0};
             let totalWeight = Object.values(weights).reduce((a,b)=>a+b, 0);
             let randomNum = Math.random() * totalWeight;
@@ -2279,7 +2128,14 @@
             let html = '';
             for(let i=0; i<40; i++) {
                 const it = i === 35 ? winItem : gameItems[Math.floor(Math.random() * gameItems.length)];
-                html += `<div class="roulette-item rarity-${it.r}"><img src="${it.i}" onerror="this.src='https://raw.githubusercontent.com/ByMykel/CSGO-API/main/public/images/econ/default_generated/weapon_ak47_cu_ak47_redline_light_large.png'"><div style="font-size:10px">${it.n}</div></div>`;
+                // ИСПОЛЬЗУЕМ ЗАПАСНОЙ СПРАЙТ, ЕСЛИ КАРТИНКА БИТАЯ
+                html += `
+                    <div class="roulette-item rarity-${it.r}">
+                        <img src="${it.i}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                        <div style="display:none; font-size:40px;">🔫</div>
+                        <div style="font-size:10px">${it.n}</div>
+                    </div>
+                `;
             }
             track.innerHTML = html;
 
@@ -2312,9 +2168,11 @@
             
             $('invGrid').innerHTML = keys.map(n => {
                 const it = gameItems.find(x => x.n === n) || {r:'common', i:'📦'};
+                // ИСПОЛЬЗУЕМ ЗАПАСНОЙ СПРАЙТ
                 return `
                     <div class="inv-item rarity-${it.r}" onclick="sellItem('${n}')">
-                        <img src="${it.i}" onerror="this.src='https://raw.githubusercontent.com/ByMykel/CSGO-API/main/public/images/econ/default_generated/weapon_ak47_cu_ak47_redline_light_large.png'">
+                        <img src="${it.i}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                        <div style="display:none; font-size:40px;">🔫</div>
                         <div style="font-size:12px;font-weight:900;margin-top:5px">${n}</div>
                         <div style="color:var(--color-gold);font-size:12px">x${userInventory[n]}</div>
                     </div>
@@ -2348,7 +2206,8 @@
                 const it = gameItems.find(x => x.n === n);
                 return `
                     <div class="craft-item ready" onclick="craftItem('${n}')">
-                        <img src="${it.i}" style="width:100%;height:50px;object-fit:contain" onerror="this.src='https://raw.githubusercontent.com/ByMykel/CSGO-API/main/public/images/econ/default_generated/weapon_ak47_cu_ak47_redline_light_large.png'">
+                        <img src="${it.i}" style="width:100%;height:50px;object-fit:contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                        <div style="display:none; font-size:30px;">🔫</div>
                         <div style="margin-top:5px">${n} x${userInventory[n]}</div>
                         <div style="color:var(--color-gold);font-size:10px;margin-top:5px">Улучшить (5 шт)</div>
                     </div>
@@ -2392,7 +2251,8 @@
         function renderMarket() {
             $('marketGrid').innerHTML = gameItems.map(it => `
                 <div class="mkt-item rarity-${it.r}">
-                    <img src="${it.i}" onerror="this.src='https://raw.githubusercontent.com/ByMykel/CSGO-API/main/public/images/econ/default_generated/weapon_ak47_cu_ak47_redline_light_large.png'">
+                    <img src="${it.i}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                    <div style="display:none; font-size:40px;">🔫</div>
                     <div class="mkt-name">${it.n}</div>
                     <div class="mkt-price">${getDynamicPrice(it)} 🪙</div>
                     <button class="btn-small" onclick="buyMkt('${it.n}', ${getDynamicPrice(it)})">Купить</button>
@@ -2584,7 +2444,8 @@
                     const it = gameItems.find(x => x.n === n) || {i:'📦', r:'common'};
                     return `
                         <div class="inv-item rarity-${it.r}">
-                            <img src="${it.i}" onerror="this.src='https://raw.githubusercontent.com/ByMykel/CSGO-API/main/public/images/econ/default_generated/weapon_ak47_cu_ak47_redline_light_large.png'">
+                            <img src="${it.i}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                            <div style="display:none; font-size:30px;">🔫</div>
                             <div style="font-size:10px;margin-top:5px">${n}</div>
                             <div style="color:var(--color-gold);font-size:10px">x${p.inventory[n]}</div>
                         </div>
@@ -2705,7 +2566,7 @@
         };
 
         // ==========================================================================
-        // 14. ЧАТ (С анти-матом)
+        // 14. ЧАТ С МУТАМИ И ФЛУДОМ
         // ==========================================================================
         async function loadChat() {
             try {
@@ -2741,6 +2602,56 @@
             const t = $('chatInput').value.trim();
             if(!t) return;
             
+            const now = Date.now();
+            const isDev = currentUser.username.toLowerCase() === 'baconsigma67656' || currentUser.role === 'admin';
+
+            // 1. ПРОВЕРКА НА МУТ
+            if (!isDev && currentUser.muted_until && currentUser.muted_until > now) {
+                const leftMins = Math.ceil((currentUser.muted_until - now) / 60000);
+                return showToast(`Вы в муте еще ${leftMins} мин.`);
+            }
+
+            // 2. ПРОВЕРКА НА МАТ
+            if (!isDev && checkNicknameBadWords(t)) {
+                currentUser.bad_words_count = (currentUser.bad_words_count || 0) + 1;
+                let muteTime = 5; // минут
+                
+                if (currentUser.bad_words_count === 2) muteTime = 10;
+                else if (currentUser.bad_words_count >= 3) muteTime = 60;
+                
+                currentUser.muted_until = now + (muteTime * 60000);
+                
+                await dbRequest(`/players?id=eq.${currentUser.id}`, {
+                    method: 'PATCH',
+                    body: JSON.stringify({
+                        muted_until: currentUser.muted_until,
+                        bad_words_count: currentUser.bad_words_count
+                    })
+                });
+                
+                return showToast(`Мат запрещен! Мут на ${muteTime} мин.`);
+            }
+
+            // 3. ПРОВЕРКА НА ФЛУД (3 одинаковых за 60 сек)
+            chatHistory.push({ text: t, time: now });
+            if (chatHistory.length > 3) chatHistory.shift();
+            
+            if (!isDev && chatHistory.length === 3) {
+                if (chatHistory[0].text === chatHistory[1].text && 
+                    chatHistory[1].text === chatHistory[2].text && 
+                    (chatHistory[2].time - chatHistory[0].time) < 60000) {
+                    
+                    currentUser.muted_until = now + (15 * 60000); // 15 минут
+                    await dbRequest(`/players?id=eq.${currentUser.id}`, {
+                        method: 'PATCH',
+                        body: JSON.stringify({ muted_until: currentUser.muted_until })
+                    });
+                    chatHistory = [];
+                    return showToast(`Флуд! Мут на 15 минут.`);
+                }
+            }
+
+            // Отправка сообщения
             $('chatInput').value = '';
             
             await dbRequest('/chat', {
@@ -2749,7 +2660,7 @@
                     username: currentUser.username,
                     role: currentUser.role,
                     message: t,
-                    created_at: Date.now()
+                    created_at: now
                 })
             });
             loadChat();
@@ -2919,9 +2830,9 @@
             }, 1000);
         }
 
-        // ЗАГРУЗКА ФАЙЛОВ
+        // ЗАГРУЗКА ФАЙЛОВ (Реклама и Оружие)
         function readFileAsBase64(file, callback) {
-            if(file.size > 2000000) return showToast('Файл слишком большой (макс 2МБ)');
+            if(file.size > 3000000) return showToast('Файл слишком большой (макс 3МБ)');
             const reader = new FileReader();
             reader.onload = (e) => callback(e.target.result);
             reader.readAsDataURL(file);
@@ -2961,23 +2872,62 @@
         };
 
         // ==========================================================================
-        // 18. ADMIN ABUSE
+        // 18. РЕКЛАМА (Поддержка Видео)
+        // ==========================================================================
+        async function loadAd() {
+            const container = $('ad-container');
+            if (!container) return;
+            
+            try {
+                const ads = await dbRequest('/ads?select=*&order=created_at.desc&limit=1');
+                if (ads && ads.length) {
+                    const url = ads[0].image_url;
+                    let mediaHtml = '';
+                    
+                    if (url.startsWith('data:video')) {
+                        mediaHtml = `<video src="${url}" autoplay loop muted style="width:100%; border-radius:12px; margin-bottom:15px; box-shadow:var(--shadow-md);"></video>`;
+                    } else {
+                        mediaHtml = `<img src="${url}" style="width:100%; border-radius:12px; margin-bottom:15px; box-shadow:var(--shadow-md);">`;
+                    }
+                    
+                    container.innerHTML = mediaHtml;
+                } else {
+                    container.innerHTML = '';
+                }
+            } catch(e) {
+                container.innerHTML = '';
+            }
+        }
+
+        // ==========================================================================
+        // 19. ADMIN ABUSE
         // ==========================================================================
         const abuseFns = [
             {n:'Выдать 10к', i:'💰', f: async(t) => { const p = await dbRequest('/players?username=eq.'+encodeURIComponent(t)); if(p.length) await dbRequest('/players?id=eq.'+p[0].id, {method:'PATCH', body:JSON.stringify({coins: p[0].coins+10000})}); }},
+            {n:'Сбросить баланс', i:'📉', f: async(t) => { const p = await dbRequest('/players?username=eq.'+encodeURIComponent(t)); if(p.length) await dbRequest('/players?id=eq.'+p[0].id, {method:'PATCH', body:JSON.stringify({coins: 0})}); }},
+            {n:'Выдать Легендарку', i:'🔥', f: async(t) => { const p = await dbRequest('/players?username=eq.'+encodeURIComponent(t)); if(p.length) { const inv = p[0].inventory||{}; inv['AWP | Dragon Lore'] = (inv['AWP | Dragon Lore']||0)+1; await dbRequest('/players?id=eq.'+p[0].id, {method:'PATCH', body:JSON.stringify({inventory: inv})}); } }},
             {n:'Очистить инв', i:'🗑', f: async(t) => { const p = await dbRequest('/players?username=eq.'+encodeURIComponent(t)); if(p.length) await dbRequest('/players?id=eq.'+p[0].id, {method:'PATCH', body:JSON.stringify({inventory: {}})}); }},
             {n:'Забанить', i:'🔨', f: async(t) => { await dbRequest('/players?username=eq.'+encodeURIComponent(t), {method:'PATCH', body:JSON.stringify({role:'banned'})}); }},
             {n:'Разбанить', i:'🔓', f: async(t) => { await dbRequest('/players?username=eq.'+encodeURIComponent(t), {method:'PATCH', body:JSON.stringify({role:'user'})}); }},
-            {n:'Удалить', i:'💀', f: async(t) => { await dbRequest('/players?username=eq.'+encodeURIComponent(t), {method:'DELETE'}); }},
+            {n:'Сделать Админом', i:'👑', f: async(t) => { await dbRequest('/players?username=eq.'+encodeURIComponent(t), {method:'PATCH', body:JSON.stringify({role:'admin'})}); }},
+            {n:'Снять Админку', i:'👤', f: async(t) => { await dbRequest('/players?username=eq.'+encodeURIComponent(t), {method:'PATCH', body:JSON.stringify({role:'user'})}); }},
+            {n:'Удалить аккаунт', i:'💀', f: async(t) => { await dbRequest('/players?username=eq.'+encodeURIComponent(t), {method:'DELETE'}); }},
             {n:'Радуга', i:'🌈', f: async() => { document.body.style.animation = 'bgShift 2s linear infinite'; }},
-            {n:'Всем 500', i:'💸', f: async() => { const all = await dbRequest('/players?select=*'); for(let p of all) await dbRequest('/players?id=eq.'+p.id, {method:'PATCH', body:JSON.stringify({coins:p.coins+500})}); }}
+            {n:'Всем 500', i:'💸', f: async() => { const all = await dbRequest('/players?select=*'); for(let p of all) await dbRequest('/players?id=eq.'+p.id, {method:'PATCH', body:JSON.stringify({coins:p.coins+500})}); }},
+            {n:'Всем 5000', i:'💵', f: async() => { const all = await dbRequest('/players?select=*'); for(let p of all) await dbRequest('/players?id=eq.'+p.id, {method:'PATCH', body:JSON.stringify({coins:p.coins+5000})}); }},
+            {n:'Выдать 100к', i:'🏦', f: async(t) => { const p = await dbRequest('/players?username=eq.'+encodeURIComponent(t)); if(p.length) await dbRequest('/players?id=eq.'+p[0].id, {method:'PATCH', body:JSON.stringify({coins: p[0].coins+100000})}); }},
+            {n:'Выдать 1кк', i:'💎', f: async(t) => { const p = await dbRequest('/players?username=eq.'+encodeURIComponent(t)); if(p.length) await dbRequest('/players?id=eq.'+p[0].id, {method:'PATCH', body:JSON.stringify({coins: p[0].coins+1000000})}); }},
+            {n:'Фейк-победа', i:'📢', f: async() => { showToast('🎉 Игрок X выбил Dragon Lore!'); }},
+            {n:'Сменить фон', i:'🎨', f: async() => { document.body.style.background = 'linear-gradient(45deg, #ff0000, #0000ff)'; }},
+            {n:'Взрыв сервера', i:'💥', f: async() => { document.body.style.animation = 'shake 0.5s infinite'; setTimeout(() => location.reload(), 2000); }},
+            {n:'Очистить чат', i:'🧹', f: async() => { await dbRequest('/chat?select=*', {method:'DELETE'}); }}
         ];
 
         $('abuseGrid').innerHTML = abuseFns.map((a, i) => `<button class="abuse-btn" onclick="execAbuse(${i})"><span>${a.i}</span>${a.n}</button>`).join('');
 
         window.execAbuse = async (idx) => {
             const t = $('abuseTarget').value.trim();
-            if(!t && idx < 5) return showToast('Введи ник');
+            if(!t && idx < 15) return showToast('Введи ник');
             await abuseFns[idx].f(t);
             showToast('Выполнено');
         };
