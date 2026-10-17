@@ -1,388 +1,482 @@
- <!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><title>Home Up</title><style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}html,body{overflow-x:hidden;max-width:100vw;width:100%}body{background:#050508;font-family:'Segoe UI',Roboto,sans-serif;color:#e8e8ee;min-height:100vh;padding:8px 8px 88px;user-select:none;font-weight:500}@media(min-width:900px){body{padding:14px 14px 20px}}.bg-fx{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}.bg-fx::before{content:'';position:absolute;inset:-50%;background:radial-gradient(circle at 20% 30%,rgba(240,185,11,.1),transparent 40%),radial-gradient(circle at 80% 70%,rgba(230,90,140,.07),transparent 40%);animation:bgShift 30s linear infinite}@keyframes bgShift{to{transform:rotate(360deg)}}.auth-screen{position:fixed;inset:0;background:radial-gradient(circle at 50% 30%,#16161c,#050508 70%);z-index:500;display:flex;justify-content:center;align-items:center;padding:16px;overflow-y:auto}.auth-screen.hidden{display:none}.auth-box{width:100%;max-width:420px;background:linear-gradient(180deg,#16161c,#0b0b10);border:1px solid #23232a;border-radius:20px;padding:26px 22px;box-shadow:0 25px 90px rgba(0,0,0,.9)}.auth-logo{text-align:center;font-size:34px;font-weight:900;letter-spacing:4px;background:linear-gradient(90deg,#f0b90b,#ffe488,#f0b90b);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:4px}.auth-tag{text-align:center;color:#666;font-size:11px;letter-spacing:3px;text-transform:uppercase;font-weight:800;margin-bottom:24px}.auth-tabs{display:grid;grid-template-columns:1fr 1fr;background:#0e0e14;border-radius:12px;padding:4px;margin-bottom:18px;border:1px solid #1c1c24}.auth-tab{padding:10px;text-align:center;border-radius:9px;font-weight:900;font-size:12px;color:#888;cursor:pointer;background:none;border:none;font-family:inherit}.auth-tab.active{background:linear-gradient(135deg,#f0b90b,#ffd968);color:#1a1a1a}.auth-form{display:flex;flex-direction:column;gap:10px}.auth-form.hidden{display:none}.input-group{position:relative}.input-group input{width:100%;background:#0e0e14;border:1.5px solid #23232a;border-radius:12px;padding:13px 42px;color:#fff;font-size:14px;font-weight:600;font-family:inherit;outline:none}.input-group input:focus{border-color:#f0b90b}.input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;opacity:.6;pointer-events:none}.pass-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;opacity:.5;padding:6px;color:#fff}.auth-msg{border-radius:10px;padding:9px 12px;font-size:12px;font-weight:700;display:none;align-items:center;gap:6px}.auth-msg.show{display:flex}.auth-msg.err{background:rgba(179,45,45,.2);border:1px solid #7a1a1a;color:#f87171}.auth-msg.ok{background:rgba(74,222,128,.15);border:1px solid #1d6a3a;color:#4ade80}.auth-submit{background:linear-gradient(135deg,#f0b90b,#ffd968);border:none;color:#1a1a1a;font-weight:900;font-size:13px;padding:14px;border-radius:12px;cursor:pointer;letter-spacing:1.5px;text-transform:uppercase;font-family:inherit;margin-top:4px}.auth-hint{text-align:center;font-size:11px;color:#555;margin-top:12px}.app{max-width:1400px;width:100%;margin:0 auto;position:relative;z-index:1}.app.hidden{display:none}.topbar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 14px;background:linear-gradient(180deg,#16161c,#0d0d12);border:1px solid #1f1f28;border-radius:14px;margin-bottom:10px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:10px}.brand-logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#f0b90b,#8a6600);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#1a1a1a}.brand-text b{font-size:14px;letter-spacing:1.5px;font-weight:900;background:linear-gradient(90deg,#f0b90b,#ffe488);-webkit-background-clip:text;background-clip:text;color:transparent}.brand-text small{font-size:8px;color:#666;letter-spacing:1.5px;text-transform:uppercase;font-weight:800;display:block;margin-top:2px}.topbar-right{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.balance-pill{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#1a1a22,#0f0f14);border:1px solid #2a2a34;padding:7px 12px;border-radius:50px;font-weight:900;font-size:13px;color:#f0b90b;transition:transform .12s}.balance-pill.bump{transform:scale(1.08)}.balance-pill.offline{color:#a78bfa;border-color:rgba(167,139,250,.4)}.profile-btn{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#1e1e26,#0f0f14);border:2px solid #2a2a34;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;padding:0}.dev-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:900;background:linear-gradient(135deg,#ff4444,#ffaa00);color:#fff;padding:2px 7px;border-radius:10px;letter-spacing:.5px;text-transform:uppercase}.dev-badge::before{content:'👑';font-size:10px}.layout{display:flex;gap:14px;align-items:flex-start}.sidebar{display:none}.views{flex:1;min-width:0;width:100%}.view{display:none}.view.active{display:block;animation:viewSlide .3s}@keyframes viewSlide{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}@media(min-width:900px){.sidebar{display:flex;width:210px;flex-shrink:0;background:linear-gradient(180deg,#16161c,#0d0d12);border:1px solid #1f1f28;border-radius:18px;padding:12px;flex-direction:column;gap:4px;position:sticky;top:14px}.nav-brand{display:flex;align-items:center;gap:10px;padding:10px 8px 14px;border-bottom:1px solid #1c1c24;margin-bottom:8px}.nav-brand-logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#f0b90b,#8a6600);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#1a1a1a}.nav-brand-info b{font-size:14px;font-weight:900;letter-spacing:1.2px;display:block;background:linear-gradient(90deg,#f0b90b,#ffe488);-webkit-background-clip:text;background-clip:text;color:transparent}.nav-brand-info small{font-size:9px;color:#666;letter-spacing:1.2px;text-transform:uppercase;font-weight:800}.nav-section{font-size:9px;color:#4a4a55;text-transform:uppercase;letter-spacing:2px;font-weight:800;padding:12px 14px 6px}.nav-btn{display:flex;align-items:center;gap:12px;padding:11px 14px;background:transparent;border:1px solid transparent;border-radius:11px;color:#8a8a98;font-weight:800;font-size:12px;cursor:pointer;text-align:left;width:100%;font-family:inherit;position:relative}.nav-btn:hover{background:#1a1a22;color:#ccc}.nav-btn.active{background:linear-gradient(135deg,rgba(240,185,11,.18),rgba(240,185,11,.05));color:#f0b90b;border-color:rgba(240,185,11,.35)}.nav-btn .nav-icon{font-size:18px;width:22px;text-align:center;flex-shrink:0}.nav-btn .nav-badge{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:#f0b90b;color:#1a1a1a;font-size:9px;font-weight:900;border-radius:10px;padding:2px 7px;display:none}.nav-btn .nav-badge.show{display:block}.nav-btn .nav-badge.purple{background:#a78bfa}.bottomnav{display:none}}.bottomnav{position:fixed;bottom:0;left:0;right:0;width:100%;background:linear-gradient(180deg,rgba(20,20,26,.98),rgba(10,10,14,.98));border-top:1px solid #232329;display:flex;padding:6px 0 calc(6px + env(safe-area-inset-bottom,0px));z-index:60;overflow-x:auto;scrollbar-width:none}.bottomnav::-webkit-scrollbar{display:none}.bnav-btn{flex:0 0 70px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;background:none;border:none;color:#6a6a78;font-weight:800;font-size:9px;cursor:pointer;font-family:inherit;position:relative;white-space:nowrap}.bnav-btn span:last-child{max-width:66px;overflow:hidden;text-overflow:ellipsis;text-align:center}.bnav-btn .bicon{font-size:18px;width:20px;height:20px;line-height:20px;display:block}.bnav-btn.active{color:#f0b90b}.bnav-btn.active::before{content:'';position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:20px;height:2px;background:#f0b90b;border-radius:2px}.bnav-badge{position:absolute;top:2px;right:8px;background:#f0b90b;color:#1a1a1a;font-size:8px;font-weight:900;border-radius:10px;padding:1px 4px;min-width:13px;text-align:center;display:none}.bnav-badge.show{display:block}.bnav-badge.purple{background:#a78bfa}.card{background:linear-gradient(180deg,#16161c,#0f0f14);border-radius:14px;padding:14px;border:1px solid #1f1f28;margin-bottom:10px}@media(min-width:900px){.card{padding:18px;border-radius:16px;margin-bottom:14px}}h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-transform:uppercase;display:flex;align-items:center;gap:6px;font-weight:900;flex-wrap:wrap}.badge{font-size:10px;background:#22222a;color:#999;padding:2px 8px;border-radius:10px;font-weight:700;border:1px solid #2a2a34}.badge.purple{background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;border-color:#a78bfa}.shop-hero{background:linear-gradient(135deg,rgba(167,139,250,.12),rgba(167,139,250,.02));border:1.5px solid rgba(167,139,250,.35);border-radius:16px;padding:22px 18px;margin-bottom:16px;text-align:center}.shop-hero .offline-icon{font-size:56px;display:block;margin-bottom:8px}.shop-hero .offline-label{font-size:11px;color:#a78bfa;text-transform:uppercase;letter-spacing:3px;font-weight:900;margin-bottom:6px}.shop-hero .offline-value{font-size:56px;font-weight:900;background:linear-gradient(90deg,#a78bfa,#c4b5fd,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1;letter-spacing:-2px}.shop-hero .offline-hint{font-size:11px;color:#888;margin-top:10px;line-height:1.5;font-weight:700}.shop-hero .rate-badge{display:inline-block;background:rgba(167,139,250,.2);border:1px solid rgba(167,139,250,.5);color:#c4b5fd;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:900;margin-top:10px}.shop-actions{display:flex;flex-direction:column;gap:10px}.shop-btn{background:linear-gradient(135deg,#a78bfa,#7c3aed);border:none;color:#fff;font-weight:900;font-size:13px;padding:14px 20px;border-radius:12px;cursor:pointer;font-family:inherit;letter-spacing:1px;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center}.shop-btn .price{background:rgba(0,0,0,.25);padding:3px 10px;border-radius:20px;font-size:12px}.shop-btn.all{background:linear-gradient(135deg,#f0b90b,#d4a017);color:#1a1a1a}.shop-btn.all .price{background:rgba(0,0,0,.15)}.shop-btn.free{background:linear-gradient(135deg,#22c55e,#16a34a)}.offline-modal-box .offline-big{font-size:64px;text-align:center;margin-bottom:8px}.offline-modal-box h3{color:#a78bfa;font-size:22px;text-align:center;margin-bottom:14px}.offline-modal-box .offline-gain{text-align:center;font-size:40px;font-weight:900;background:linear-gradient(90deg,#a78bfa,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent;margin:14px 0}.offline-modal-box .offline-sub{text-align:center;font-size:12px;color:#888;margin-bottom:20px;line-height:1.5}.offline-modal-box .offline-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}.news-card{background:#0b0b10;border:1px solid #1c1c24;border-radius:12px;padding:14px;margin-bottom:10px}.news-card.pinned{border-color:rgba(240,185,11,.4)}.news-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}.news-author-avatar{width:36px;height:36px;border-radius:50%;background:#16161c;display:flex;align-items:center;justify-content:center;font-size:20px}.news-author-name{font-size:12px;font-weight:900;color:#fff;display:flex;align-items:center;gap:6px;flex-wrap:wrap}.news-date{font-size:10px;color:#666;font-weight:700;margin-top:2px}.news-title{font-size:15px;font-weight:900;color:#fff;margin-bottom:6px}.news-content{font-size:13px;color:#c8c8d0;line-height:1.6;white-space:pre-wrap}.news-actions{display:flex;gap:6px;margin-top:10px}.news-btn{background:#16161c;border:1px solid #2a2a34;color:#bbb;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:800;font-size:10px;font-family:inherit}.news-btn.del{color:#f87171}.news-create-btn{width:100%;background:linear-gradient(135deg,#f0b90b,#ffd968);border:none;color:#1a1a1a;font-weight:900;padding:12px;border-radius:12px;cursor:pointer;font-family:inherit;text-transform:uppercase;font-size:12px;margin-bottom:14px}.news-empty{color:#555;text-align:center;font-size:12px;padding:40px 10px;font-style:italic;font-weight:700}.news-textarea,.news-input{width:100%;background:#0e0e14;border:1.5px solid #23232a;border-radius:12px;padding:12px;color:#fff;font-size:13px;font-family:inherit;outline:none;resize:vertical}.news-input{font-weight:800;font-size:14px}.news-textarea{min-height:120px;line-height:1.5}.news-checkbox-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#0b0b10;border:1px solid #1c1c24;border-radius:10px;cursor:pointer}.news-checkbox-row input{width:auto;accent-color:#f0b90b;transform:scale(1.3)}.news-checkbox-row label{font-size:12px;font-weight:800;color:#ccc;cursor:pointer;flex:1}.tap-view{display:grid;grid-template-columns:1fr;gap:16px;padding:12px 0;text-align:center}@media(min-width:640px){.tap-view{grid-template-columns:1fr 1fr;text-align:left;padding:20px 12px;align-items:center}}.tap-balance{display:flex;flex-direction:column;gap:6px;align-items:center}@media(min-width:640px){.tap-balance{align-items:flex-start}}.tap-balance .lbl{color:#6a6a78;font-size:10px;text-transform:uppercase;letter-spacing:2px;font-weight:800}.tap-balance .val{font-size:clamp(38px,10vw,52px);font-weight:900;background:linear-gradient(90deg,#ffe488,#f0b90b,#ffe488);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-2px;line-height:1}.tap-stats{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:10px}@media(min-width:640px){.tap-stats{justify-content:flex-start}}.stat-pill{background:#1a1a22;border:1px solid #2a2a34;border-radius:20px;padding:6px 11px;font-size:10px;font-weight:800;color:#aaa;display:flex;align-items:center;gap:5px}.stat-pill b{color:#f0b90b}.tap-area2{position:relative;display:flex;justify-content:center;align-items:center;min-height:220px}#tapBtn{width:clamp(150px,40vw,190px);height:clamp(150px,40vw,190px);border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe488,#f0b90b 45%,#8a6600 100%);border:none;color:#1a1a1a;font-weight:900;font-size:clamp(18px,5vw,24px);letter-spacing:3px;cursor:pointer;box-shadow:0 10px 0 #5a4400,0 18px 50px rgba(240,185,11,.5),inset 0 -10px 25px rgba(0,0,0,.35),inset 0 10px 25px rgba(255,255,255,.55);touch-action:manipulation;position:relative}#tapBtn:active{transform:translateY(6px);box-shadow:0 4px 0 #5a4400,0 8px 25px rgba(240,185,11,.6)}#tapBtn .subtext{display:block;font-size:clamp(10px,2.8vw,12px);opacity:.65;margin-top:5px}.float-coin{position:absolute;font-weight:900;font-size:clamp(16px,4.5vw,22px);pointer-events:none;animation:floatUp .9s forwards;color:#f0b90b;text-shadow:0 0 12px #f0b90b;z-index:5}@keyframes floatUp{0%{transform:translateY(0) scale(.6);opacity:0}20%{transform:translateY(-10px) scale(1.15);opacity:1}100%{transform:translateY(-100px) scale(1);opacity:0}}.cheat-banner{background:linear-gradient(90deg,#7a1a1a,#b32d2d);border-radius:10px;padding:9px 14px;font-size:11px;font-weight:800;color:#ffe;display:none;margin-top:10px}.cheat-banner.show{display:block}.rarity-common{background:linear-gradient(180deg,#464652,#5a5a68);border-bottom-color:#7a7a88}.rarity-uncommon{background:linear-gradient(180deg,#2c3d84,#4b69c4);border-bottom-color:#7a9df8}.rarity-rare{background:linear-gradient(180deg,#432176,#6b3fa0);border-bottom-color:#a878e0}.rarity-epic{background:linear-gradient(180deg,#8a296a,#c74b9b);border-bottom-color:#f088c8}.rarity-legendary{background:linear-gradient(180deg,#9a720a,#d4a017);border-bottom-color:#f0c14b;color:#1a1a1a;text-shadow:none}.cases-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}@media(min-width:640px){.cases-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}}.case-card{background:linear-gradient(180deg,#1a1a22,#0f0f14);border-radius:14px;padding:12px;border:2px solid #22222a}.case-icon{font-size:clamp(36px,9vw,56px);text-align:center;margin-bottom:6px}.case-name{text-align:center;font-size:clamp(12px,3.5vw,15px);font-weight:900;margin-bottom:2px;color:#fff}.case-price{text-align:center;font-size:clamp(11px,3vw,13px);color:#f0b90b;font-weight:800;margin-bottom:8px}.case-preview{display:flex;gap:3px;justify-content:center;margin-bottom:10px;flex-wrap:wrap;min-height:26px}.case-preview .pv{width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;border-bottom:2px solid #555}.case-btn{width:100%;background:linear-gradient(135deg,#f0b90b,#ffd968);border:none;color:#1a1a1a;font-weight:900;padding:9px;border-radius:10px;cursor:pointer;font-size:clamp(10px,2.8vw,12px);letter-spacing:1px;text-transform:uppercase;font-family:inherit}.craft-info{background:linear-gradient(135deg,rgba(240,185,11,.1),rgba(240,185,11,.02));border:1px solid rgba(240,185,11,.25);border-radius:12px;padding:12px;margin-bottom:14px;font-size:11px;color:#ccc;line-height:1.5;text-align:center}.craft-info b{color:#f0b90b}.craft-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}.craft-item{border-radius:10px;padding:10px 6px;text-align:center;font-size:10px;font-weight:800;color:#fff;text-shadow:1px 1px 2px #000;cursor:pointer;position:relative;min-height:110px;display:flex;flex-direction:column;justify-content:center;align-items:center;border-bottom:3px solid #555;outline:2px solid transparent;outline-offset:-2px}.craft-item .icon{font-size:32px;margin-bottom:4px}.craft-item .cnt{font-size:10px;color:#fff;font-weight:800;margin-top:4px;background:rgba(0,0,0,.4);padding:2px 8px;border-radius:10px}.craft-item .need{font-size:9px;color:#888;margin-top:2px;font-weight:700}.craft-item.ready{outline-color:#f0b90b}.craft-item.not-ready{opacity:.55}.craft-item.legendary-locked::after{content:'🔒 МАКС';position:absolute;bottom:4px;font-size:8px;color:#f0c14b;font-weight:900}.craft-item .ready-badge{position:absolute;top:6px;right:6px;background:#f0b90b;color:#1a1a1a;font-size:9px;font-weight:900;border-radius:10px;padding:2px 6px}.craft-empty{color:#555;text-align:center;font-size:12px;padding:40px 10px;font-style:italic;font-weight:700}.upg-chances{display:flex;gap:5px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;scrollbar-width:none}.upg-chances::-webkit-scrollbar{display:none}.upg-chances .ch{flex-shrink:0;background:#16161c;border:1.5px solid #22222a;color:#999;padding:7px 12px;border-radius:10px;font-weight:900;font-size:11px;cursor:pointer;font-family:inherit}.upg-chances .ch.active{background:linear-gradient(135deg,#1d6a3a,#228a4a);color:#fff;border-color:#2a9a55}.gauge-wrap{position:relative;width:min(280px,80vw);aspect-ratio:1;margin:0 auto 16px}.gauge-svg{width:100%;height:100%;display:block}.gauge-inner{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:70%}.gauge-pct{font-size:clamp(34px,10vw,44px);font-weight:900;color:#4ade80;letter-spacing:-2px;line-height:1}.gauge-pct.medium{color:#f0b90b}.gauge-pct.low{color:#f87171}.gauge-lbl{font-size:11px;color:#888;margin-top:4px;font-weight:700}.upg-panels{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}.upg-panel{background:#0b0b10;border:1.5px solid #1c1c24;border-radius:14px;padding:10px;display:flex;flex-direction:column;height:180px;overflow:hidden}.upg-panel-title{font-size:9px;color:#6a6a78;text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-bottom:6px;display:flex;justify-content:space-between}.upg-panel-title .c{color:#f0b90b}.upg-scroll{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:5px;overflow-y:auto;padding-right:2px;flex:1;align-content:start}</style></head><body>
-   <div class="bg-fx"></div>
-<div class="auth-screen" id="authScreen">
-  <div class="auth-box">
-    <div class="auth-logo">HOME UP</div>
-    <div class="auth-tag">Case Roulette</div>
-    <div class="auth-tabs">
-      <button class="auth-tab active" data-authtab="login">ВХОД</button>
-      <button class="auth-tab" data-authtab="register">РЕГИСТРАЦИЯ</button>
-    </div>
-    <div class="auth-form" id="loginForm">
-      <div class="input-group"><span class="input-icon">👤</span><input type="text" id="loginUser" placeholder="Имя" maxlength="20" autocomplete="username"></div>
-      <div class="input-group"><span class="input-icon">🔒</span><input type="password" id="loginPass" placeholder="Пароль" maxlength="40"><button class="pass-toggle" data-target="loginPass" type="button">👁</button></div>
-      <div class="auth-msg err" id="loginError">⚠️ <span></span></div>
-      <button class="auth-submit" id="loginBtn">Войти</button>
-    </div>
-    <div class="auth-form hidden" id="registerForm">
-      <div class="input-group"><span class="input-icon">👤</span><input type="text" id="regUser" placeholder="Имя (3-20)" maxlength="20" autocomplete="username"></div>
-      <div class="input-group"><span class="input-icon">🔒</span><input type="password" id="regPass" placeholder="Пароль (мин. 4)" maxlength="40"><button class="pass-toggle" data-target="regPass" type="button">👁</button></div>
-      <div class="input-group"><span class="input-icon">🔐</span><input type="password" id="regPass2" placeholder="Повтори пароль" maxlength="40"><button class="pass-toggle" data-target="regPass2" type="button">👁</button></div>
-      <div class="auth-msg err" id="regError">⚠️ <span></span></div>
-      <div class="auth-msg ok" id="regSuccess">✅ <span></span></div>
-      <button class="auth-submit" id="registerBtn">Создать аккаунт</button>
-    </div>
-    <div class="auth-hint">💾 Аккаунт хранится в облаке</div>
-  </div>
-</div>
-
-<div class="app hidden" id="app">
-  <div class="topbar">
-    <div class="brand"><div class="brand-logo">H</div><div class="brand-text"><b>HOME UP</b><small>Case Roulette</small></div></div>
-    <div class="topbar-right">
-      <div class="balance-pill offline" id="offlinePill"><span>🌙</span><span id="offlineAmount">0</span></div>
-      <div class="balance-pill" id="balancePill"><span>🪙</span><span id="coinsAmount">0</span></div>
-      <button class="profile-btn" id="profileBtn"><span id="topAvatar">🐺</span></button>
-    </div>
-  </div>
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="nav-brand"><div class="nav-brand-logo">H</div><div class="nav-brand-info"><b>HOME UP</b><small>Case Roulette</small></div></div>
-      <div class="nav-section">Игра</div>
-      <button class="nav-btn active" data-view="tap"><span class="nav-icon">👆</span><span>Тапалка</span></button>
-      <button class="nav-btn" data-view="cases"><span class="nav-icon">🎁</span><span>Кейсы</span></button>
-      <button class="nav-btn" data-view="craft"><span class="nav-icon">⚒️</span><span>Крафт</span></button>
-      <button class="nav-btn" data-view="upgrader"><span class="nav-icon">⚡</span><span>Апгрейдер</span></button>
-      <button class="nav-btn" data-view="wheel"><span class="nav-icon">🎡</span><span>Колесо</span></button>
-      <div class="nav-section">Экономика</div>
-      <button class="nav-btn" data-view="shop"><span class="nav-icon">🛒</span><span>Магазин</span><span class="nav-badge purple" id="offlineBadgeDesktop">0</span></button>
-      <button class="nav-btn" data-view="market"><span class="nav-icon">🏪</span><span>Рынок</span></button>
-      <button class="nav-btn" data-view="inventory"><span class="nav-icon">🎒</span><span>Инвентарь</span><span class="nav-badge" id="invBadgeDesktop">0</span></button>
-      <div class="nav-section">Социальное</div>
-      <button class="nav-btn" data-view="news"><span class="nav-icon">📰</span><span>Новости</span></button>
-      <div class="nav-section">Аккаунт</div>
-      <button class="nav-btn" data-view="profile"><span class="nav-icon">👤</span><span>Профиль</span></button>
-      <button class="nav-btn" data-view="settings"><span class="nav-icon">⚙️</span><span>Настройки</span></button>
-    </aside>
-    <main class="views">
-      <section class="view active" id="view-tap">
-        <div class="card" id="tapNewsCard" style="display:none"><h2>📰 Новость</h2><div id="tapNewsContent"></div></div>
-        <div class="card"><div class="tap-view">
-          <div class="tap-balance">
-            <div class="lbl">Баланс</div>
-            <div class="val" id="tapBalance">0</div>
-            <div class="tap-stats"><div class="stat-pill">👆 Всего: <b id="totalTaps">0</b></div><div class="stat-pill">🔥 Сессия: <b id="sessionTaps">0</b></div></div>
-            <div class="cheat-banner" id="cheatBanner">🚫 <span>Автокликер!</span></div>
-          </div>
-          <div class="tap-area2"><button id="tapBtn">ТАП<span class="subtext">+1 🪙</span></button></div>
-        </div></div>
-      </section>
-      <section class="view" id="view-shop">
-        <div class="card">
-          <h2>🛒 Магазин <span class="badge purple">обмен</span></h2>
-          <div class="shop-hero">
-            <span class="offline-icon">🌙</span>
-            <div class="offline-label">Офлайн-коины</div>
-            <div class="offline-value" id="shopOfflineValue">0</div>
-            <div class="offline-hint">5 коинов в минуту<br>Меняй их на монеты</div>
-            <div class="rate-badge">💱 5 🌙 → 1 🪙</div>
-          </div>
-          <div class="shop-actions">
-            <button class="shop-btn" data-exchange="25"><span>Обменять 25 🌙</span><span class="price">+5 🪙</span></button>
-            <button class="shop-btn" data-exchange="100"><span>Обменять 100 🌙</span><span class="price">+20 🪙</span></button>
-            <button class="shop-btn all" id="exchangeAllBtn"><span>Обменять ВСЁ</span><span class="price" id="allPreview">0 🪙</span></button>
-            <button class="shop-btn free" id="freeCoinsBtn" style="display:none"><span>👑 Забрать 1000 🪙</span><span class="price">бесплатно</span></button>
-          </div>
-        </div>
-      </section>
-      <section class="view" id="view-news">
-        <div class="card">
-          <h2>📰 Новости</h2>
-          <button class="news-create-btn" id="newsCreateBtn" style="display:none">➕ Написать</button>
-          <div id="newsList"></div>
-        </div>
-      </section>
-      <section class="view" id="view-cases">
-        <div class="card"><h2>🎁 Кейсы</h2><div class="cases-grid" id="casesGrid"></div></div>
-      </section>
-      <section class="view" id="view-craft">
-        <div class="card">
-          <h2>⚒️ Крафт</h2>
-          <div class="craft-info">Обменяй <b>5 одинаковых</b> на <b>1 лучше</b></div>
-          <div class="craft-grid" id="craftGrid"></div>
-        </div>
-      </section>
-      <section class="view" id="view-upgrader">
-        <div class="card">
-          <h2>⚡ Апгрейдер</h2>
-          <div class="upg-chances" id="upgChances">
-            <button class="ch" data-chance="5">5%</button><button class="ch" data-chance="10">10%</button>
-            <button class="ch" data-chance="15">15%</button><button class="ch" data-chance="25">25%</button>
-            <button class="ch" data-chance="35">35%</button><button class="ch active" data-chance="50">50%</button>
-            <button class="ch" data-chance="65">65%</button><button class="ch" data-chance="75">75%</button>
-          </div>
-          <div class="gauge-wrap">
-            <svg class="gauge-svg" viewBox="0 0 220 220">
-              <defs><linearGradient id="gGrad" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f87171"/><stop offset="50%" stop-color="#f0b90b"/><stop offset="100%" stop-color="#4ade80"/></linearGradient></defs>
-              <circle cx="110" cy="110" r="90" fill="none" stroke="#1a1a22" stroke-width="16" stroke-linecap="round" stroke-dasharray="424.12 565.49" transform="rotate(-225 110 110)"/>
-              <circle id="gaugeFill" cx="110" cy="110" r="90" fill="none" stroke="url(#gGrad)" stroke-width="16" stroke-linecap="round" stroke-dasharray="0 565.49" transform="rotate(-225 110 110)"/>
-            </svg>
-            <div class="gauge-inner"><div class="gauge-pct" id="gaugePct">50%</div><div class="gauge-lbl" id="gaugeLbl">шанс</div></div>
-          </div>
-          <div class="upg-panels">
-            <div class="upg-panel"><div class="upg-panel-title">СТАВКА <span class="c" id="upgInvCount">0</span></div><div class="upg-scroll" id="upgInvGrid"></div></div>
-            <div class="upg-panel"><div class="upg-panel-title">ЦЕЛЬ <span class="c" id="upgTargetCount">—</span></div><div class="upg-scroll" id="upgTargetGrid"></div></div>
-          </div>
-          <div class="status-tag wait" id="statusTag">Выбери предметы и цель</div>
-          <button class="primary" id="upgradeBtn" disabled style="width:100%">УЛУЧШИТЬ</button>
-        </div>
-      </section>
-      <section class="view" id="view-wheel">
-        <div class="card">
-          <h2>🎡 Колесо <span class="badge">🪙 100</span></h2>
-          <div class="wheel-wrap">
-            <div class="wheel-stage"><div class="wheel-pointer">▼</div><canvas class="wheel-canvas" id="wheelCanvas" width="700" height="700"></canvas><div class="wheel-center">SPIN</div></div>
-            <div class="wheel-result" id="wheelResult">Крутить?</div>
-            <button class="wheel-spin-btn" id="wheelSpinBtn">КРУТИТЬ 🪙 100</button>
-            <div class="wheel-history" id="wheelHistory"></div>
-          </div>
-        </div>
-      </section>
-      <section class="view" id="view-market">
-        <div class="card">
-          <h2>🏪 Рынок</h2>
-          <div class="market-filters" id="marketFilters">
-            <button class="filter-btn active" data-filter="all">Все</button>
-            <button class="filter-btn" data-filter="legendary">Леген.</button>
-            <button class="filter-btn" data-filter="epic">Эпик</button>
-            <button class="filter-btn" data-filter="rare">Редкие</button>
-            <button class="filter-btn" data-filter="uncommon">Необыч.</button>
-            <button class="filter-btn" data-filter="common">Обычные</button>
-            <button class="filter-btn" data-filter="owned">Мои</button>
-          </div>
-          <div class="market-grid" id="marketGrid"></div>
-        </div>
-      </section>
-      <section class="view" id="view-inventory">
-        <div class="card">
-          <div class="inv-header"><h2>🎒 Инвентарь</h2></div>
-          <div class="inv-filters" id="invFilters">
-            <button class="filter-btn active" data-invfilter="all">Все</button>
-            <button class="filter-btn" data-invfilter="legendary">Леген.</button>
-            <button class="filter-btn" data-invfilter="epic">Эпик</button>
-            <button class="filter-btn" data-invfilter="rare">Редкие</button>
-            <button class="filter-btn" data-invfilter="uncommon">Необыч.</button>
-            <button class="filter-btn" data-invfilter="common">Обычные</button>
-          </div>
-          <div class="inv-grid" id="invGrid"></div>
-        </div>
-      </section>
-      <section class="view" id="view-profile">
-        <div class="card">
-          <h2>👤 Профиль</h2>
-          <div class="profile-hero">
-            <div class="profile-avatar" id="profileAvatar">🐺</div>
-            <div class="profile-info"><h3 id="profileName">Игрок</h3><div class="joined">С нами с <b id="profileJoined">—</b></div></div>
-            <button class="set-btn danger" id="logoutBtn">Выйти</button>
-          </div>
-          <div class="profile-stats">
-            <div class="pstat"><div class="lbl">Баланс</div><div class="v" id="pstatCoins">0</div></div>
-            <div class="pstat"><div class="lbl">🌙 Офлайн</div><div class="v purple" id="pstatOffline">0</div></div>
-            <div class="pstat"><div class="lbl">Предметов</div><div class="v" id="pstatItems">0</div></div>
-          </div>
-          <div class="avatar-picker" id="avatarPicker"></div>
-        </div>
-      </section>
-      <section class="view" id="view-settings">
-        <div class="card">
-          <h2>⚙️ Настройки</h2>
-          <button class="primary" style="width:100%" onclick="localStorage.clear();location.reload()">Сбросить аккаунт</button>
-        </div>
-      </section>
-    </main>
-  </div>
-</div>
-<nav class="bottomnav">
-  <button class="bnav-btn active" data-view="tap"><span class="bicon">👆</span><span>Тап</span></button>
-  <button class="bnav-btn" data-view="cases"><span class="bicon">🎁</span><span>Кейсы</span></button>
-  <button class="bnav-btn" data-view="craft"><span class="bicon">⚒️</span><span>Крафт</span></button>
-  <button class="bnav-btn" data-view="upgrader"><span class="bicon">⚡</span><span>Апгрейд</span></button>
-  <button class="bnav-btn" data-view="wheel"><span class="bicon">🎡</span><span>Колесо</span></button>
-  <button class="bnav-btn" data-view="shop"><span class="bicon">🛒</span><span>Магазин</span><span class="bnav-badge purple" id="offlineBadge">0</span></button>
-  <button class="bnav-btn" data-view="market"><span class="bicon">🏪</span><span>Рынок</span></button>
-  <button class="bnav-btn" data-view="inventory"><span class="bicon">🎒</span><span>Инв.</span><span class="bnav-badge" id="invBadge">0</span></button>
-  <button class="bnav-btn" data-view="news"><span class="bicon">📰</span><span>Новости</span></button>
-  <button class="bnav-btn" data-view="profile"><span class="bicon">👤</span><span>Профиль</span></button>
-</nav>
-<div class="modal-overlay" id="offlineModal"><div class="modal offline-modal-box">
-  <div class="offline-big">🌙</div><h3>С возвращением!</h3>
-  <div class="offline-gain" id="offlineGain">+0 🌙</div>
-  <div class="offline-sub">Обменяй офлайн-коины в магазине<br>по курсу <b style="color:#a78bfa">5 🌙 → 1 🪙</b></div>
-  <div class="offline-btns"><button class="primary" id="offlineGoShop">В магазин</button><button class="secondary" id="offlineLater">Позже</button></div>
-</div></div>
-<div class="modal-overlay" id="newsModal"><div class="modal">
-  <button class="close-btn" id="newsModalClose">✕</button>
-  <h3>📰 Новая новость</h3>
-  <div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">
-    <input class="news-input" type="text" id="newsTitleInput" placeholder="Заголовок" maxlength="100">
-    <textarea class="news-textarea" id="newsContentInput" placeholder="Текст..." maxlength="2000"></textarea>
-    <div class="news-checkbox-row"><input type="checkbox" id="newsPinnedInput"><label for="newsPinnedInput">📌 Закрепить</label></div>
-    <div class="auth-msg err" id="newsError">⚠️ <span></span></div>
-    <button class="primary" id="newsSubmitBtn" style="width:100%">ОПУБЛИКОВАТЬ</button>
-  </div>
-</div></div>
-<div class="modal-overlay" id="caseModal"><div class="modal">
-  <button class="close-btn" id="caseModalClose">✕</button>
-  <h3 id="caseModalTitle">Кейс</h3>
-  <div style="text-align:center;font-size:11px;color:#f0b90b;font-weight:800;margin-bottom:4px" id="caseModalPrice">🪙 50</div>
-  <div class="roulette-wrapper"><div class="pointer"></div><div class="roulette-track" id="track"></div></div>
-  <div class="result" id="caseResult"></div>
-  <div class="case-modal-actions">
-    <button class="primary" id="openOneBtn">x1</button>
-    <button class="secondary" id="openFiveBtn">x5</button>
-    <button class="secondary" id="openTenBtn">x10</button>
-  </div>
-</div></div>
-<div class="modal-overlay" id="modalOverlay"><div class="modal">
-  <button class="close-btn" id="modalClose">✕</button>
-  <div style="font-size:50px;text-align:center;margin-bottom:6px" id="modalIcon">🔫</div>
-  <h3 id="modalName">Предмет</h3>
-  <div style="text-align:center;font-size:10px;text-transform:uppercase;font-weight:900;margin-bottom:10px" id="modalRarity">Редкость</div>
-  <div style="text-align:center;font-size:20px;font-weight:900;color:#f0b90b;margin-bottom:10px" id="modalPrice">🪙 0</div>
-  <div style="display:flex;justify-content:space-between;font-size:11px;padding:6px 10px;background:#0e0e14;border-radius:8px;margin-bottom:12px"><span>У тебя:</span><b id="modalOwned">0</b></div>
-  <button class="primary" id="modalSellBtn" style="width:100%">ПРОДАТЬ 1</button>
-</div></div>
-<div class="upgrade-overlay" id="upgradeOverlay"><div class="upg-stage" id="upgStage"></div></div>
-<div class="flash" id="flash"></div><div class="toast" id="toast"></div>
-<script>
-const SUPABASE_URL='https://fsxputemwveouteusdsy.supabase.co';
-const SUPABASE_KEY='sb_publishable_srJqOHjNtODKifwwL3j7Vg_7-ynR2L3';
-const H={'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=representation'};
-async function sb(p,o={}){const r=await fetch(SUPABASE_URL+'/rest/v1'+p,{...o,headers:{...H,...(o.headers||{})}});const t=await r.text();if(!r.ok)throw new Error(t||'Ошибка БД');return t?JSON.parse(t):null;}
-async function hash(pw){const e=new TextEncoder().encode('salt_'+pw);const b=await crypto.subtle.digest('SHA-256',e);return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');}
-const R={common:{label:'Обычный',color:'#7a7a88',basePrice:2,next:'uncommon'},uncommon:{label:'Необычный',color:'#6a8df0',basePrice:8,next:'rare'},rare:{label:'Редкий',color:'#9b6fd0',basePrice:35,next:'epic'},epic:{label:'Эпический',color:'#e06ebf',basePrice:220,next:'legendary'},legendary:{label:'Легендарный',color:'#f0c14b',basePrice:1600,next:null}};
-const R_ORD={legendary:0,epic:1,rare:2,uncommon:3,common:4};
-const I=[{n:'P250 Sand Dune',i:'🔫',r:'common'},{n:'MP9 Storm',i:'🔫',r:'common'},{n:'Nova Predator',i:'🔫',r:'common'},{n:'Dual Berettas Colony',i:'🔫',r:'common'},{n:'Galil AR Cerberus',i:'🔫',r:'common'},{n:'Glock-18 Water Elemental',i:'🔫',r:'uncommon'},{n:'M4A1-S Varicamo',i:'🔫',r:'uncommon'},{n:'USP-S Blueprint',i:'🔫',r:'uncommon'},{n:'P90 Asiimov',i:'🔫',r:'uncommon'},{n:'Five-SeveN Case Hardened',i:'🔫',r:'uncommon'},{n:'AK-47 Redline',i:'🔫',r:'rare'},{n:'AWP Electric Hive',i:'🔫',r:'rare'},{n:'Desert Eagle Code Red',i:'🔫',r:'rare'},{n:'AK-47 Vulcan',i:'🔫',r:'rare'},{n:'M4A1-S Hyper Beast',i:'🔫',r:'rare'},{n:'M4A4 Howl',i:'🔫',r:'epic'},{n:'AWP Asiimov',i:'🔫',r:'epic'},{n:'Karambit Fade',i:'🔪',r:'epic'},{n:'Glock Fade',i:'🔫',r:'epic'},{n:'Deagle Blaze',i:'🔫',r:'epic'},{n:'AWP Dragon Lore',i:'🔫',r:'legendary'},{n:'Butterfly Knife | Gold',i:'🔪',r:'legendary'},{n:'M9 Bayonet | Doppler',i:'🔪',r:'legendary'},{n:'AK-47 Fire Serpent',i:'🔫',r:'legendary'},{n:'AWP Gungnir',i:'🔫',r:'legendary'}];
-const C=[{id:'starter',name:'Стартовый',icon:'📦',price:25,color:'#7a7a88',w:{common:70,uncommon:30}},{id:'standard',name:'Стандартный',icon:'🎁',price:50,color:'#6a8df0',w:{common:50,uncommon:30,rare:15,epic:4,legendary:1}},{id:'premium',name:'Премиум',icon:'💎',price:150,color:'#9b6fd0',w:{uncommon:40,rare:35,epic:20,legendary:5}},{id:'elite',name:'Элитный',icon:'👑',price:500,color:'#e06ebf',w:{rare:40,epic:45,legendary:15}},{id:'knife',name:'Ножевой',icon:'🔪',price:1200,color:'#f0c14b',w:{epic:75,legendary:25},f:true},{id:'dragon',name:'Драконий',icon:'🐉',price:3000,color:'#ff4444',w:{epic:50,legendary:50},d:true}];
-const W=[{v:20,c:'#5a5a68',l:'20'},{v:50,c:'#4b69c4',l:'50'},{v:100,c:'#2c3d84',l:'100'},{v:250,c:'#6b3fa0',l:'250'},{v:500,c:'#432176',l:'500'},{v:1000,c:'#c74b9b',l:'1000'},{v:2000,c:'#8a296a',l:'2000'},{v:5000,c:'#d4a017',l:'5000'},{v:0,c:'#e06ebf',l:'EPIC'},{v:0,c:'#f0c14b',l:'LEG'}];
-const D_R=[100,200,350,500,750,1000,2500],D_I=['🪙','💰','💵','💎','💠','🏆','👑'];
-const AV=['🐺','🦊','🐉','🦁','🐯','🦅','🐻','🐼','🦖','👾','🤖','👑','💎','🔥','⚡','🌟'];
-const DEV=['baconsigma67656'];
-let user=null,token=localStorage.getItem('tk'),inv={},mkt={},news=[];
-const $=id=>document.getElementById(id);
-function toast(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2000);}
-function flash(t=''){const f=$('flash');f.className='flash '+t+' on';setTimeout(()=>f.classList.remove('on'),100);}
-function conf(){const c=['#f0b90b','#e06ebf','#6a8df0','#4ade80','#fff'];for(let i=0;i<40;i++){let d=document.createElement('div');d.className='confetti';d.style.left=Math.random()*100+'vw';d.style.background=c[Math.floor(Math.random()*c.length)];d.style.animationDuration=(1.8+Math.random()*1.5)+'s';document.body.appendChild(d);setTimeout(()=>d.remove(),3800);}}
-function beep(f,d,t='sine',v=.06){try{const a=new(window.AudioContext||window.webkitAudioContext)();const o=a.createOscillator(),g=a.createGain();o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,a.currentTime);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+d);o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+d);}catch(e){}}
-function getPrice(n){const it=I.find(x=>x.n===n);if(!it)return 0;const s=mkt[n]||{drops:0,trend:0};return Math.max(1,Math.round(R[it.r].basePrice*(100/(100+s.drops))*(1+s.trend*.15)));}
-function updateCoins(){if(!user)return;$('coinsAmount').textContent=user.coins.toLocaleString();$('tapBalance').textContent=user.coins.toLocaleString();$('offlineAmount').textContent=(user.offline_coins||0).toLocaleString();$('shopOfflineValue').textContent=(user.offline_coins||0).toLocaleString();$('allPreview').textContent=Math.floor((user.offline_coins||0)/5)+' 🪙';if($('freeCoinsBtn'))$('freeCoinsBtn').style.display=DEV.includes(user.username.toLowerCase())?'flex':'none';}
-async function refreshMkt(){const d=await sb('/market?select=*');d.forEach(x=>mkt[x.item_name]={drops:x.drops,trend:x.trend});}
-async function addItem(n,c=1){inv[n]=(inv[n]||0)+c;const u={...user,inventory:inv};await sb('/players?id=eq.'+user.id,{method:'PATCH',body:JSON.stringify({inventory:inv})});}
-async function remItem(n,c=1){if(!inv[n])return;inv[n]-=c;if(inv[n]<=0)delete inv[n];await sb('/players?id=eq.'+user.id,{method:'PATCH',body:JSON.stringify({inventory:inv})});}
-async function updateUser(data){Object.assign(user,data);await sb('/players?id=eq.'+user.id,{method:'PATCH',body:JSON.stringify(data)});updateCoins();}
-
-async function enterGame(offGain=0){
-  try{
-    const d=await sb('/players?id=eq.'+user.id+'&select=*');user=d[0];inv=user.inventory||{};
-    $('authScreen').classList.add('hidden');$('app').classList.remove('hidden');
-    await refreshMkt();
-    $('topAvatar').textContent=user.avatar;$('profileAvatar').textContent=user.avatar;
-    $('profileName').innerHTML=user.username+(DEV.includes(user.username.toLowerCase())?' <span class="dev-badge">Разработчик</span>':'');
-    updateCoins();renderCases();renderCraft();renderInv();renderMkt();
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Home Up</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+    body { background: #0a0a0f; color: #fff; padding: 10px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
     
-    if(offGain>0&&user.offline_coins>0){$('offlineGain').textContent='+'+offGain+' 🌙';$('offlineModal').classList.add('active');}
-    setInterval(async()=>{const d=await sb('/players?id=eq.'+user.id+'&select=offline_coins');if(d[0]&&d[0].offline_coins>user.offline_coins){user.offline_coins=d[0].offline_coins;updateCoins();}},30000);
-    toast('👋 Привет, '+user.username);
-  }catch(e){console.error(e);localStorage.removeItem('tk');location.reload();}
+    /* --- Экраны --- */
+    .screen { width: 100%; max-width: 500px; display: none; }
+    .screen.active { display: block; }
+    
+    /* --- Авторизация --- */
+    .auth-box { background: #1a1a22; padding: 20px; border-radius: 12px; border: 1px solid #333; margin-top: 40px; }
+    .auth-logo { text-align: center; font-size: 28px; font-weight: bold; color: #f0b90b; margin-bottom: 20px; letter-spacing: 2px; }
+    .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+    .tab { flex: 1; padding: 10px; background: #0a0a0f; border: 1px solid #333; color: #888; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; }
+    .tab.active { background: #f0b90b; color: #000; border-color: #f0b90b; }
+    .form-group { display: none; flex-direction: column; gap: 12px; }
+    .form-group.active { display: flex; }
+    input { padding: 12px; background: #0a0a0f; border: 1px solid #333; color: #fff; border-radius: 8px; font-size: 16px; outline: none; }
+    input:focus { border-color: #f0b90b; }
+    .btn { padding: 14px; background: #f0b90b; color: #000; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; width: 100%; transition: transform 0.1s; }
+    .btn:active { transform: scale(0.98); }
+
+    /* --- Игра --- */
+    .top-bar { display: flex; justify-content: space-between; align-items: center; background: #1a1a22; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #333; }
+    .balance { font-size: 18px; font-weight: bold; color: #f0b90b; }
+    .offline { font-size: 18px; font-weight: bold; color: #a78bfa; }
+    
+    .nav { display: flex; overflow-x: auto; gap: 8px; margin-bottom: 15px; padding-bottom: 5px; }
+    .nav::-webkit-scrollbar { display: none; }
+    .nav-btn { background: #1a1a22; border: 1px solid #333; color: #aaa; padding: 10px 18px; border-radius: 20px; white-space: nowrap; cursor: pointer; font-weight: bold; font-size: 13px; }
+    .nav-btn.active { background: #f0b90b; color: #000; border-color: #f0b90b; }
+    
+    .page { display: none; background: #1a1a22; padding: 15px; border-radius: 12px; border: 1px solid #333; }
+    .page.active { display: block; }
+    .page h2 { color: #f0b90b; margin-bottom: 15px; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
+    
+    .tap-btn { width: 170px; height: 170px; border-radius: 50%; background: #f0b90b; border: none; font-size: 24px; font-weight: bold; display: block; margin: 30px auto; cursor: pointer; box-shadow: 0 8px 0 #8a6600; transition: 0.1s; }
+    .tap-btn:active { transform: translateY(8px); box-shadow: none; }
+    
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
+    .item-card { background: #0a0a0f; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #333; display: flex; flex-direction: column; justify-content: space-between; }
+    .item-icon { font-size: 32px; margin-bottom: 5px; }
+    .item-name { font-size: 12px; font-weight: bold; margin-bottom: 4px; word-break: break-word; }
+    .item-price { font-size: 12px; color: #f0b90b; margin-bottom: 8px; font-weight: bold; }
+    .btn-small { width: 100%; padding: 8px; font-size: 12px; border-radius: 6px; background: #f0b90b; border: none; font-weight: bold; cursor: pointer; margin-top: auto; }
+    
+    /* Редкости */
+    .rar-common { border-bottom: 3px solid #7a7a88; }
+    .rar-uncommon { border-bottom: 3px solid #7a9df8; }
+    .rar-rare { border-bottom: 3px solid #a878e0; }
+    .rar-epic { border-bottom: 3px solid #f088c8; }
+    .rar-legendary { border-bottom: 3px solid #f0c14b; }
+
+    #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #f0b90b; color: #000; padding: 12px 24px; border-radius: 30px; font-weight: bold; display: none; z-index: 1000; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+  </style>
+</head>
+<body>
+
+  <!-- ЭКРАН АВТОРИЗАЦИИ -->
+  <div id="screen-auth" class="screen active">
+    <div class="auth-box">
+      <div class="auth-logo">HOME UP</div>
+      <div class="tabs">
+        <button class="tab active" id="btn-tab-login">ВХОД</button>
+        <button class="tab" id="btn-tab-reg">РЕГИСТРАЦИЯ</button>
+      </div>
+      
+      <div id="form-login" class="form-group active">
+        <input type="text" id="login-user" placeholder="Имя пользователя">
+        <input type="password" id="login-pass" placeholder="Пароль">
+        <button class="btn" id="btn-do-login">ВОЙТИ</button>
+      </div>
+
+      <div id="form-reg" class="form-group">
+        <input type="text" id="reg-user" placeholder="Имя (от 3 символов)">
+        <input type="password" id="reg-pass" placeholder="Пароль (от 4 символов)">
+        <input type="password" id="reg-pass2" placeholder="Повторите пароль">
+        <button class="btn" id="btn-do-reg">СОЗДАТЬ АККАУНТ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЭКРАН ИГРЫ -->
+  <div id="screen-game" class="screen">
+    <div class="top-bar">
+      <div class="balance">🪙 <span id="ui-coins">0</span></div>
+      <div class="offline">🌙 <span id="ui-offline">0</span></div>
+      <button class="nav-btn" id="btn-logout" style="padding: 8px">Выйти</button>
+    </div>
+
+    <div class="nav">
+      <button class="nav-btn active" data-page="tap">Тап</button>
+      <button class="nav-btn" data-page="cases">Кейсы</button>
+      <button class="nav-btn" data-page="inv">Инвентарь</button>
+      <button class="nav-btn" data-page="market">Рынок</button>
+      <button class="nav-btn" data-page="shop">Магазин</button>
+    </div>
+
+    <div id="page-tap" class="page active">
+      <h2>Тапалка</h2>
+      <button class="tap-btn" id="btn-tap">ТАП</button>
+    </div>
+
+    <div id="page-cases" class="page">
+      <h2>Кейсы</h2>
+      <div class="grid" id="grid-cases"></div>
+    </div>
+
+    <div id="page-inv" class="page">
+      <h2>Инвентарь</h2>
+      <div class="grid" id="grid-inv"></div>
+    </div>
+
+    <div id="page-market" class="page">
+      <h2>Рынок</h2>
+      <div class="grid" id="grid-market"></div>
+    </div>
+
+    <div id="page-shop" class="page">
+      <h2>Магазин офлайн-коинов</h2>
+      <p style="margin-bottom: 15px; color: #aaa;">Курс обмена: 5 🌙 = 1 🪙</p>
+      <button class="btn" id="btn-exchange" style="margin-bottom: 10px;">Обменять ВСЁ</button>
+      <button class="btn" id="btn-free" style="background: #22c55e; display: none;">👑 Забрать 1000 🪙</button>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+  <script>
+// --- НАСТРОЙКИ SUPABASE (Твой сервер) ---
+const SB_URL = 'https://fsxputemwveouteusdsy.supabase.co';
+const SB_KEY = 'sb_publishable_srJqOHjNtODKifwwL3j7Vg_7-ynR2L3';
+const HEADERS = {
+  'apikey': SB_KEY,
+  'Authorization': 'Bearer ' + SB_KEY,
+  'Content-Type': 'application/json',
+  'Prefer': 'return=representation'
+};
+
+// --- УНИВЕРСАЛЬНЫЙ ЗАПРОС К БАЗЕ ---
+async function db(path, options = {}) {
+  const res = await fetch(SB_URL + '/rest/v1' + path, {
+    ...options,
+    headers: { ...HEADERS, ...(options.headers || {}) }
+  });
+  const text = await res.text();
+  if (!res.ok) throw new Error(text || 'Ошибка БД');
+  return text ? JSON.parse(text) : null;
 }
 
-async function loadApp(){if(!token)return;try{const d=await sb('/players?token=eq.'+token+'&select=*');if(d.length){user=d[0];enterGame(0);}}catch(e){}}
-$('registerBtn').onclick=async()=>{
-  const u=$('regUser').value.trim(),p=$('regPass').value,p2=$('regPass2').value;
-  if(u.length<3)return toast('Имя от 3 символов');
-  if(p.length<4)return toast('Пароль от 4 символов');
-  if(p!==p2)return toast('Пароли не совпадают');
-  try{
-    const ex=await sb('/players?username=eq.'+u);
-    if(ex.length)return toast('Имя занято');
-    const h=await hash(p),tk=crypto.randomUUID();
-    const d=await sb('/players',{method:'POST',body:JSON.stringify({username:u,password:h,token:tk,coins:100,inventory:{},created:Date.now(),last_seen:Date.now()})});
-    token=tk;user=d[0];localStorage.setItem('tk',tk);enterGame(0);
-  }catch(e){toast('Ошибка: '+e.message);}
-};
-$('loginBtn').onclick=async()=>{
-  const u=$('loginUser').value.trim(),p=$('loginPass').value;
-  try{
-    const d=await sb('/players?username=eq.'+u);if(!d.length)return toast('Не найден');
-    const h=await hash(p);if(d[0].password!==h)return toast('Неверный пароль');
-    const now=Date.now(),gap=now-(d[0].last_seen||now);let gain=0;
-    if(gap>60000){gain=Math.floor(gap/60000)*5;d[0].offline_coins=(d[0].offline_coins||0)+gain;}
-    await sb('/players?id=eq.'+d[0].id,{method:'PATCH',body:JSON.stringify({offline_coins:d[0].offline_coins,last_seen:now})});
-    token=d[0].token;user=d[0];localStorage.setItem('tk',token);enterGame(gain);
-  }catch(e){toast('Ошибка: '+e.message);}
+// --- ХЕШИРОВАНИЕ ПАРОЛЯ ---
+async function hashPass(pass) {
+  const msgBuffer = new TextEncoder().encode('salt_hu_' + pass);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// --- ИГРОВЫЕ ДАННЫЕ ---
+const RARITY = {
+  common: { price: 2, next: 'uncommon' }, uncommon: { price: 8, next: 'rare' },
+  rare: { price: 35, next: 'epic' }, epic: { price: 220, next: 'legendary' }, legendary: { price: 1600, next: null }
 };
 
-$('tapBtn').onpointerdown=async(e)=>{
-  if(!user)return;beep(600+Math.random()*200,.05,'square');
-  user.coins++;updateCoins();
-  const el=document.createElement('div');el.className='float-coin';el.textContent='+1';
-  el.style.left=(e.clientX-15)+'px';el.style.top=(e.clientY-15)+'px';document.body.appendChild(el);setTimeout(()=>el.remove(),950);
-  await sb('/players?id=eq.'+user.id,{method:'PATCH',body:JSON.stringify({coins:user.coins,total_taps:(user.total_taps||0)+1})});
-};
-$('claimDailyBtn')?.onclick=async()=>{
-  const now=Date.now();if(now-(user.last_daily||0)<86400000)return toast('Рано');
-  let st=user.daily_streak||0;const rw=D_R[st%7];user.coins+=rw;user.last_daily=now;user.daily_streak=(st+1)%7;
-  await updateUser({coins:user.coins,last_daily:now,daily_streak:user.daily_streak});flash('legend');conf();toast('+'+rw+' 🪙');
-};
-$('exchangeAllBtn').onclick=async()=>{
-  const c=Math.floor((user.offline_coins||0)/5)*5;if(c<5)return toast('Мало коинов');
-  user.offline_coins-=c;user.coins+=c/5;await updateUser({coins:user.coins,offline_coins:user.offline_coins});toast('Обменяно!');
-};
-$('freeCoinsBtn').onclick=async()=>{user.coins+=1000;await updateUser({coins:user.coins});toast('+1000 🪙');};
+const ITEMS = [
+  { name: 'P250', icon: '🔫', rar: 'common' }, { name: 'MP9', icon: '🔫', rar: 'common' },
+  { name: 'Glock', icon: '🔫', rar: 'uncommon' }, { name: 'USP', icon: '🔫', rar: 'uncommon' },
+  { name: 'AK-47', icon: '🔫', rar: 'rare' }, { name: 'AWP', icon: '🔫', rar: 'rare' },
+  { name: 'Howl', icon: '🔫', rar: 'epic' }, { name: 'Karambit', icon: '🔪', rar: 'epic' },
+  { name: 'Dragon Lore', icon: '🔫', rar: 'legendary' }, { name: 'Butterfly', icon: '🔪', rar: 'legendary' }
+];
 
-function renderCases(){$('casesGrid').innerHTML=C.map(c=>`<div class="case-card" style="--case-color:${c.color}"><div class="case-icon">${c.icon}</div><div class="case-name">${c.name}</div><div class="case-price">🪙 ${c.price}</div><button class="case-btn" onclick="openCaseModal('${c.id}')">ОТКРЫТЬ</button></div>`).join('');}
-window.openCaseModal=async(id)=>{
-  const c=C.find(x=>x.id===id);$('caseModalTitle').textContent=c.name;$('caseModalPrice').textContent='🪙 '+c.price;
-  $('caseModal').classList.add('active');
-  $('openOneBtn').onclick=()=>buyCase(c,1);$('openFiveBtn').onclick=()=>buyCase(c,5);$('openTenBtn').onclick=()=>buyCase(c,10);
+const CASES = [
+  { id: '1', name: 'Стартовый', price: 25, weights: { common: 80, uncommon: 20 } },
+  { id: '2', name: 'Стандарт', price: 50, weights: { common: 50, uncommon: 40, rare: 10 } },
+  { id: '3', name: 'Премиум', price: 150, weights: { uncommon: 50, rare: 40, epic: 10 } }
+];
+
+// --- ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ---
+let user = null;
+let token = localStorage.getItem('hu_tk') || null;
+
+// --- ИНТЕРФЕЙС (UI) ---
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; 
+  t.style.display = 'block';
+  clearTimeout(window.toastTimer);
+  window.toastTimer = setTimeout(() => t.style.display = 'none', 2500);
+}
+
+function updateUI() {
+  if (!user) return;
+  document.getElementById('ui-coins').textContent = user.coins || 0;
+  document.getElementById('ui-offline').textContent = user.offline_coins || 0;
+  // Показ секретной кнопки для разработчика
+  document.getElementById('btn-free').style.display = (user.username.toLowerCase() === 'baconsigma67656') ? 'block' : 'none';
+}
+
+// --- ПЕРЕКЛЮЧЕНИЕ ТАБОВ ---
+document.getElementById('btn-tab-login').onclick = () => {
+  document.getElementById('btn-tab-login').classList.add('active');
+  document.getElementById('btn-tab-reg').classList.remove('active');
+  document.getElementById('form-login').classList.add('active');
+  document.getElementById('form-reg').classList.remove('active');
 };
-async function buyCase(c,m){
-  if(user.coins<c.price*m)return toast('Мало монет');
-  user.coins-=c.price*m;updateCoins();
-  for(let i=0;i<m;i++){
-    let tot=Object.values(c.w).reduce((a,b)=>a+b),r=Math.random()*tot,sel='common';
-    for(let [k,v] of Object.entries(c.w)){if(r<v){sel=k;break}r-=v;}
-    let pool=I.filter(x=>x.r===sel);if(c.f)pool=pool.filter(x=>x.i==='🔪');if(c.d)pool=pool.filter(x=>x.r==='legendary'||x.n.includes('Dragon')||x.n.includes('Howl'));
-    const it=pool[Math.floor(Math.random()*pool.length)];
-    await addItem(it.n);beep(800,.1);toast('🎁 '+it.n);
-    await sb('/market',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify({item_name:it.n,drops:1,trend:0})}).catch(async()=>{
-      const cur=(await sb('/market?item_name=eq.'+it.n))[0];if(cur)await sb('/market?item_name=eq.'+it.n,{method:'PATCH',body:JSON.stringify({drops:cur.drops+1})});
+document.getElementById('btn-tab-reg').onclick = () => {
+  document.getElementById('btn-tab-reg').classList.add('active');
+  document.getElementById('btn-tab-login').classList.remove('active');
+  document.getElementById('form-reg').classList.add('active');
+  document.getElementById('form-login').classList.remove('active');
+};
+
+// --- РЕГИСТРАЦИЯ ---
+document.getElementById('btn-do-reg').onclick = async () => {
+  const u = document.getElementById('reg-user').value.trim();
+  const p = document.getElementById('reg-pass').value;
+  const p2 = document.getElementById('reg-pass2').value;
+
+  if (u.length < 3) return showToast('Имя слишком короткое');
+  if (p.length < 4) return showToast('Пароль слишком короткий');
+  if (p !== p2) return showToast('Пароли не совпадают');
+
+  try {
+    const check = await db('/players?username=eq.' + u);
+    if (check && check.length > 0) return showToast('Имя уже занято');
+
+    const hashed = await hashPass(p);
+    const newToken = crypto.randomUUID();
+    
+    const res = await db('/players', {
+      method: 'POST',
+      body: JSON.stringify({
+        username: u,
+        password: hashed,
+        token: newToken,
+        coins: 100,
+        inventory: {},
+        last_seen: Date.now()
+      })
     });
+
+    token = newToken;
+    user = res[0];
+    localStorage.setItem('hu_tk', token);
+    startGame();
+  } catch (e) {
+    showToast('Ошибка: ' + e.message);
   }
-  await updateUser({coins:user.coins,inventory:inv});$('caseModal').classList.remove('active');renderInv();renderMkt();
-}
-function renderCraft(){
-  const k=Object.keys(inv).filter(n=>inv[n]>0);
-  $('craftGrid').innerHTML=k.map(n=>{const it=I.find(x=>x.n===n);const ok=R[it.r].next&&inv[n]>=5;return `<div class="craft-item rarity-${it.r} ${ok?'ready':''}" onclick="${ok?`craft('${n}')`:''}"><div class="icon">${it.i}</div><div>${n}</div><div class="cnt">x${inv[n]}</div></div>`}).join('');
-}
-window.craft=async(n)=>{
-  const it=I.find(x=>x.n===n);if(!it||!R[it.r].next)return;if(inv[n]<5)return;
-  await remItem(n,5);const pool=I.filter(x=>x.r===R[it.r].next);const res=pool[Math.floor(Math.random()*pool.length)];
-  await addItem(res.n);await updateUser({inventory:inv});toast('⚒️ '+res.n);renderCraft();renderInv();
-};
-function renderInv(){
-  const k=Object.keys(inv).filter(n=>inv[n]>0);
-  $('invGrid').innerHTML=k.map(n=>{const it=I.find(x=>x.n===n);return `<div class="inv-item rarity-${it.r}" onclick="selItem('${n}')"><div class="icon">${it.i}</div><div>${n}</div><div class="inv-price">🪙 ${getPrice(n)}</div></div>`}).join('');
-}
-window.selItem=n=>{
-  const it=I.find(x=>x.n===n);$('modalName').textContent=n;$('modalIcon').textContent=it.i;$('modalPrice').textContent='🪙 '+getPrice(n);$('modalOwned').textContent=inv[n];
-  $('modalOverlay').classList.add('active');
-  $('modalSellBtn').onclick=async()=>{if(inv[n]<1)return;await remItem(n,1);user.coins+=getPrice(n);await updateUser({coins:user.coins,inventory:inv});$('modalOverlay').classList.remove('active');toast('Продано');renderInv();};
-};
-function renderMkt(){
-  $('marketGrid').innerHTML=I.map(it=>{const p=getPrice(it.n);return `<div class="market-card"><div class="mc-head"><div class="mc-icon">${it.i}</div><div class="mc-info"><div class="mc-name">${it.n}</div></div></div><div class="mc-price-row"><div class="mc-price">🪙 ${p}</div></div><div class="mc-actions"><button class="mc-btn" onclick="buyMkt('${it.n}')">Купить</button></div></div>`}).join('');
-}
-window.buyMkt=async(n)=>{
-  const p=getPrice(n);if(user.coins<p)return toast('Мало монет');user.coins-=p;await addItem(n);await updateUser({coins:user.coins,inventory:inv});renderInv();toast('Куплено');
 };
 
-document.querySelectorAll('.nav-btn,.bnav-btn').forEach(b=>b.onclick=()=>{document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$( 'view-'+b.dataset.view ).classList.add('active');});
-$('logoutBtn').onclick=()=>{localStorage.removeItem('tk');location.reload();};
-$('offlineLater').onclick=()=>$('offlineModal').classList.remove('active');
-$('offlineGoShop').onclick=()=>{$('offlineModal').classList.remove('active');document.querySelector('[data-view="shop"]').click();};
-$('modalClose').onclick=$('caseModalClose').onclick=()=>{document.querySelectorAll('.modal-overlay').forEach(x=>x.classList.remove('active'));};
+// --- ВХОД ---
+document.getElementById('btn-do-login').onclick = async () => {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
 
-loadApp();
-</script>
-</body>
- </html>
+  if (!u || !p) return showToast('Заполните поля');
+
+  try {
+    const res = await db('/players?username=eq.' + u);
+    if (!res || res.length === 0) return showToast('Пользователь не найден');
+
+    const hashed = await hashPass(p);
+    if (res[0].password !== hashed) return showToast('Неверный пароль');
+
+    // Подсчёт офлайн-коинов (5 шт за каждую минуту отсутствия)
+    const now = Date.now();
+    const gap = now - (res[0].last_seen || now);
+    let gain = 0;
+    if (gap > 60000) {
+      gain = Math.floor(gap / 60000) * 5;
+      res[0].offline_coins = (res[0].offline_coins || 0) + gain;
+    }
+
+    await db('/players?id=eq.' + res[0].id, {
+      method: 'PATCH',
+      body: JSON.stringify({ offline_coins: res[0].offline_coins, last_seen: now })
+    });
+
+    token = res[0].token;
+    user = res[0];
+    localStorage.setItem('hu_tk', token);
+    startGame();
+
+    if (gain > 0) setTimeout(() => showToast('Начислено ' + gain + ' 🌙'), 1000);
+  } catch (e) {
+    showToast('Ошибка: ' + e.message);
+  }
+};
+
+// --- ЗАПУСК ИГРЫ ---
+function startGame() {
+  showScreen('screen-game');
+  updateUI();
+  renderCases();
+  renderInv();
+  renderMarket();
+
+  // Каждые 30 секунд обновляем время онлайна, чтобы офлайн-коины капали корректно
+  setInterval(async () => {
+    if (!user) return;
+    await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ last_seen: Date.now() }) });
+  }, 30000);
+}
+
+// Кнопка выхода
+document.getElementById('btn-logout').onclick = () => {
+  localStorage.removeItem('hu_tk');
+  location.reload();
+};
+
+// Навигация по разделам
+document.querySelectorAll('.nav-btn[data-page]').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.nav-btn[data-page]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + btn.dataset.page).classList.add('active');
+  };
+});
+
+// --- ТАПАЛКА ---
+document.getElementById('btn-tap').onclick = async () => {
+  if (!user) return;
+  user.coins += 1;
+  updateUI();
+  await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ coins: user.coins }) });
+};
+
+// --- КЕЙСЫ ---
+function renderCases() {
+  const g = document.getElementById('grid-cases');
+  g.innerHTML = CASES.map(c => `
+    <div class="item-card rar-rare">
+      <div class="item-icon">📦</div>
+      <div class="item-name">${c.name}</div>
+      <div class="item-price">🪙 ${c.price}</div>
+      <button class="btn-small" onclick="openCase('${c.id}')">Открыть</button>
+    </div>
+  `).join('');
+}
+
+window.openCase = async (id) => {
+  const c = CASES.find(x => x.id === id);
+  if (user.coins < c.price) return showToast('Недостаточно монет');
+
+  user.coins -= c.price;
+  
+  let total = Object.values(c.weights).reduce((a, b) => a + b, 0);
+  let rand = Math.random() * total;
+  let selectedRar = 'common';
+  for (let [k, v] of Object.entries(c.weights)) {
+    if (rand < v) { selectedRar = k; break; }
+    rand -= v;
+  }
+
+  const pool = ITEMS.filter(x => x.rar === selectedRar);
+  const winItem = pool[Math.floor(Math.random() * pool.length)];
+
+  user.inventory = user.inventory || {};
+  user.inventory[winItem.name] = (user.inventory[winItem.name] || 0) + 1;
+  
+  updateUI();
+  await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ coins: user.coins, inventory: user.inventory }) });
+  
+  showToast('Выпало: ' + winItem.name);
+  renderInv();
+};
+
+// --- ИНВЕНТАРЬ ---
+function renderInv() {
+  const g = document.getElementById('grid-inv');
+  const keys = Object.keys(user.inventory || {}).filter(k => user.inventory[k] > 0);
+  
+  if (keys.length === 0) {
+    g.innerHTML = '<div style="color:#666; grid-column: 1/-1;">Инвентарь пуст</div>';
+    return;
+  }
+
+  g.innerHTML = keys.map(name => {
+    const it = ITEMS.find(x => x.name === name);
+    return `
+      <div class="item-card rar-${it.rar}">
+        <div class="item-icon">${it.icon}</div>
+        <div class="item-name">${name} (x${user.inventory[name]})</div>
+        <div class="item-price">🪙 ${RARITY[it.rar].price}</div>
+        <button class="btn-small" onclick="sellItem('${name}')">Продать</button>
+      </div>
+    `;
+  }).join('');
+}
+
+window.sellItem = async (name) => {
+  if (!user.inventory[name]) return;
+  const it = ITEMS.find(x => x.name === name);
+  user.inventory[name]--;
+  if (user.inventory[name] <= 0) delete user.inventory[name];
+  user.coins += RARITY[it.rar].price;
+  
+  updateUI();
+  await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ coins: user.coins, inventory: user.inventory }) });
+  renderInv();
+  showToast('Продано');
+};
+
+// --- РЫНОК ---
+function renderMarket() {
+  const g = document.getElementById('grid-market');
+  g.innerHTML = ITEMS.map(it => `
+    <div class="item-card rar-${it.rar}">
+      <div class="item-icon">${it.icon}</div>
+      <div class="item-name">${it.name}</div>
+      <div class="item-price">🪙 ${RARITY[it.rar].price}</div>
+      <button class="btn-small" onclick="buyItem('${it.name}')">Купить</button>
+    </div>
+  `).join('');
+}
+
+window.buyItem = async (name) => {
+  const it = ITEMS.find(x => x.name === name);
+  const price = RARITY[it.rar].price;
+  
+  if (user.coins < price) return showToast('Недостаточно монет');
+  
+  user.coins -= price;
+  user.inventory = user.inventory || {};
+  user.inventory[name] = (user.inventory[name] || 0) + 1;
+  
+  updateUI();
+  await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ coins: user.coins, inventory: user.inventory }) });
+  renderInv();
+  showToast('Куплено');
+};
+
+// --- МАГАЗИН (ОФЛАЙН КОИНЫ) ---
+document.getElementById('btn-exchange').onclick = async () => {
+  const oCoins = user.offline_coins || 0;
+  const toExch = Math.floor(oCoins / 5) * 5;
+  
+  if (toExch < 5) return showToast('Мало офлайн-коинов');
+  
+  user.offline_coins -= toExch;
+  user.coins += (toExch / 5);
+  
+  updateUI();
+  await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ offline_coins: user.offline_coins, coins: user.coins }) });
+  showToast(`Обменяно ${toExch} 🌙`);
+};
+
+document.getElementById('btn-free').onclick = async () => {
+  user.coins += 1000;
+  updateUI();
+  await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ coins: user.coins }) });
+  showToast('+1000 🪙');
+};
+
+// --- АВТОРИЗАЦИЯ ПРИ ЗАГРУЗКЕ (АВТОВХОД) ---
+window.onload = async () => {
+  if (token) {
+    try {
+      const res = await db('/players?token=eq.' + token);
+      if (res && res.length > 0) {
+        user = res[0];
+        startGame();
+      } else {
+        localStorage.removeItem('hu_tk');
+      }
+    } catch (e) {
+      console.log('Ошибка автовхода', e);
+    }
+  }
+};
+   </script>
