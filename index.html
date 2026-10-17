@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>HOME UP | Premium Edition</title>
-    
+
     <!-- ==========================================================================
          БЛОК СТИЛЕЙ (CSS)
          Разделен на секции для удобства чтения. Никакого сжатия.
@@ -18,21 +18,21 @@
             --color-bg: #050508;
             --color-bg-darker: #020203;
             --color-card: rgba(22, 22, 28, 0.85);
-            
+
             /* Цвета границ */
             --color-border: #22222a;
             --color-border-hover: #33333d;
-            
+
             /* Золотая палитра (главный акцент) */
             --color-gold: #f0b90b;
             --color-gold-hover: #ffe488;
             --color-gold-dark: #8a6600;
-            
+
             /* Текст */
             --color-text: #e8e8ee;
             --color-text-muted: #888888;
             --color-text-dark: #555555;
-            
+
             /* Статусные цвета */
             --color-green: #4ade80;
             --color-green-dark: #22c55e;
@@ -41,19 +41,19 @@
             --color-purple: #a78bfa;
             --color-purple-dark: #7c3aed;
             --color-blue: #6a8df0;
-            
+
             /* Тени */
             --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.3);
             --shadow-md: 0 10px 20px rgba(0, 0, 0, 0.5);
             --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.7);
             --shadow-gold: 0 10px 30px rgba(240, 185, 11, 0.3);
-            
+
             /* Скругления */
             --radius-sm: 8px;
             --radius-md: 14px;
             --radius-lg: 20px;
             --radius-xl: 30px;
-            
+
             /* Шрифты и анимации */
             --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             --transition-fast: 0.2s ease;
@@ -72,7 +72,7 @@
 
         body {
             background-color: var(--color-bg);
-            background-image: 
+            background-image:
                 radial-gradient(circle at 15% 20%, rgba(240, 185, 11, 0.08), transparent 30%),
                 radial-gradient(circle at 85% 80%, rgba(167, 139, 250, 0.08), transparent 30%);
             color: var(--color-text);
@@ -773,6 +773,65 @@
         .music-btn { background: linear-gradient(135deg, var(--color-gold), var(--color-gold-hover)); color: #1a1a1a; border: none; border-radius: 50%; width: 35px; height: 35px; font-size: 16px; cursor: pointer; display: flex; justify-content: center; align-items: center; }
         .music-btn.loop { background: var(--color-blue); color: #fff; border: 2px solid #fff; }
         .music-volume { width: 80px; cursor: pointer; accent-color: var(--color-gold); }
+
+/* HOME UP PREMIUM UI PATCH */
+.topbar{position:sticky;top:8px;z-index:90;background:rgba(10,10,14,.88);border-color:rgba(240,185,11,.22);box-shadow:0 14px 45px #0008}
+.brand{font-size:clamp(20px,2vw,29px);letter-spacing:3px;text-shadow:0 0 26px #f0b90b30}
+.sidebar{width:278px;max-height:calc(100dvh - 36px);overflow:auto;background:linear-gradient(165deg,rgba(24,24,31,.97),rgba(8,8,12,.97));border-color:#ffffff12}
+.nav-section-title{display:flex;align-items:center;gap:9px;color:#777786;font-size:10px;letter-spacing:2.2px}
+.nav-section-title:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,#ffffff16,transparent)}
+.nav-btn{min-height:48px;padding:12px 14px;border-radius:13px;border-color:transparent;color:#a4a4b2;overflow:hidden}
+.nav-btn::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,#f0b90b12,transparent 65%);opacity:0;transition:opacity .22s;pointer-events:none}
+.nav-btn:hover{transform:translateX(3px);border-color:#ffffff0d;background:#ffffff08}
+.nav-btn:hover::after,.nav-btn.active::after{opacity:1}
+.nav-btn.active{border-color:#f0b90b30;background:linear-gradient(100deg,#f0b90b1b,#f0b90b05);color:#ffe488;box-shadow:inset 0 0 22px #f0b90b08}
+.nav-icon{width:28px;height:28px;display:inline-grid;place-items:center;border-radius:9px;background:#ffffff08;font-size:17px;flex-shrink:0}
+.nav-btn.active .nav-icon{background:#f0b90b1a;filter:drop-shadow(0 0 7px #f0b90b50)}
+.nav-search-wrap{padding:4px 2px 10px}
+.nav-search{width:100%;padding:12px 14px;border-radius:12px;background:#08080d;border:1px solid #ffffff14;color:#fff;outline:none;font:inherit;font-size:13px}
+.nav-search:focus{border-color:#f0b90b80;box-shadow:0 0 0 3px #f0b90b12}
+.menu-profile{display:flex;align-items:center;gap:12px;padding:14px;margin-bottom:12px;border-radius:15px;background:linear-gradient(120deg,#f0b90b12,#ffffff03);border:1px solid #f0b90b20}
+.menu-profile-avatar{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:#f0b90b18;font-size:21px}
+.menu-profile small{display:block;color:#777786;font-size:10px;letter-spacing:1px;margin-top:3px}
+.card{border-color:#ffffff12;background:linear-gradient(145deg,rgba(22,22,29,.93),rgba(11,11,16,.94));box-shadow:0 16px 42px #0002}
+.view.active .card{animation:menuEnter .28s ease both}
+@keyframes menuEnter{from{opacity:.5;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.balance{border-color:#f0b90b30;box-shadow:inset 0 0 18px #f0b90b08}
+.bottom-nav{justify-content:flex-start;gap:5px;padding:9px 8px calc(9px + env(safe-area-inset-bottom));scrollbar-width:none;background:rgba(7,7,10,.94);border-top-color:#f0b90b25}
+.bnav-btn{min-width:61px;border-radius:12px;padding:7px 10px;font-size:10px}
+.bnav-btn span{width:31px;height:27px;display:grid;place-items:center;font-size:20px;border-radius:9px}
+.bnav-btn.active{background:#f0b90b12;color:#ffe488}
+.bnav-btn.active span{background:#f0b90b1c}
+.gauge-wrapper{max-width:min(320px,78vw);max-height:min(320px,78vw)}
+.upg-slot{border-color:#ffffff17;background:linear-gradient(145deg,#111118,#08080c);min-width:0}
+.upg-slot:focus-visible,.nav-btn:focus-visible,.bnav-btn:focus-visible,button:focus-visible{outline:2px solid var(--color-gold);outline-offset:3px}
+.upg-slots{align-items:stretch}
+.upg-chances{flex-wrap:wrap;justify-content:center}
+.chance-btn{min-width:76px}
+.upg-info-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%;margin:0 0 20px}
+.upg-info{padding:14px 10px;border-radius:13px;background:#08080d;border:1px solid #ffffff10;text-align:center}
+.upg-info span{display:block;color:#777786;font-size:10px;letter-spacing:1px;margin-bottom:7px}
+.upg-info strong{font-size:16px;color:#f5f5f8}
+.upg-history{width:100%;margin-top:24px;border-top:1px solid #ffffff12;padding-top:18px}
+.upg-history-row{display:flex;justify-content:space-between;gap:12px;padding:11px 12px;margin-top:7px;border-radius:10px;background:#ffffff05;font-size:12px}
+.upg-history-row.win strong{color:var(--color-green)}.upg-history-row.loss strong{color:var(--color-red)}
+.menu-empty{display:none;color:#777786;font-size:12px;padding:12px;text-align:center}
+@media(max-width:899px){body{padding:8px 8px 100px}.topbar{top:4px;padding:12px 14px;border-radius:17px}.layout{display:block}.sidebar{display:none!important}.card{padding:20px 15px}.tap-balance{font-size:clamp(38px,12vw,64px)}.upg-slots{gap:10px}.upg-slot{padding:14px 8px;min-height:130px}.gauge-arrow{height:34vw;max-height:140px}.maint-timer{font-size:42px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+
+        /* HOME UP: обновлённая загрузка, настройки и рулетка */
+        .settings-panel{padding:18px;margin:12px 0 25px;border:1px solid rgba(255,196,0,.22);border-radius:16px;background:linear-gradient(145deg,#17171d,#0a0a0e);box-shadow:0 12px 35px rgba(0,0,0,.18)}
+        .settings-toggle{display:flex;justify-content:space-between;align-items:center;gap:12px;color:var(--color-text,#fff)}
+        .settings-toggle input{width:20px;height:20px;accent-color:var(--color-gold)}
+        .loading-screen{background-color:#070707;background-image:radial-gradient(ellipse at 50% 45%,rgba(255,193,7,.15),transparent 58%),linear-gradient(135deg,#090909,#15120a)!important}
+        .loading-spinner{width:76px;height:76px;border:3px solid rgba(255,205,0,.13);border-top-color:#ffd000;border-right-color:#ff9f00;box-shadow:0 0 28px rgba(255,193,7,.18)}
+        .loading-text{letter-spacing:8px;text-shadow:0 0 22px rgba(255,193,7,.48)}
+        .roulette-item{flex:0 0 125px;width:125px;height:155px;box-sizing:border-box;overflow:hidden;border:1px solid rgba(255,255,255,.09);border-radius:13px;background:linear-gradient(145deg,#1d1d25,#0b0b10);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:9px;text-align:center;box-shadow:inset 0 1px rgba(255,255,255,.04);transition:border-color .2s,box-shadow .2s}
+        .roulette-item img{display:block;width:100%;height:88px;object-fit:contain;filter:drop-shadow(0 5px 9px rgba(0,0,0,.65))}
+        #rouletteTrack{display:flex;gap:10px;width:max-content;will-change:transform}
+        #caseResult{color:var(--color-gold);text-shadow:0 0 16px rgba(255,208,0,.25)}
+
     </style>
 </head>
 <body>
@@ -784,11 +843,6 @@
         <source src="https://cdn.pixabay.com/download/audio/2022/10/25/audio_9f9d6d2e18.mp3?filename=cyberpunk-2099-122383.mp3" type="audio/mpeg">
     </audio>
 
-    <div class="music-player hidden" id="musicPlayer">
-        <button class="music-btn" id="playPauseBtn" onclick="togglePlay()">▶</button>
-        <button class="music-btn loop" id="loopBtn" onclick="toggleLoop()" title="Повтор">🔁</button>
-        <input type="range" id="volumeSlider" class="music-volume" min="0" max="1" step="0.1" value="0.5" onchange="changeVolume(this)">
-    </div>
 
     <!-- ==========================================================================
          ЭКРАН ЗАГРУЗКИ
@@ -822,6 +876,7 @@
                 <button class="btn-primary" id="loginBtn">ВОЙТИ</button>
             </div>
             <div id="formRegister" style="display: none;">
+                <input type="email" id="regEmail" class="form-input" placeholder="Email" autocomplete="email" required>
                 <input type="text" id="regUser" class="form-input" placeholder="Логин (от 3 символов)" autocomplete="username">
                 <div id="regUserHint" class="input-hint"></div>
                 <input type="password" id="regPass" class="form-input" placeholder="Пароль (от 6 символов)" autocomplete="new-password">
@@ -840,7 +895,6 @@
          ОСНОВНОЕ ПРИЛОЖЕНИЕ
          ========================================================================== -->
     <div class="app" id="app">
-        <div id="ad-container" class="ad-container"></div>
 
         <div class="topbar">
             <div class="brand">HOME UP</div>
@@ -854,23 +908,28 @@
         <div class="layout">
             <!-- Боковое меню -->
             <aside class="sidebar">
+                <div class="menu-profile">
+                    <div class="menu-profile-avatar" id="menuProfileAvatar">👤</div>
+                    <div style="min-width:0"><strong id="menuProfileName" style="display:block;overflow:hidden;text-overflow:ellipsis">Игрок</strong><small>HOME UP MEMBER</small></div>
+                </div>
+                <div class="nav-search-wrap"><input id="navSearch" class="nav-search" type="search" placeholder="⌕  Найти раздел..." autocomplete="off"><div id="navSearchEmpty" class="menu-empty">Ничего не найдено</div></div>
                 <div class="nav-section-title">Игра</div>
                 <button class="nav-btn active" data-view="tap"><span class="nav-icon">👆</span> Тапалка</button>
                 <button class="nav-btn" data-view="cases"><span class="nav-icon">🎁</span> Кейсы</button>
                 <button class="nav-btn" data-view="upgrader"><span class="nav-icon">⚡</span> Апгрейдер</button>
                 <button class="nav-btn" data-view="craft"><span class="nav-icon">⚒️</span> Крафт</button>
-                
+
                 <div class="nav-section-title">Экономика</div>
                 <button class="nav-btn" data-view="market"><span class="nav-icon">🏪</span> Рынок</button>
                 <button class="nav-btn" data-view="inventory"><span class="nav-icon">🎒</span> Инвентарь</button>
                 <button class="nav-btn" data-view="shop"><span class="nav-icon">🌙</span> Обменник</button>
-                
+
                 <div class="nav-section-title">Сообщество</div>
                 <button class="nav-btn" data-view="leaderboard"><span class="nav-icon">🏆</span> Лидеры</button>
                 <button class="nav-btn" data-view="friends"><span class="nav-icon">👥</span> Друзья</button>
                 <button class="nav-btn" data-view="chat"><span class="nav-icon">💬</span> Чат</button>
                 <button class="nav-btn" data-view="support"><span class="nav-icon">🎧</span> Поддержка</button>
-                
+
                 <div class="nav-section-title">Аккаунт</div>
                 <button class="nav-btn" data-view="settings"><span class="nav-icon">⚙️</span> Настройки</button>
                 <button class="nav-btn" data-view="admin" id="navAdmin" style="display:none"><span class="nav-icon">👑</span> Админка</button>
@@ -878,7 +937,7 @@
 
             <!-- Рабочая область -->
             <main class="content-area">
-                
+
                 <!-- ЭКРАН: ТАПАЛКА -->
                 <section class="view active" id="view-tap">
                     <div class="card tap-area">
@@ -927,6 +986,11 @@
                                     <div id="targetSlotContent" style="color:var(--color-text-dark);font-weight:800">Выбрать</div>
                                 </div>
                             </div>
+                            <div class="upg-info-grid">
+                                <div class="upg-info"><span>ШАНС ПОБЕДЫ</span><strong id="upgChanceStat">50%</strong></div>
+                                <div class="upg-info"><span>ЦЕНА ЦЕЛИ</span><strong id="upgTargetPrice">—</strong></div>
+                                <div class="upg-info"><span>ПРИБЫЛЬ</span><strong id="upgProfit">—</strong></div>
+                            </div>
                             <div class="upg-chances" id="upgChances">
                                 <button class="chance-btn" data-chance="10">10%</button>
                                 <button class="chance-btn" data-chance="30">30%</button>
@@ -934,7 +998,8 @@
                                 <button class="chance-btn" data-chance="70">70%</button>
                                 <button class="chance-btn" data-chance="90">90%</button>
                             </div>
-                            <button class="btn-primary" id="upgradeBtn" disabled style="max-width:400px">УЛУЧШИТЬ</button>
+                            <button class="btn-primary" id="upgradeBtn" disabled style="max-width:400px">⚡ ЗАПУСТИТЬ АПГРЕЙД</button>
+                            <div class="upg-history"><h3 style="font-size:14px;color:#aaa;margin-bottom:8px">ПОСЛЕДНИЕ АПГРЕЙДЫ</h3><div id="upgHistory"><div style="color:#666;font-size:12px">История появится после первой попытки.</div></div></div>
                         </div>
                     </div>
                 </section>
@@ -1043,7 +1108,15 @@
                 <section class="view" id="view-settings">
                     <div class="card">
                         <h2 style="margin-bottom:20px;color:var(--color-gold)">⚙️ НАСТРОЙКИ</h2>
-                        
+
+                        <h3 style="color:white;margin:15px 0 10px;font-size:16px">🎵 Музыка</h3>
+                        <div class="settings-panel">
+                            <label class="settings-toggle"><span>Фоновая музыка</span><input type="checkbox" id="settingsMusicToggle"></label>
+                            <label style="display:block;margin-top:18px;color:var(--color-text-muted)">Громкость
+                                <input type="range" id="settingsMusicVolume" min="0" max="100" value="35" style="display:block;width:100%;margin-top:12px;accent-color:var(--color-gold)">
+                            </label>
+                        </div>
+
                         <h3 style="color:white;margin:15px 0 10px;font-size:16px">📸 Аватарка (Эмодзи или Своя)</h3>
                         <div id="avatarPicker" style="display:grid; grid-template-columns:repeat(6, 1fr); gap:10px; margin-bottom:15px;"></div>
                         <p style="font-size:12px;color:var(--color-text-muted);margin-bottom:10px">Или загрузите свою картинку (Base64):</p>
@@ -1066,19 +1139,11 @@
                 <section class="view" id="view-admin">
                     <div class="card">
                         <h2 style="margin-bottom:20px;color:var(--color-gold)">⚙️ НАСТРОЙКИ САЙТА</h2>
-                        
-                        <h3 style="color:white;margin:15px 0 10px">📢 Объявление</h3>
-                        <input type="text" id="admAnn" class="form-input" placeholder="Текст объявления (пусто = скрыть)">
-                        <button class="btn-primary" id="admAnnBtn" style="margin-bottom:20px">СОХРАНИТЬ</button>
-                        
+
                         <h3 style="color:white;margin:15px 0 10px">🖼 Картинка загрузки (Base64)</h3>
                         <input type="file" id="admLoadImgFile" class="form-input" accept="image/*" style="padding:10px">
                         <button class="btn-primary" id="admLoadImgBtn" style="margin-bottom:20px">ЗАГРУЗИТЬ НА ЗАГРУЗКУ</button>
-                        
-                        <h3 style="color:white;margin:15px 0 10px">🖼 Реклама (Картинка или Видео)</h3>
-                        <input type="file" id="admAdFile" class="form-input" accept="image/*,video/*" style="padding:10px">
-                        <button class="btn-primary" id="admAdBtn" style="margin-bottom:20px">ЗАГРУЗИТЬ РЕКЛАМУ</button>
-                        
+
                         <h3 style="color:white;margin:15px 0 10px">🛠 Тех. Перерыв</h3>
                         <input type="datetime-local" id="admMaintTime" class="form-input" style="color-scheme:dark">
                         <button class="btn-primary" id="admMaintBtn" style="margin-bottom:20px;background:#2a2a34">ВКЛЮЧИТЬ ТЕХ. ПЕРЕРЫВ</button>
@@ -1197,14 +1262,14 @@
     <div class="toast" id="toast"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
+
     <script>
         // ==========================================================================
         // 1. КОНФИГУРАЦИЯ SUPABASE
         // ==========================================================================
         const SUPABASE_URL = 'https://fsxputemwveouteusdsy.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_srJqOHjNtODKifwwL3j7Vg_7-ynR2L3';
-        
+
         const HEADERS = {
             'apikey': SUPABASE_KEY,
             'Authorization': 'Bearer ' + SUPABASE_KEY,
@@ -1223,7 +1288,18 @@
         let maintenanceInterval = null;
         let upgraderState = { betItem: null, targetItem: null, chance: 50, isRolling: false };
         let isCaseRolling = false;
-        let chatHistory = []; 
+        let chatHistory = [];
+
+        // Администратор определяется только подтверждённым адресом аккаунта.
+        const DEVELOPER_EMAIL = 'stepanzvyagin14@gmail.com';
+        function normalizeEmail(value) { return String(value || '').trim().toLowerCase(); }
+        function isDeveloper(user = currentUser) { return !!user && normalizeEmail(user.email) === DEVELOPER_EMAIL; }
+        function applyAccountRole(user) {
+            if (!user) return user;
+            // Не доверяем сохранённой роли admin: роль разработчика привязана к email.
+            user.role = isDeveloper(user) ? 'admin' : (user.role === 'banned' ? 'banned' : 'user');
+            return user;
+        }
 
         // Музыка
         const bgMusic = document.getElementById('bgMusic');
@@ -1233,37 +1309,30 @@
         const $ = id => document.getElementById(id);
 
         // ==========================================================================
-        // 2. МУЗЫКА
+        // 2. МУЗЫКА — управление только из настроек
         // ==========================================================================
         function togglePlay() {
-            if (bgMusic.paused) {
-                bgMusic.play();
-                playPauseBtn.textContent = '⏸';
-                playPauseBtn.style.background = 'var(--color-green)';
-            } else {
-                bgMusic.pause();
-                playPauseBtn.textContent = '▶';
-                playPauseBtn.style.background = 'linear-gradient(135deg, var(--color-gold), var(--color-gold-hover))';
-            }
+            if (!bgMusic) return;
+            if (bgMusic.paused) bgMusic.play().catch(() => showToast('Нажмите переключатель, чтобы разрешить музыку'));
+            else bgMusic.pause();
         }
-
-        function toggleLoop() {
-            bgMusic.loop = !bgMusic.loop;
-            const btn = document.getElementById('loopBtn');
-            if (bgMusic.loop) {
-                btn.classList.add('active');
-                btn.style.background = 'var(--color-gold)';
-                btn.style.color = '#1a1a1a';
-            } else {
-                btn.classList.remove('active');
-                btn.style.background = 'var(--color-blue)';
-                btn.style.color = '#fff';
-            }
+        function toggleLoop() { if (bgMusic) bgMusic.loop = !bgMusic.loop; }
+        function changeVolume(slider) { if (bgMusic) bgMusic.volume = Number(slider.value); }
+        function initMusicSettings() {
+            const toggle = $('settingsMusicToggle');
+            const volume = $('settingsMusicVolume');
+            if (!bgMusic || !toggle || !volume || toggle.dataset.ready) return;
+            toggle.dataset.ready = '1';
+            bgMusic.volume = Number(volume.value) / 100;
+            toggle.checked = false;
+            toggle.addEventListener('change', async () => {
+                if (!toggle.checked) { bgMusic.pause(); return; }
+                try { await bgMusic.play(); }
+                catch (error) { toggle.checked = false; showToast('Нажмите переключатель ещё раз, чтобы включить музыку'); }
+            });
+            volume.addEventListener('input', () => { bgMusic.volume = Number(volume.value) / 100; });
         }
-
-        function changeVolume(slider) {
-            bgMusic.volume = slider.value;
-        }
+        initMusicSettings();
 
         // ==========================================================================
         // 3. МАТЕРНЫЙ ФИЛЬТР (Анти-обход)
@@ -1323,7 +1392,7 @@
         // ==========================================================================
         // Для безопасности паролей
         function hashPassword(password) {
-            return btoa(encodeURIComponent(password)); 
+            return btoa(encodeURIComponent(password));
         }
 
         // ==========================================================================
@@ -1367,7 +1436,7 @@
         async function loadGameData() {
             try {
                 const configs = await dbRequest('/config?select=*') || [];
-                
+
                 // Загрузка предметов
                 let itemsConfig = configs.find(c => c.key === 'items_data');
                 if (!itemsConfig || !itemsConfig.value || itemsConfig.value === '[]') {
@@ -1376,7 +1445,7 @@
                 } else {
                     gameItems = JSON.parse(itemsConfig.value);
                 }
-                
+
                 // Загрузка кейсов
                 let casesConfig = configs.find(c => c.key === 'cases_data');
                 if (!casesConfig || !casesConfig.value || casesConfig.value === '[]') {
@@ -1400,13 +1469,12 @@
                 }
 
                 // Инициализация UI
-                loadAd(); 
-                renderCases(); 
-                renderMarket(); 
-                updateUpgraderUI(); 
-                renderCraft(); 
-                loadLeaderboard(); 
-                loadChat(); 
+                renderCases();
+                renderMarket();
+                updateUpgraderUI();
+                renderCraft();
+                loadLeaderboard();
+                loadChat();
                 loadFriends();
                 renderAvatarPicker();
 
@@ -1418,7 +1486,6 @@
                     $('loadingScreen').classList.add('hidden');
                     if (currentUser) {
                         $('app').classList.add('active');
-                        $('musicPlayer').classList.remove('hidden');
                     } else {
                         $('authScreen').classList.remove('hidden');
                     }
@@ -1434,7 +1501,7 @@
             $('shopOfflineValue').textContent = (currentUser.offline_coins || 0).toLocaleString();
             $('offlineBalance').style.display = 'flex';
 
-            const isAdmin = currentUser.username.toLowerCase() === 'baconsigma67656' || currentUser.role === 'admin';
+            const isAdmin = isDeveloper(currentUser);
             $('navAdmin').style.display = isAdmin ? 'flex' : 'none';
             $('navAdminMob').style.display = isAdmin ? 'flex' : 'none';
         }
@@ -1459,20 +1526,20 @@
         $('regUser').addEventListener('input', async (e) => {
             const val = e.target.value.trim();
             const hint = $('regUserHint');
-            
+
             if (val.length < 3) {
                 e.target.className = 'form-input';
                 hint.textContent = '';
                 return;
             }
-            
+
             if (checkNicknameBadWords(val)) {
                 e.target.className = 'form-input invalid';
                 hint.style.color = 'var(--color-red)';
                 hint.textContent = 'Ник содержит запрещенные слова';
                 return;
             }
-            
+
             try {
                 const existing = await dbRequest(`/players?username=ilike.${encodeURIComponent(val)}&select=id`);
                 if (existing && existing.length > 0) {
@@ -1491,43 +1558,43 @@
             const u = $('loginUser').value.trim();
             const p = $('loginPass').value.trim();
             if (!u || !p) return showToast('Заполни поля');
-            
+
             try {
-                const data = await dbRequest(`/players?username=ilike.${encodeURIComponent(u)}&select=*`);
+                let data = await dbRequest(`/players?username=ilike.${encodeURIComponent(u)}&select=*`);
+                if (!data || !data.length) data = await dbRequest(`/players?email=ilike.${encodeURIComponent(normalizeEmail(u))}&select=*`);
                 if (data && data.length > 0) {
-                    const usr = data[0];
+                    const usr = applyAccountRole(data[0]);
                     if (usr.role === 'banned') return showToast('Вы забанены!');
-                    
+
                     const storedPw = (usr.password || '').trim();
                     const hashedInput = hashPassword(p);
-                    
+
                     if (storedPw === hashedInput || storedPw === p) {
                         const now = Date.now();
                         const lastSeen = usr.last_seen || now;
                         const diffMins = Math.floor((now - lastSeen) / 60000);
                         let offlineGain = 0;
-                        
+
                         if (diffMins > 0) {
                             offlineGain = diffMins * 5;
                             usr.offline_coins = (usr.offline_coins || 0) + offlineGain;
                         }
-                        
+
                         await dbRequest(`/players?id=eq.${usr.id}`, {
                             method: 'PATCH',
                             body: JSON.stringify({ last_seen: now, offline_coins: usr.offline_coins })
                         });
-                        
-                        currentUser = usr;
+
+                        currentUser = applyAccountRole(usr);
                         userInventory = currentUser.inventory || {};
                         localStorage.setItem('hu_token', currentUser.token);
-                        
+
                         $('loadingScreen').classList.remove('hidden');
                         setTimeout(() => {
                             $('loadingScreen').classList.add('hidden');
                             $('authScreen').classList.add('hidden');
                             $('app').classList.add('active');
-                            $('musicPlayer').classList.remove('hidden');
-                            updateBalanceUI();
+                                updateBalanceUI();
                             loadGameData();
                             renderInventory();
                         }, 500);
@@ -1546,30 +1613,34 @@
         };
 
         $('regBtn').onclick = async () => {
+            const email = normalizeEmail($('regEmail').value);
             const u = $('regUser').value.trim();
             const p = $('regPass').value.trim();
             const p2 = $('regPass2').value.trim();
-            
+
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showToast('Укажи корректный email');
             if (u.length < 3) return showToast('Логин от 3 символов');
             if (checkNicknameBadWords(u)) return showToast('Ник содержит мат');
             if (p.length < 6) return showToast('Пароль от 6 символов');
             if (p !== p2) return showToast('Пароли не совпадают');
-            
+
             try {
                 const existing = await dbRequest(`/players?username=ilike.${encodeURIComponent(u)}&select=id`);
                 if (existing && existing.length > 0) return showToast('Это имя занято');
-                
+                const emailExisting = await dbRequest(`/players?email=ilike.${encodeURIComponent(email)}&select=id`);
+                if (emailExisting && emailExisting.length > 0) return showToast('Этот email уже зарегистрирован');
+
                 const hashedPass = hashPassword(p);
                 const token = 'token_' + Date.now() + Math.floor(Math.random() * 1000);
-                
+
                 const newUser = {
-                    username: u, password: hashedPass, token: token,
+                    username: u, email: email, password: hashedPass, token: token,
                     coins: 1000, offline_coins: 0, inventory: {},
-                    role: 'user', last_seen: Date.now(), avatar: '🐺'
+                    role: email === DEVELOPER_EMAIL ? 'admin' : 'user', last_seen: Date.now(), avatar: '🐺'
                 };
-                
+
                 const result = await dbRequest('/players', { method: 'POST', body: JSON.stringify(newUser) });
-                
+
                 await dbRequest('/chat', {
                     method: 'POST',
                     body: JSON.stringify({
@@ -1578,8 +1649,8 @@
                         created_at: Date.now()
                     })
                 });
-                
-                currentUser = result[0];
+
+                currentUser = applyAccountRole(result[0]);
                 userInventory = {};
                 localStorage.setItem('hu_token', token);
                 startGame();
@@ -1602,7 +1673,6 @@
                 $('loadingScreen').classList.add('hidden');
                 $('authScreen').classList.add('hidden');
                 $('app').classList.add('active');
-                $('musicPlayer').classList.remove('hidden');
                 updateBalanceUI();
                 loadGameData();
                 renderInventory();
@@ -1620,24 +1690,24 @@
                             $('authScreen').classList.remove('hidden');
                             return showToast('Вы забанены!');
                         }
-                        
-                        currentUser = d[0];
+
+                        currentUser = applyAccountRole(d[0]);
                         userInventory = currentUser.inventory || {};
-                        
+
                         const now = Date.now();
                         const gap = now - (currentUser.last_seen || now);
                         let gain = 0;
-                        
+
                         if (gap > 60000) {
                             gain = Math.floor(gap / 60000) * 5;
                             currentUser.offline_coins = (currentUser.offline_coins || 0) + gain;
                         }
-                        
+
                         await dbRequest(`/players?id=eq.${currentUser.id}`, {
                             method: 'PATCH',
                             body: JSON.stringify({ offline_coins: currentUser.offline_coins, last_seen: now })
                         });
-                        
+
                         startGame();
                         if (gain > 0) {
                             $('offlineGainAmount').textContent = `+${gain} 🌙`;
@@ -1656,13 +1726,14 @@
         // 9. НАВИГАЦИЯ
         // ==========================================================================
         function showView(viewId) {
+            if (viewId === 'admin' && !isDeveloper()) { showToast('Админка доступна только разработчику'); viewId = 'tap'; }
             document.querySelectorAll('.nav-btn, .bnav-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll(`[data-view="${viewId}"]`).forEach(b => b.classList.add('active'));
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            
+
             const target = $('view-' + viewId);
             if (target) target.classList.add('active');
-            
+
             if (viewId === 'market') renderMarket();
             if (viewId === 'inventory') renderInventory();
             if (viewId === 'leaderboard') loadLeaderboard();
@@ -1705,24 +1776,24 @@
         window.openCase = async (id) => {
             const c = gameCases.find(x => x.id === id);
             if (!c || currentUser.coins < c.price) return showToast('Мало монет');
-            
+
             currentUser.coins -= c.price;
             updateBalanceUI();
             isCaseRolling = true;
-            
+
             $('caseModalTitle').textContent = c.name;
             $('caseResult').textContent = '';
             $('modalCaseOpen').classList.add('active');
-            
+
             const track = $('rouletteTrack');
             track.style.transition = 'none';
             track.style.transform = 'translateX(0)';
-            
+
             let weights = c.w || {common:80, uncommon:20, rare:0, epic:0, legendary:0};
             let totalWeight = Object.values(weights).reduce((a,b)=>a+b, 0);
             let randomNum = Math.random() * totalWeight;
             let selectedRarity = 'common';
-            
+
             for (let [rarity, weight] of Object.entries(weights)) {
                 if (weight > 0) {
                     if (randomNum < weight) {
@@ -1732,7 +1803,7 @@
                     randomNum -= weight;
                 }
             }
-            
+
             let pool = gameItems.filter(item => item.r === selectedRarity);
             if (pool.length === 0) pool = gameItems;
             const winItem = pool[Math.floor(Math.random() * pool.length)];
@@ -1751,13 +1822,15 @@
             track.innerHTML = html;
 
             setTimeout(() => {
-                const scroll = (35 * 135) - (track.parentElement.offsetWidth / 2) + 60;
+                const winningCard = track.children[35];
+                const scroll = winningCard.offsetLeft + winningCard.offsetWidth / 2 - track.parentElement.offsetWidth / 2;
                 track.style.transition = 'transform 4.5s cubic-bezier(0.1, 0.8, 0.1, 1)';
                 track.style.transform = `translateX(-${scroll}px)`;
-                
+
                 setTimeout(async () => {
                     userInventory[winItem.n] = (userInventory[winItem.n] || 0) + 1;
                     $('caseResult').textContent = `Выпал: ${winItem.n}`;
+                    if (track.children[35]) { track.children[35].style.borderColor = '#ffd000'; track.children[35].style.boxShadow = '0 0 28px rgba(255,208,0,.35)'; }
                     renderInventory();
                     await dbRequest(`/players?id=eq.${currentUser.id}`, {
                         method: 'PATCH',
@@ -1776,7 +1849,7 @@
             if (!keys.length) {
                 return $('craftGrid').innerHTML = '<div style="color:#555;text-align:center;padding:20px">Нужно 5 одинаковых предметов</div>';
             }
-            
+
             $('craftGrid').innerHTML = keys.map(n => {
                 const it = gameItems.find(x => x.n === n);
                 return `
@@ -1792,23 +1865,23 @@
 
         window.craftItem = async (n) => {
             if (userInventory[n] < 5) return;
-            
+
             userInventory[n] -= 5;
             if (userInventory[n] <= 0) delete userInventory[n];
-            
+
             const tiers = ['common','uncommon','rare','epic','legendary'];
             const it = gameItems.find(x => x.n === n);
             const currIdx = tiers.indexOf(it.r);
             const nextTier = tiers[Math.min(tiers.length-1, currIdx+1)];
             const pool = gameItems.filter(x => x.r === nextTier);
             const res = pool[Math.floor(Math.random()*pool.length)] || it;
-            
+
             userInventory[res.n] = (userInventory[res.n]||0)+1;
-            
+
             updateBalanceUI();
             renderInventory();
             renderCraft();
-            
+
             await dbRequest(`/players?id=eq.${currentUser.id}`, {
                 method: 'PATCH',
                 body: JSON.stringify({ inventory: userInventory })
@@ -1824,7 +1897,7 @@
             if (!keys.length) {
                 return $('invGrid').innerHTML = '<div style="color:#555;text-align:center;padding:30px">Пусто</div>';
             }
-            
+
             $('invGrid').innerHTML = keys.map(n => {
                 const it = gameItems.find(x => x.n === n) || {r:'common', i:'📦'};
                 return `
@@ -1842,11 +1915,11 @@
             if (userInventory[n] < 1) return;
             userInventory[n]--;
             if (userInventory[n] <= 0) delete userInventory[n];
-            
+
             currentUser.coins += 50;
             updateBalanceUI();
             renderInventory();
-            
+
             await dbRequest(`/players?id=eq.${currentUser.id}`, {
                 method: 'PATCH',
                 body: JSON.stringify({ coins: currentUser.coins, inventory: userInventory })
@@ -1875,13 +1948,13 @@
 
         window.buyMkt = async (n, p) => {
             if (currentUser.coins < p) return showToast('Мало монет');
-            
+
             currentUser.coins -= p;
             userInventory[n] = (userInventory[n]||0)+1;
-            
+
             updateBalanceUI();
             renderInventory();
-            
+
             await dbRequest(`/players?id=eq.${currentUser.id}`, {
                 method: 'PATCH',
                 body: JSON.stringify({ coins: currentUser.coins, inventory: userInventory })
@@ -1893,11 +1966,11 @@
             t.onclick = () => {
                 document.querySelectorAll('.tab[data-mtab]').forEach(x => x.classList.remove('active'));
                 t.classList.add('active');
-                
+
                 $('mkt-buy').style.display = t.dataset.mtab === 'buy' ? 'block' : 'none';
                 $('mkt-auction').style.display = t.dataset.mtab === 'auction' ? 'block' : 'none';
                 $('mkt-history').style.display = t.dataset.mtab === 'history' ? 'block' : 'none';
-                
+
                 if(t.dataset.mtab === 'auction') loadAuctions();
             };
         });
@@ -1905,7 +1978,7 @@
         async function loadAuctions() {
             const d = await dbRequest('/auctions?status=eq.active&select=*');
             if(!d.length) return $('auctionList').innerHTML = '<div style="color:#555;text-align:center">Нет лотов</div>';
-            
+
             $('auctionList').innerHTML = d.map(a => `
                 <div class="auction-card">
                     <div style="font-size:24px">📦</div>
@@ -1923,23 +1996,23 @@
 
         window.buyAuction = async (id, name, price, seller) => {
             if(currentUser.coins < price) return showToast('Мало монет');
-            
+
             currentUser.coins -= price;
             userInventory[name] = (userInventory[name]||0)+1;
-            
+
             updateBalanceUI();
             renderInventory();
-            
+
             await dbRequest(`/auctions?id=eq.${id}`, {
                 method: 'PATCH',
                 body: JSON.stringify({ status: 'sold', buyer: currentUser.username })
             });
-            
+
             await dbRequest(`/players?id=eq.${currentUser.id}`, {
                 method: 'PATCH',
                 body: JSON.stringify({ coins: currentUser.coins, inventory: userInventory })
             });
-            
+
             const s = await dbRequest(`/players?username=eq.${encodeURIComponent(seller)}&select=*`);
             if(s.length) {
                 await dbRequest(`/players?id=eq.${s[0].id}`, {
@@ -1954,7 +2027,7 @@
         window.openAuctionModal = () => {
             const keys = Object.keys(userInventory).filter(k => userInventory[k] > 0);
             if(!keys.length) return showToast('Инвентарь пуст');
-            
+
             $('aucItemSelect').innerHTML = keys.map(k => `<option value="${k}">${k}</option>`).join('');
             $('modalAuction').classList.add('active');
         };
@@ -1962,18 +2035,18 @@
         window.submitAuction = async () => {
             const n = $('aucItemSelect').value;
             const p = parseInt($('aucPriceInput').value);
-            
+
             if(!n || isNaN(p)) return showToast('Введи цену');
-            
+
             userInventory[n]--;
             if(userInventory[n]<=0) delete userInventory[n];
             renderInventory();
-            
+
             await dbRequest(`/players?id=eq.${currentUser.id}`, {
                 method: 'PATCH',
                 body: JSON.stringify({ inventory: userInventory })
             });
-            
+
             await dbRequest('/auctions', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -1985,7 +2058,7 @@
                     expires_at: Date.now() + 120000
                 })
             });
-            
+
             closeModals();
             showToast('Лот выставлен');
             loadAuctions();
@@ -1996,13 +2069,13 @@
             try {
                 const now = Date.now();
                 const exp = await dbRequest('/auctions?status=eq.active&expires_at=lt.' + now);
-                
+
                 for(let a of exp) {
                     await dbRequest('/auctions?id=eq.'+a.id, {
                         method: 'PATCH',
                         body: JSON.stringify({ status: 'sold', buyer: '🤖 Бот' })
                     });
-                    
+
                     const s = await dbRequest('/players?username=eq.' + encodeURIComponent(a.seller));
                     if(s.length) {
                         await dbRequest('/players?id=eq.'+s[0].id, {
@@ -2010,7 +2083,7 @@
                             body: JSON.stringify({ coins: s[0].coins + a.price })
                         });
                     }
-                    
+
                     if(s.length && s[0].id === currentUser.id) {
                         currentUser.coins += a.price;
                         updateBalanceUI();
@@ -2026,9 +2099,9 @@
         async function loadLeaderboard(search = '') {
             let url = '/players?role=neq.banned&select=username,coins,total_taps&order=coins.desc&limit=50';
             if(search) url = `/players?role=neq.banned&username=ilike.*${encodeURIComponent(search)}*&select=username,coins,total_taps`;
-            
+
             const d = await dbRequest(url);
-            
+
             $('leaderboardList').innerHTML = d.map((p, i) => `
                 <div class="lb-item" onclick="viewProfile('${p.username}')">
                     <div class="lb-rank">${search?'🔍':(i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1)}</div>
@@ -2043,12 +2116,12 @@
         window.viewProfile = async (username) => {
             const d = await dbRequest(`/players?username=eq.${encodeURIComponent(username)}&select=*`);
             if(!d.length) return showToast('Игрок не найден');
-            
+
             const p = d[0];
             $('profModalName').textContent = p.username;
             $('profModalCoins').textContent = p.coins.toLocaleString();
             $('profModalTaps').textContent = p.total_taps || 0;
-            
+
             const invKeys = Object.keys(p.inventory || {}).filter(k => p.inventory[k] > 0);
             if(!invKeys.length) {
                 $('profModalInv').innerHTML = '<div style="color:#555;grid-column:1/-1;text-align:center">Пусто</div>';
@@ -2065,10 +2138,10 @@
                     `;
                 }).join('');
             }
-            
+
             // Настраиваем кнопку жалобы
             $('reportUserBtn').onclick = () => reportUser(username);
-            
+
             $('modalProfile').classList.add('active');
         };
 
@@ -2077,7 +2150,7 @@
             if(reportedUser === currentUser.username) return showToast('Нельзя пожаловаться на себя');
             const reason = prompt('Причина жалобы (например: оскорбления, читы):');
             if(!reason) return;
-            
+
             try {
                 await dbRequest('/reports', {
                     method: 'POST',
@@ -2101,11 +2174,11 @@
             t.onclick = () => {
                 document.querySelectorAll('.tab[data-ftab]').forEach(x => x.classList.remove('active'));
                 t.classList.add('active');
-                
+
                 $('ftab-list').style.display = t.dataset.ftab === 'list' ? 'block' : 'none';
                 $('ftab-requests').style.display = t.dataset.ftab === 'requests' ? 'block' : 'none';
                 $('ftab-search').style.display = t.dataset.ftab === 'search' ? 'block' : 'none';
-                
+
                 if(t.dataset.ftab === 'list') loadFriends();
                 if(t.dataset.ftab === 'requests') loadRequests();
             };
@@ -2115,7 +2188,7 @@
             if(!currentUser) return;
             const d = await dbRequest(`/friends?or=(and(sender.eq.${currentUser.username},status.eq.accepted),and(receiver.eq.${currentUser.username},status.eq.accepted))`);
             if(!d.length) return $('friendsList').innerHTML = '<div style="color:#555">У вас пока нет друзей</div>';
-            
+
             $('friendsList').innerHTML = d.map(f => {
                 const friendName = f.sender === currentUser.username ? f.receiver : f.sender;
                 return `
@@ -2137,7 +2210,7 @@
             if(!currentUser) return;
             const d = await dbRequest(`/friends?receiver=eq.${currentUser.username}&status=eq.pending`);
             if(!d.length) return $('requestsList').innerHTML = '<div style="color:#555">Нет входящих заявок</div>';
-            
+
             $('requestsList').innerHTML = d.map(f => `
                 <div class="friend-card">
                     <div style="display:flex;align-items:center;gap:15px">
@@ -2170,10 +2243,10 @@
             const q = $('friendSearchInput').value.trim();
             if(!q) return showToast('Введите ник');
             if(q.toLowerCase() === currentUser.username.toLowerCase()) return showToast('Это ваш ник');
-            
+
             const d = await dbRequest(`/players?username=ilike.${encodeURIComponent(q)}&select=username`);
             if(!d.length) return $('searchResults').innerHTML = '<div style="color:#555">Игрок не найден</div>';
-            
+
             $('searchResults').innerHTML = d.map(p => `
                 <div class="friend-card">
                     <div style="display:flex;align-items:center;gap:15px">
@@ -2188,7 +2261,7 @@
         window.sendFriendRequest = async (receiver) => {
             const ex = await dbRequest(`/friends?or=(and(sender.eq.${currentUser.username},receiver.eq.${receiver}),and(sender.eq.${receiver},receiver.eq.${currentUser.username}))`);
             if(ex.length) return showToast('Заявка уже отправлена или вы уже друзья');
-            
+
             await dbRequest('/friends', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -2210,27 +2283,27 @@
                 const msgs = await dbRequest('/chat?select=*&order=created_at.asc&limit=50');
                 const box = $('chatMessages');
                 if(!box) return;
-                
+
                 box.innerHTML = msgs.map(m => {
                     const filtered = filterText(m.message);
                     let roleColor = '#fff';
                     let username = m.username;
-                    
+
                     if(m.role === 'admin') roleColor = 'var(--color-red)';
                     if(m.role === 'mod') roleColor = 'var(--color-blue)';
                     if(m.role === 'system') {
                         roleColor = 'var(--color-gold)';
                         username = '⚙️ ' + username;
                     }
-                    
+
                     const isSystem = m.role === 'system';
                     const systemStyle = isSystem ? 'text-align:center;font-style:italic;background:rgba(240,185,11,0.1);padding:5px;border-radius:5px' : '';
-                    
+
                     return `<div style="font-size:14px;${systemStyle}">
                         <span style="font-weight:900;color:${roleColor}">${username}</span>${isSystem ? ' ' : ': '}${filtered}
                     </div>`;
                 }).join('');
-                
+
                 box.scrollTop = box.scrollHeight;
             } catch(e) {}
         }
@@ -2238,9 +2311,9 @@
         $('chatSendBtn').onclick = async () => {
             const t = $('chatInput').value.trim();
             if(!t) return;
-            
+
             const now = Date.now();
-            const isDev = currentUser.username.toLowerCase() === 'baconsigma67656' || currentUser.role === 'admin';
+            const isDev = isDeveloper(currentUser);
 
             if (!isDev && currentUser.muted_until && currentUser.muted_until > now) {
                 const leftMins = Math.ceil((currentUser.muted_until - now) / 60000);
@@ -2250,12 +2323,12 @@
             if (!isDev && checkNicknameBadWords(t)) {
                 currentUser.bad_words_count = (currentUser.bad_words_count || 0) + 1;
                 let muteTime = 5;
-                
+
                 if (currentUser.bad_words_count === 2) muteTime = 10;
                 else if (currentUser.bad_words_count >= 3) muteTime = 60;
-                
+
                 currentUser.muted_until = now + (muteTime * 60000);
-                
+
                 await dbRequest(`/players?id=eq.${currentUser.id}`, {
                     method: 'PATCH',
                     body: JSON.stringify({
@@ -2263,18 +2336,18 @@
                         bad_words_count: currentUser.bad_words_count
                     })
                 });
-                
+
                 return showToast(`Мат запрещен! Мут на ${muteTime} мин.`);
             }
 
             chatHistory.push({ text: t, time: now });
             if (chatHistory.length > 3) chatHistory.shift();
-            
+
             if (!isDev && chatHistory.length === 3) {
-                if (chatHistory[0].text === chatHistory[1].text && 
-                    chatHistory[1].text === chatHistory[2].text && 
+                if (chatHistory[0].text === chatHistory[1].text &&
+                    chatHistory[1].text === chatHistory[2].text &&
                     (chatHistory[2].time - chatHistory[0].time) < 60000) {
-                    
+
                     currentUser.muted_until = now + (15 * 60000);
                     await dbRequest(`/players?id=eq.${currentUser.id}`, {
                         method: 'PATCH',
@@ -2286,7 +2359,7 @@
             }
 
             $('chatInput').value = '';
-            
+
             await dbRequest('/chat', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -2335,14 +2408,14 @@
         $('uploadAvatarBtn').onclick = () => {
             const file = $('avatarFile').files[0];
             if(!file) return showToast('Выберите картинку');
-            
+
             // Защита от слишком больших файлов (Base64)
-            if(file.size > 150000) return showToast('Картинка слишком большая (макс 150КБ)');
-            
+            if (!validateImageFile(file)) return;
+
             readFileAsBase64(file, async (base64) => {
                 // Простая проверка на "плохие" фото (если файл слишком большой или имеет странный формат)
                 if(!base64.startsWith('data:image/')) return showToast('Неверный формат');
-                
+
                 currentUser.avatar = base64;
                 await dbRequest(`/players?id=eq.${currentUser.id}`, {
                     method: 'PATCH',
@@ -2355,19 +2428,19 @@
 
         $('setChangeNickBtn').onclick = async () => {
             if(currentUser.nick_changed) return showToast('Вы уже меняли ник!');
-            
+
             const newNick = $('setNewNick').value.trim();
             if(newNick.length < 3) return showToast('Ник от 3 символов');
             if(checkNicknameBadWords(newNick)) return showToast('Ник содержит мат');
-            
+
             const ex = await dbRequest(`/players?username=ilike.${encodeURIComponent(newNick)}&select=id`);
             if(ex.length) return showToast('Ник занят');
-            
+
             await dbRequest(`/players?id=eq.${currentUser.id}`, {
                 method: 'PATCH',
                 body: JSON.stringify({ username: newNick, nick_changed: true })
             });
-            
+
             showToast('Ник успешно изменен! Перезайдите в игру.');
             setTimeout(() => location.reload(), 2000);
         };
@@ -2375,21 +2448,21 @@
         $('setChangePassBtn').onclick = async () => {
             const oldP = $('setOldPass').value.trim();
             const newP = $('setNewPass').value.trim();
-            
+
             if(!oldP || !newP) return showToast('Заполните поля');
             if(newP.length < 6) return showToast('Пароль от 6 символов');
-            
+
             const storedPw = (currentUser.password || '').trim();
             const hashedOld = hashPassword(oldP);
-            
+
             if(storedPw !== hashedOld && storedPw !== oldP) return showToast('Старый пароль неверный');
-            
+
             const newHash = hashPassword(newP);
             await dbRequest(`/players?id=eq.${currentUser.id}`, {
                 method: 'PATCH',
                 body: JSON.stringify({ password: newHash })
             });
-            
+
             showToast('Пароль изменен!');
             $('setOldPass').value = '';
             $('setNewPass').value = '';
@@ -2401,9 +2474,9 @@
         $('supportSendBtn').onclick = async () => {
             const msg = $('supportMsg').value.trim();
             if(!msg) return;
-            
+
             $('supportMsg').value = '';
-            
+
             await dbRequest('/support_tickets', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -2413,16 +2486,16 @@
                     status: 'open'
                 })
             });
-            
+
             showToast('Тикет отправлен!');
             loadMyTickets();
         };
 
         async function loadMyTickets() {
             if(!currentUser) return;
-            
+
             const d = await dbRequest(`/support_tickets?username=eq.${encodeURIComponent(currentUser.username)}&order=created_at.desc`);
-            
+
             $('supportHistory').innerHTML = d.map(t => `
                 <div style="background:#0b0b10;padding:15px;border-radius:12px;border:1px solid ${t.status==='open'?'var(--color-gold)':'#2a2a34'};margin-bottom:10px">
                     <div style="color:#888;font-size:11px;margin-bottom:5px">${new Date(t.created_at).toLocaleString()}</div>
@@ -2438,8 +2511,8 @@
         // 19. АДМИНКА
         // ==========================================================================
         async function loadAdminData() {
-            if(!currentUser || currentUser.role !== 'admin') return;
-            
+            if(!isDeveloper(currentUser)) { showView('tap'); return; }
+
             // Тикеты
             const d = await dbRequest('/support_tickets?status=eq.open&order=created_at.desc');
             $('adminTickets').innerHTML = d.map(t => `
@@ -2466,18 +2539,21 @@
         }
 
         window.closeTicket = async (id) => {
+            if (!isDeveloper()) return showToast('Нет прав разработчика');
             await dbRequest(`/support_tickets?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ status: 'closed' }) });
             loadAdminData();
             showToast('Тикет закрыт');
         };
 
         window.resolveReport = async (id) => {
+            if (!isDeveloper()) return showToast('Нет прав разработчика');
             await dbRequest(`/reports?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ status: 'closed' }) });
             loadAdminData();
             showToast('Жалоба закрыта');
         };
 
         window.banFromReport = async (username, reportId) => {
+            if (!isDeveloper()) return showToast('Нет прав разработчика');
             if(!confirm(`Забанить ${username}?`)) return;
             await dbRequest(`/players?username=eq.${encodeURIComponent(username)}`, { method: 'PATCH', body: JSON.stringify({ role: 'banned' }) });
             await dbRequest(`/reports?id=eq.${reportId}`, { method: 'PATCH', body: JSON.stringify({ status: 'closed' }) });
@@ -2486,15 +2562,16 @@
         };
 
         $('admMaintBtn').onclick = async () => {
+            if (!isDeveloper()) return showToast('Нет прав разработчика');
             const timeVal = $('admMaintTime').value;
             if(!timeVal) return showToast('Выберите время');
-            
+
             const timestamp = new Date(timeVal).getTime();
             if(timestamp < Date.now()) return showToast('Время уже прошло');
-            
+
             await saveConfig('maintenance', '1');
             await saveConfig('maintenance_time', timestamp.toString());
-            
+
             startMaintenanceTimer(timestamp);
             showToast('Тех. перерыв включен');
         };
@@ -2502,16 +2579,16 @@
         function startMaintenanceTimer(endTime) {
             if(maintenanceInterval) clearInterval(maintenanceInterval);
             maintenanceMode = true;
-            
-            const isAdmin = currentUser.role === 'admin' || currentUser.username.toLowerCase() === 'baconsigma67656';
+
+            const isAdmin = isDeveloper(currentUser);
             if (!isAdmin) {
                 $('maintOverlay').classList.add('active');
             }
-            
+
             maintenanceInterval = setInterval(() => {
                 const now = Date.now();
                 const left = endTime - now;
-                
+
                 if(left <= 0) {
                     clearInterval(maintenanceInterval);
                     maintenanceMode = false;
@@ -2519,13 +2596,13 @@
                     saveConfig('maintenance', '0');
                     return;
                 }
-                
+
                 const h = Math.floor(left / 3600000);
                 const m = Math.floor((left % 3600000) / 60000);
                 const s = Math.floor((left % 60000) / 1000);
-                
+
                 $('maintTimerOverlay').textContent = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-                
+
                 if (!isAdmin) {
                     $('tapBtn').disabled = true;
                 }
@@ -2533,14 +2610,47 @@
         }
 
         // ФАЙЛЫ
+        const MAX_IMAGE_SIZE = 32 * 1024 * 1024; // 32 MiB
+        ['avatarFile', 'admLoadImgFile', 'admImgFile'].forEach(id => {
+            const input = document.getElementById(id);
+            if (!input) return;
+            input.setAttribute('accept', 'image/*');
+            input.addEventListener('change', () => {
+                const file = input.files && input.files[0];
+                if (file && !validateImageFile(file)) input.value = '';
+            });
+        });
+
+        function validateImageFile(file) {
+            if (!file) { showToast('Выберите картинку'); return false; }
+            if (!file.type || !file.type.startsWith('image/')) {
+                showToast('Разрешены только файлы изображений');
+                return false;
+            }
+            if (file.size > MAX_IMAGE_SIZE) {
+                showToast('Картинка слишком большая. Максимум 32 МБ');
+                return false;
+            }
+            return true;
+        }
+
         function readFileAsBase64(file, callback) {
-            if(file.size > 2000000) return showToast('Файл слишком большой (макс 2МБ)');
+            if (!validateImageFile(file)) return;
             const reader = new FileReader();
-            reader.onload = (e) => callback(e.target.result);
+            reader.onerror = () => showToast('Не удалось прочитать файл');
+            reader.onload = (e) => {
+                const result = String(e.target.result || '');
+                if (!result.startsWith('data:image/')) {
+                    showToast('Неверный формат изображения');
+                    return;
+                }
+                callback(result);
+            };
             reader.readAsDataURL(file);
         }
 
         $('admLoadImgBtn').onclick = () => {
+            if (!isDeveloper()) return showToast('Нет прав разработчика');
             const file = $('admLoadImgFile').files[0];
             if(!file) return showToast('Выберите файл');
             readFileAsBase64(file, async (base64) => {
@@ -2550,16 +2660,8 @@
             });
         };
 
-        $('admAdBtn').onclick = () => {
-            const file = $('admAdFile').files[0];
-            if(!file) return showToast('Выберите файл');
-            readFileAsBase64(file, async (base64) => {
-                await dbRequest('/ads', { method: 'POST', body: JSON.stringify({ image_url: base64, created_at: Date.now() }) });
-                showToast('Реклама добавлена'); loadAd();
-            });
-        };
-
         $('admAddBtn').onclick = () => {
+            if (!isDeveloper()) return showToast('Нет прав разработчика');
             const name = $('admName').value, price = parseInt($('admPrice').value), rarity = $('admRarity').value, file = $('admImgFile').files[0];
             if(!name || isNaN(price) || !file) return showToast('Заполни все поля и выбери картинку');
             readFileAsBase64(file, async (base64) => {
@@ -2570,26 +2672,7 @@
             });
         };
 
-        // ==========================================================================
-        // 20. РЕКЛАМА
-        // ==========================================================================
-        async function loadAd() {
-            const container = $('ad-container');
-            if (!container) return;
-            try {
-                const ads = await dbRequest('/ads?select=*&order=created_at.desc&limit=1');
-                if (ads && ads.length) {
-                    const url = ads[0].image_url;
-                    if (url.startsWith('data:video')) {
-                        container.innerHTML = `<video src="${url}" autoplay loop muted style="width:100%; border-radius:12px; margin-bottom:15px;"></video>`;
-                    } else {
-                        container.innerHTML = `<img src="${url}" style="width:100%; border-radius:12px; margin-bottom:15px;">`;
-                    }
-                } else {
-                    container.innerHTML = '';
-                }
-            } catch(e) { container.innerHTML = ''; }
-        }
+        // Рекламный блок отключён: объявления больше не загружаются и не отображаются.
 
         // ==========================================================================
         // 21. ОЧИСТКА ЧАТА РАЗ В ЧАС
@@ -2638,6 +2721,165 @@
             await abuseFns[idx].f(t);
             showToast('Выполнено');
         };
+
+        // HOME UP: навигация, поиск разделов и игровой апгрейдер (только виртуальные предметы)
+        (function initPremiumNavigation(){
+            const search = $('navSearch');
+            if (search) search.addEventListener('input', () => {
+                const q = search.value.trim().toLocaleLowerCase('ru');
+                let visible = 0;
+                document.querySelectorAll('.sidebar .nav-btn').forEach(btn => {
+                    const match = !q || btn.textContent.toLocaleLowerCase('ru').includes(q);
+                    btn.style.display = match ? 'flex' : 'none';
+                    if (match) visible++;
+                });
+                document.querySelectorAll('.sidebar .nav-section-title').forEach(title => {
+                    let next = title.nextElementSibling;
+                    let any = false;
+                    while (next && !next.classList.contains('nav-section-title')) {
+                        if (next.classList.contains('nav-btn') && next.style.display !== 'none') any = true;
+                        next = next.nextElementSibling;
+                    }
+                    title.style.display = any ? '' : 'none';
+                });
+                const empty = $('navSearchEmpty');
+                if (empty) empty.style.display = visible ? 'none' : 'block';
+            });
+            const originalShowView = window.showView;
+            // showView is a normal function declaration; wrap is not required for routing.
+            document.querySelectorAll('.nav-btn,.bnav-btn').forEach(btn => btn.setAttribute('aria-label', btn.textContent.trim()));
+        })();
+
+        const upgraderHistory = [];
+        let upgraderPickMode = 'bet';
+        function upgradeItemValue(name) {
+            const item = gameItems.find(x => x.n === name);
+            return item ? Number(item.p || 0) : 0;
+        }
+        function upgradeItemMarkup(item, count) {
+            return `<img src="${item.i}" alt="" onerror="this.style.display='none'"><strong style="font-size:12px;line-height:1.35">${item.n}</strong><small style="color:var(--color-gold);margin-top:5px">${upgradeItemValue(item.n).toLocaleString()} 🪙${count ? ` · x${count}` : ''}</small>`;
+        }
+        function refreshUpgradeUI() {
+            const st = upgraderState;
+            const bet = st.betItem && gameItems.find(x => x.n === st.betItem);
+            const target = st.targetItem && gameItems.find(x => x.n === st.targetItem);
+            $('betSlotContent').innerHTML = bet ? upgradeItemMarkup(bet, userInventory[bet.n]) : '＋ Выбрать предмет';
+            $('targetSlotContent').innerHTML = target ? upgradeItemMarkup(target, 0) : '＋ Выбрать цель';
+            $('gaugePercent').textContent = `${st.chance}%`;
+            $('upgChanceStat').textContent = `${st.chance}%`;
+            $('gaugeFill').style.strokeDashoffset = String(628 - (628 * st.chance / 100));
+            $('upgTargetPrice').textContent = target ? `${upgradeItemValue(target.n).toLocaleString()} 🪙` : '—';
+            const profit = bet && target ? upgradeItemValue(target.n) - upgradeItemValue(bet.n) : null;
+            $('upgProfit').textContent = profit === null ? '—' : `${profit >= 0 ? '+' : ''}${profit.toLocaleString()} 🪙`;
+            $('upgradeBtn').disabled = !!st.isRolling || !bet || !target || bet.n === target.n || !(userInventory[bet.n] > 0) || upgradeItemValue(target.n) <= upgradeItemValue(bet.n);
+            document.querySelectorAll('[data-chance]').forEach(btn => {
+                const active = Number(btn.dataset.chance) === st.chance;
+                btn.classList.toggle('active', active);
+                btn.setAttribute('aria-pressed', String(active));
+            });
+        }
+        window.openBetModal = function() {
+            upgraderPickMode = 'bet';
+            const grid = $('modalSelectGrid');
+            const names = Object.keys(userInventory).filter(n => userInventory[n] > 0);
+            if (!names.length) { showToast('Инвентарь пуст — сначала получи предмет'); return; }
+            grid.innerHTML = names.map(name => {
+                const item = gameItems.find(x => x.n === name) || {n:name,i:'',p:0,r:'common'};
+                return `<div class="inv-item rarity-${item.r}" role="button" tabindex="0" data-upgrade-pick="${encodeURIComponent(name)}">${upgradeItemMarkup(item,userInventory[name])}</div>`;
+            }).join('');
+            $('modalSelectItem').classList.add('active');
+        };
+        window.openTargetModal = function() {
+            upgraderPickMode = 'target';
+            const grid = $('modalSelectGrid');
+            const betValue = upgraderState.betItem ? upgradeItemValue(upgraderState.betItem) : -1;
+            const options = gameItems.filter(item => upgradeItemValue(item.n) > betValue && item.n !== upgraderState.betItem);
+            if (!options.length) { showToast('Нет подходящей цели для апгрейда'); return; }
+            grid.innerHTML = options.map(item => `<div class="inv-item rarity-${item.r}" role="button" tabindex="0" data-upgrade-pick="${encodeURIComponent(item.n)}">${upgradeItemMarkup(item,0)}</div>`).join('');
+            $('modalSelectItem').classList.add('active');
+        };
+        $('modalSelectGrid').addEventListener('click', event => {
+            const card = event.target.closest('[data-upgrade-pick]');
+            if (!card) return;
+            const name = decodeURIComponent(card.dataset.upgradePick);
+            if (upgraderPickMode === 'bet') {
+                upgraderState.betItem = name;
+                if (upgraderState.targetItem && upgradeItemValue(upgraderState.targetItem) <= upgradeItemValue(name)) upgraderState.targetItem = null;
+            } else {
+                upgraderState.targetItem = name;
+            }
+            $('modalSelectItem').classList.remove('active');
+            refreshUpgradeUI();
+        });
+        $('modalSelectGrid').addEventListener('keydown', event => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                const card = event.target.closest('[data-upgrade-pick]');
+                if (card) { event.preventDefault(); card.click(); }
+            }
+        });
+        document.querySelectorAll('[data-chance]').forEach(btn => btn.addEventListener('click', () => {
+            if (upgraderState.isRolling) return;
+            upgraderState.chance = Number(btn.dataset.chance);
+            refreshUpgradeUI();
+        }));
+        function renderUpgradeHistory() {
+            $('upgHistory').innerHTML = upgraderHistory.length ? upgraderHistory.slice(0,6).map(row =>
+                `<div class="upg-history-row ${row.win?'win':'loss'}"><span>${row.win?'✓':'×'} ${row.from} → ${row.to}</span><strong>${row.win?'УСПЕХ':'НЕУДАЧА'}</strong></div>`
+            ).join('') : '<div style="color:#666;font-size:12px">История появится после первой попытки.</div>';
+        }
+        $('upgradeBtn').addEventListener('click', async () => {
+            const st = upgraderState;
+            if (st.isRolling || !currentUser || !st.betItem || !st.targetItem) return;
+            const bet = gameItems.find(x => x.n === st.betItem);
+            const target = gameItems.find(x => x.n === st.targetItem);
+            if (!bet || !target || st.betItem === st.targetItem || !(userInventory[bet.n] > 0) || upgradeItemValue(target.n) <= upgradeItemValue(bet.n)) {
+                showToast('Выбери предмет и цель подороже'); return;
+            }
+            const inventoryBefore = JSON.parse(JSON.stringify(userInventory));
+            st.isRolling = true;
+            refreshUpgradeUI();
+            $('upgradeBtn').textContent = '⏳ ПРОВЕРЯЕМ ШАНС...';
+            const win = Math.random() * 100 < st.chance;
+            $('gaugeArrow').style.transform = `rotate(${Math.random()*360}deg)`;
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            userInventory[bet.n] -= 1;
+            if (userInventory[bet.n] <= 0) delete userInventory[bet.n];
+            if (win) userInventory[target.n] = (userInventory[target.n] || 0) + 1;
+            try {
+                await dbRequest(`/players?id=eq.${currentUser.id}`, {
+                    method:'PATCH',
+                    body:JSON.stringify({inventory:userInventory})
+                });
+                renderInventory();
+                upgraderHistory.unshift({from:bet.n,to:target.n,win});
+                renderUpgradeHistory();
+                showToast(win ? `Успех! Получен ${target.n}` : 'Неудача: предмет потерян');
+            } catch (err) {
+                // Не оставляем локально изменённый инвентарь, если сохранение не удалось.
+                userInventory = inventoryBefore;
+                showToast('Не удалось сохранить результат. Инвентарь восстановлен.');
+            } finally {
+                st.isRolling = false;
+                $('upgradeBtn').textContent = '⚡ ЗАПУСТИТЬ АПГРЕЙД';
+                refreshUpgradeUI();
+            }
+        });
+        const oldShowView = showView;
+        showView = function(viewId) {
+            oldShowView(viewId);
+            if (viewId === 'upgrader') refreshUpgradeUI();
+            if (viewId === 'settings' && $('menuProfileName') && currentUser) {
+                $('menuProfileName').textContent = currentUser.username || 'Игрок';
+            }
+        };
+        const balanceObserver = setInterval(() => {
+            if (currentUser && $('menuProfileName')) {
+                $('menuProfileName').textContent = currentUser.username || 'Игрок';
+                $('menuProfileAvatar').textContent = currentUser.avatar || '👤';
+            }
+        }, 1200);
+        refreshUpgradeUI();
+
     </script>
 </body>
-    </html>
+</html>
