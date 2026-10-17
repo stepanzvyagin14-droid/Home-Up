@@ -31,6 +31,12 @@ body{background:#050508;font-family:'Segoe UI',Roboto,sans-serif;color:#e8e8ee;m
 .auth-msg.err{background:rgba(179,45,45,.2);border:1px solid #7a1a1a;color:#f87171}
 .auth-msg.ok{background:rgba(74,222,128,.15);border:1px solid #1d6a3a;color:#4ade80}
 .auth-submit{background:linear-gradient(135deg,#f0b90b,#ffd968);border:none;color:#1a1a1a;font-weight:900;font-size:13px;padding:14px;border-radius:12px;cursor:pointer;letter-spacing:1.5px;text-transform:uppercase;font-family:inherit;margin-top:4px}
+.auth-divider{position:relative;text-align:center;margin:16px 0 12px;color:#555;font-size:10px}
+.auth-divider::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:#1f1f28}
+.auth-divider span{background:#0b0b10;padding:0 12px;position:relative;z-index:1;letter-spacing:2px;text-transform:uppercase;font-weight:800}
+.auth-google{width:100%;padding:13px;border-radius:12px;background:#fff;color:#1a1a1a;border:none;font-weight:900;font-size:13px;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:10px;letter-spacing:.3px;transition:background .15s}
+.auth-google:hover{background:#eaeaea}
+.auth-google:disabled{opacity:.6;cursor:wait}
 .auth-hint{text-align:center;font-size:11px;color:#555;margin-top:12px}
 .app{max-width:1400px;width:100%;margin:0 auto;position:relative;z-index:1}
 .app.hidden{display:none}
@@ -41,11 +47,8 @@ body{background:#050508;font-family:'Segoe UI',Roboto,sans-serif;color:#e8e8ee;m
 .brand-text small{font-size:8px;color:#666;letter-spacing:1.5px;text-transform:uppercase;font-weight:800;display:block;margin-top:2px}
 .topbar-right{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .balance-pill{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#1a1a22,#0f0f14);border:1px solid #2a2a34;padding:7px 12px;border-radius:50px;font-weight:900;font-size:13px;color:#f0b90b;transition:transform .12s}
-.balance-pill.bump{transform:scale(1.08)}
 .balance-pill.offline{color:#a78bfa;border-color:rgba(167,139,250,.4)}
 .profile-btn{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#1e1e26,#0f0f14);border:2px solid #2a2a34;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;padding:0}
-.dev-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:900;background:linear-gradient(135deg,#ff4444,#ffaa00);color:#fff;padding:2px 7px;border-radius:10px;letter-spacing:.5px;text-transform:uppercase}
-.dev-badge::before{content:'👑';font-size:10px}
 .layout{display:flex;gap:14px;align-items:flex-start}
 .sidebar{display:none}
 .views{flex:1;min-width:0;width:100%}
@@ -67,7 +70,6 @@ body{background:#050508;font-family:'Segoe UI',Roboto,sans-serif;color:#e8e8ee;m
 .nav-btn .nav-icon{font-size:18px;width:22px;text-align:center;flex-shrink:0}
 .nav-btn .nav-badge{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:#f0b90b;color:#1a1a1a;font-size:9px;font-weight:900;border-radius:10px;padding:2px 7px;display:none}
 .nav-btn .nav-badge.show{display:block}
-.nav-btn .nav-badge.dot{background:#ff4444;width:8px;height:8px;padding:0;border-radius:50%;font-size:0}
 .nav-btn .nav-badge.purple{background:#a78bfa}
 .bottomnav{display:none}
 }
@@ -80,7 +82,6 @@ body{background:#050508;font-family:'Segoe UI',Roboto,sans-serif;color:#e8e8ee;m
 .bnav-btn.active::before{content:'';position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:20px;height:2px;background:#f0b90b;border-radius:2px}
 .bnav-badge{position:absolute;top:2px;right:10px;background:#f0b90b;color:#1a1a1a;font-size:8px;font-weight:900;border-radius:10px;padding:1px 4px;min-width:13px;text-align:center;display:none}
 .bnav-badge.show{display:block}
-.bnav-badge.dot{background:#ff4444;width:7px;height:7px;min-width:7px;padding:0;border-radius:50%}
 .bnav-badge.purple{background:#a78bfa}
 .card{background:linear-gradient(180deg,#16161c,#0f0f14);border-radius:14px;padding:14px;border:1px solid #1f1f28;margin-bottom:10px}
 @media(min-width:900px){.card{padding:18px;border-radius:16px;margin-bottom:14px}}
@@ -108,7 +109,7 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
 .news-card.pinned{border-color:rgba(240,185,11,.4)}
 .news-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .news-author-avatar{width:36px;height:36px;border-radius:50%;background:#16161c;display:flex;align-items:center;justify-content:center;font-size:20px}
-.news-author-name{font-size:12px;font-weight:900;color:#fff;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.news-author-name{font-size:12px;font-weight:900;color:#fff}
 .news-date{font-size:10px;color:#666;font-weight:700;margin-top:2px}
 .news-title{font-size:15px;font-weight:900;color:#fff;margin-bottom:6px}
 .news-content{font-size:13px;color:#c8c8d0;line-height:1.6;white-space:pre-wrap}
@@ -139,8 +140,6 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
 #tapBtn .subtext{display:block;font-size:clamp(10px,2.8vw,12px);opacity:.65;margin-top:5px}
 .float-coin{position:absolute;font-weight:900;font-size:clamp(16px,4.5vw,22px);pointer-events:none;animation:floatUp .9s forwards;color:#f0b90b;text-shadow:0 0 12px #f0b90b;z-index:5}
 @keyframes floatUp{0%{transform:translateY(0) scale(.6);opacity:0}20%{transform:translateY(-10px) scale(1.15);opacity:1}100%{transform:translateY(-100px);scale:1;opacity:0}}
-.cheat-banner{background:linear-gradient(90deg,#7a1a1a,#b32d2d);border-radius:10px;padding:9px 14px;font-size:11px;font-weight:800;color:#ffe;display:none;margin-top:10px}
-.cheat-banner.show{display:block}
 .rarity-common{background:linear-gradient(180deg,#464652,#5a5a68);border-bottom-color:#7a7a88}
 .rarity-uncommon{background:linear-gradient(180deg,#2c3d84,#4b69c4);border-bottom-color:#7a9df8}
 .rarity-rare{background:linear-gradient(180deg,#432176,#6b3fa0);border-bottom-color:#a878e0}
@@ -152,8 +151,6 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
 .case-icon{font-size:clamp(36px,9vw,56px);text-align:center;margin-bottom:6px}
 .case-name{text-align:center;font-size:clamp(12px,3.5vw,15px);font-weight:900;margin-bottom:2px;color:#fff}
 .case-price{text-align:center;font-size:clamp(11px,3vw,13px);color:#f0b90b;font-weight:800;margin-bottom:8px}
-.case-preview{display:flex;gap:3px;justify-content:center;margin-bottom:10px;flex-wrap:wrap;min-height:26px}
-.case-preview .pv{width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;border-bottom:2px solid #555}
 .case-btn{width:100%;background:linear-gradient(135deg,#f0b90b,#ffd968);border:none;color:#1a1a1a;font-weight:900;padding:9px;border-radius:10px;cursor:pointer;font-size:clamp(10px,2.8vw,12px);text-transform:uppercase;font-family:inherit}
 .craft-info{background:linear-gradient(135deg,rgba(240,185,11,.1),rgba(240,185,11,.02));border:1px solid rgba(240,185,11,.25);border-radius:12px;padding:12px;margin-bottom:14px;font-size:11px;color:#ccc;line-height:1.5;text-align:center}
 .craft-info b{color:#f0b90b}
@@ -161,11 +158,7 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
 .craft-item{border-radius:10px;padding:10px 6px;text-align:center;font-size:10px;font-weight:800;color:#fff;text-shadow:1px 1px 2px #000;cursor:pointer;position:relative;min-height:110px;display:flex;flex-direction:column;justify-content:center;align-items:center;border-bottom:3px solid #555;outline:2px solid transparent;outline-offset:-2px}
 .craft-item .icon{font-size:32px;margin-bottom:4px}
 .craft-item .cnt{font-size:10px;color:#fff;font-weight:800;margin-top:4px;background:rgba(0,0,0,.4);padding:2px 8px;border-radius:10px}
-.craft-item .need{font-size:9px;color:#888;margin-top:2px;font-weight:700}
 .craft-item.ready{outline-color:#f0b90b}
-.craft-item.not-ready{opacity:.55}
-.craft-item.legendary-locked::after{content:'🔒 МАКС';position:absolute;bottom:4px;font-size:8px;color:#f0c14b;font-weight:900}
-.craft-item .ready-badge{position:absolute;top:6px;right:6px;background:#f0b90b;color:#1a1a1a;font-size:9px;font-weight:900;border-radius:10px;padding:2px 6px}
 .craft-empty{color:#555;text-align:center;font-size:12px;padding:40px 10px;font-style:italic;font-weight:700}
 .upg-chances{display:flex;gap:5px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;scrollbar-width:none}
 .upg-chances::-webkit-scrollbar{display:none}
@@ -191,7 +184,6 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
 .upg-item.target-sel{outline-color:#4ade80}
 .upg-item.target-sel::before{content:'🎯';position:absolute;top:1px;left:3px;font-size:9px}
 .upg-item .bdg{position:absolute;top:1px;right:1px;background:#f0b90b;color:#1a1a1a;font-size:7px;border-radius:6px;padding:1px 3px;font-weight:900}
-.upg-item.dim{opacity:.35}
 .upg-info{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px}
 .upg-info .cell{background:#0b0b10;border:1px solid #1c1c24;border-radius:10px;padding:8px 6px;text-align:center}
 .upg-info .cell .l{font-size:9px;color:#6a6a78;text-transform:uppercase;font-weight:800;margin-bottom:2px}
@@ -204,7 +196,6 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
 .status-tag.wait{background:#1e1e26;color:#888}
 .status-tag.ok{background:rgba(42,154,85,.2);color:#4ade80;border:1px solid #1d6a3a}
 .status-tag.bad{background:rgba(179,45,45,.2);color:#f87171;border:1px solid #7a1a1a}
-.status-tag.hint{background:rgba(240,185,11,.15);color:#f0b90b;border:1px solid #7a5e05}
 .market-filters,.inv-filters{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:10px;scrollbar-width:none}
 .market-filters::-webkit-scrollbar,.inv-filters::-webkit-scrollbar{display:none}
 .filter-btn{flex-shrink:0;background:#16161c;border:1px solid #2a2a34;color:#888;padding:7px 13px;border-radius:20px;font-weight:800;font-size:10px;cursor:pointer;font-family:inherit}
@@ -213,21 +204,16 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
 @media(min-width:540px){.market-grid{grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}}
 .market-card{background:#0b0b10;border:1px solid #1c1c24;border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:6px}
 .mc-head{display:flex;align-items:center;gap:8px}
-.mc-icon{font-size:24px}
 .mc-info{flex:1;min-width:0}
 .mc-name{font-size:11px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mc-price-row{display:flex;align-items:center;justify-content:space-between}
 .mc-price{font-size:14px;font-weight:900;color:#f0b90b}
-.mc-actions{display:flex;gap:5px}
 .mc-btn{flex:1;background:#16161c;border:1px solid #2a2a34;color:#ddd;padding:8px 6px;border-radius:8px;cursor:pointer;font-weight:800;font-size:10px;font-family:inherit}
 .inv-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap}
-.inv-total{color:#f0b90b;font-size:11px;font-weight:900}
 .inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px}
 @media(min-width:640px){.inv-grid{grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:10px}}
 .inv-item{border-radius:9px;padding:7px 4px;text-align:center;font-size:9px;font-weight:800;color:#fff;text-shadow:1px 1px 2px #000;cursor:pointer;position:relative;min-height:82px;display:flex;flex-direction:column;justify-content:center;align-items:center;border-bottom:3px solid #555;overflow:hidden}
 .inv-item .icon{font-size:clamp(18px,5vw,20px);margin-bottom:2px}
 .inv-item .inv-price{font-size:8px;color:#f0b90b;margin-top:2px;font-weight:800}
-.inv-item .count-badge{position:absolute;top:3px;right:3px;background:#f0b90b;color:#1a1a1a;font-size:8px;border-radius:10px;padding:1px 5px;font-weight:900}
 .inv-empty{color:#555;text-align:center;font-size:12px;padding:30px 10px;font-style:italic;grid-column:1/-1;font-weight:700}
 .profile-hero{display:flex;align-items:center;gap:16px;padding:10px 0 18px;border-bottom:1px solid #1f1f28;margin-bottom:18px;flex-wrap:wrap}
 .profile-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#1e1e26,#0f0f14);border:3px solid #f0b90b;display:flex;align-items:center;justify-content:center;font-size:42px}
@@ -262,66 +248,23 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
 .primary:disabled{opacity:.35;cursor:not-allowed;filter:grayscale(.7)}
 .secondary{background:#1a1a22;color:#bbb;border:1px solid #2a2a34;font-size:11px;padding:8px 14px;border-radius:20px;cursor:pointer;font-weight:800;font-family:inherit}
 .roulette-wrapper{position:relative;overflow:hidden;background:#08080c;border-radius:12px;border:2px solid #1f1f26;padding:12px 0;margin:12px 0}
-.roulette-wrapper::before,.roulette-wrapper::after{content:'';position:absolute;top:0;bottom:0;width:50px;z-index:11;pointer-events:none}
-.roulette-wrapper::before{left:0;background:linear-gradient(90deg,#08080c 20%,transparent)}
-.roulette-wrapper::after{right:0;background:linear-gradient(-90deg,#08080c 20%,transparent)}
 .roulette-track{display:flex;will-change:transform}
 .item{flex-shrink:0;width:clamp(88px,22vw,118px);height:clamp(78px,20vw,100px);margin:0 6px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6px;font-weight:800;font-size:9px;color:#fff;text-shadow:1px 1px 3px #000;background:#333;border-bottom:4px solid #555;overflow:hidden}
 .item .icon{font-size:clamp(18px,5vw,24px);margin-bottom:2px}
-.item .price{font-size:8px;color:#f0b90b;margin-top:2px;font-weight:800}
 .pointer{position:absolute;top:0;left:50%;transform:translateX(-50%);width:3px;height:100%;background:linear-gradient(180deg,#f0b90b,#ffe488);box-shadow:0 0 20px #f0b90b;z-index:12}
-.pointer::before,.pointer::after{content:'';position:absolute;left:50%;transform:translateX(-50%);border-left:8px solid transparent;border-right:8px solid transparent}
-.pointer::before{top:-8px;border-top:11px solid #f0b90b}
-.pointer::after{bottom:-8px;border-bottom:11px solid #f0b90b}
+.pointer::before{content:'';position:absolute;top:-8px;left:50%;transform:translateX(-50%);border-left:8px solid transparent;border-right:8px solid transparent;border-top:11px solid #f0b90b}
 .result{text-align:center;margin:10px 0;font-size:12px;min-height:22px;color:#f0b90b;font-weight:800}
-.result .win-tag{color:#fff;background:#1a1a22;padding:4px 12px;border-radius:20px;margin:2px;display:inline-block;border:1px solid #333;font-size:11px}
-.upgrade-overlay{position:fixed;inset:0;background:rgba(0,0,0,.96);display:none;justify-content:center;align-items:center;z-index:600;padding:16px}
-.upgrade-overlay.active{display:flex}
-.upg-stage{max-width:560px;width:100%;text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px}
-.roll-circle{width:140px;height:140px;border-radius:50%;background:#1e1e26;border:3px solid #2a2a34;display:flex;align-items:center;justify-content:center;position:relative;margin:0 auto}
-.roll-circle::before{content:'';position:absolute;inset:-8px;border-radius:50%;border:2px solid transparent;border-top-color:#f0b90b;border-right-color:#f0b90b;animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.roll-num{font-size:36px;font-weight:900;color:#f0b90b;letter-spacing:-2px}
-.roll-label{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:2px;font-weight:800;margin-top:8px}
-.roll-status{font-size:12px;color:#ccc;font-weight:700;margin-top:5px}
-.result-title{font-size:32px;font-weight:900;letter-spacing:2px;line-height:1}
-.result-title.success{color:#4ade80;text-shadow:0 0 40px #4ade80}
-.result-title.fail{color:#f87171;text-shadow:0 0 40px #f87171}
-.result-title.legendary{background:linear-gradient(90deg,#f0b90b,#ffe488);-webkit-background-clip:text;color:transparent}
-.result-card{padding:18px 24px;border-radius:16px;min-width:220px;display:flex;flex-direction:column;align-items:center;gap:5px;border-bottom:5px solid #555}
-.result-card .rc-icon{font-size:56px;line-height:1}
-.result-card .rc-name{font-size:14px;font-weight:900;text-shadow:1px 1px 3px #000}
-.result-card .rc-price{font-size:13px;font-weight:900;color:#f0b90b}
-.result-sub{font-size:11px;color:#999;font-weight:700;max-width:95%;padding:0 10px}
-.lost-items{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-top:4px}
-.lost-item{width:56px;height:56px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:8px;font-weight:800;opacity:.55;filter:grayscale(.7);text-decoration:line-through;padding:3px;text-align:center;color:#fff;border-bottom:2px solid #555}
-.craft-result-overlay{position:fixed;inset:0;background:rgba(0,0,0,.96);display:none;justify-content:center;align-items:center;z-index:600;padding:16px}
-.craft-result-overlay.active{display:flex}
-.craft-result-box{display:flex;flex-direction:column;align-items:center;gap:16px;max-width:440px;width:100%;text-align:center;animation:pop .4s}
-@keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
-.craft-result-title{font-size:26px;font-weight:900;letter-spacing:2px;color:#4ade80}
-.craft-result-card{padding:22px 34px;border-radius:16px;display:flex;flex-direction:column;align-items:center;gap:6px;border-bottom:5px solid #555;min-width:220px}
-.craft-result-card .rc-icon{font-size:64px;line-height:1}
-.craft-result-card .rc-name{font-size:15px;font-weight:900;text-shadow:1px 1px 3px #000}
-.craft-result-card .rc-price{font-size:14px;font-weight:900;color:#f0b90b}
-.craft-result-sub{font-size:12px;color:#999;font-weight:700}
-.craft-consumed{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;margin-top:6px}
-.craft-consumed .cc{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;opacity:.4;filter:grayscale(.6)}
-.toast{position:fixed;bottom:calc(88px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%) translateY(120px);background:#1a1a22;color:#f0b90b;padding:11px 20px;border-radius:30px;font-weight:800;font-size:12px;transition:transform .35s;z-index:200;box-shadow:0 12px 40px rgba(0,0,0,.8);border:1px solid #2a2a34;max-width:90%;text-align:center;pointer-events:none}
+.toast{position:fixed;bottom:calc(88px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%) translateY(120px);background:#1a1a22;color:#f0b90b;padding:11px 20px;border-radius:30px;font-weight:800;font-size:12px;transition:transform .35s;z-index:9999;box-shadow:0 12px 40px rgba(0,0,0,.8);border:1px solid #2a2a34;max-width:90%;text-align:center;pointer-events:none}
 @media(min-width:900px){.toast{bottom:26px}}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .flash{position:fixed;inset:0;pointer-events:none;background:#fff;opacity:0;z-index:250;transition:opacity .12s}
 .flash.on{opacity:.85;transition:opacity .05s}
-.flash.legend{background:radial-gradient(circle,#fff,#ffe488 30%,transparent 70%)}
 .flash.epic{background:radial-gradient(circle,#fff,#f088c8 30%,transparent 70%)}
-.confetti{position:fixed;top:-20px;width:8px;height:14px;pointer-events:none;z-index:260;animation:fall linear forwards}
-@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.7}}
-.chat-box { display: flex; flex-direction: column; background: #0b0b10; border-radius: 12px; border: 1px solid #1c1c24; }
-.ad-banner { background: #1e1e26; border: 1px solid #333; border-radius: 12px; margin-bottom: 12px; overflow: hidden; position: relative; text-align: center; padding: 10px; }
-.ad-banner img { max-width: 100%; max-height: 120px; object-fit: contain; border-radius: 8px; cursor: pointer; }
-.ad-close { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.5); color: #fff; border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-size: 12px; }
-.item-img { width: 100%; height: 60px; object-fit: contain; margin-bottom: 5px; display: block; filter: drop-shadow(0 0 10px rgba(240,185,11,0.5)); }
-/* Настройки (добавлено, т.к. в HTML разметка была, а стилей нет) */
+.chat-box{display:flex;flex-direction:column;background:#0b0b10;border-radius:12px;border:1px solid #1c1c24}
+.ad-banner{background:#1e1e26;border:1px solid #333;border-radius:12px;margin-bottom:12px;overflow:hidden;position:relative;text-align:center;padding:10px}
+.ad-banner img{max-width:100%;max-height:120px;object-fit:contain;border-radius:8px;cursor:pointer}
+.ad-close{position:absolute;top:5px;right:5px;background:rgba(0,0,0,.5);color:#fff;border:none;width:24px;height:24px;border-radius:50%;cursor:pointer;font-size:12px}
+.item-img{width:100%;height:60px;object-fit:contain;margin-bottom:5px;display:block;filter:drop-shadow(0 0 10px rgba(240,185,11,.5))}
 .settings-list{display:flex;flex-direction:column;gap:10px}
 .set-row{display:flex;justify-content:space-between;align-items:center;padding:12px;background:#0b0b10;border:1px solid #1c1c24;border-radius:12px}
 .set-info b{font-size:13px;color:#fff;display:block}
@@ -332,10 +275,23 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
 .toggle.on::before{left:22px;background:#1a1a1a}
 .set-btn{background:#1a1a22;color:#bbb;border:1px solid #2a2a34;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:700;font-family:inherit;font-size:12px}
 .set-btn.danger{color:#f87171;border-color:#7a1a1a;background:rgba(179,45,45,.1)}
+.form-input{width:100%;padding:13px;border-radius:12px;background:#0e0e14;border:1.5px solid #23232a;color:#fff;font-family:inherit;font-size:14px;outline:none}
+.form-input:focus{border-color:#f0b90b}
+.form-input:disabled{opacity:.5;cursor:not-allowed}
+.form-stack{display:flex;flex-direction:column;gap:10px}
+.form-hint{font-size:11px;color:#888;line-height:1.5;margin-bottom:10px}
+.form-hint b{color:#f0b90b}
+.maintenance-overlay{position:fixed;inset:0;background:rgba(5,5,8,.98);z-index:900;display:none;justify-content:center;align-items:center;padding:20px}
+.maintenance-overlay.active{display:flex}
+.maintenance-box{background:linear-gradient(180deg,#1a1a22,#0b0b10);border:2px solid #f0b90b;border-radius:20px;padding:32px 24px;max-width:420px;width:100%;text-align:center}
+.maintenance-box .mt-icon{font-size:72px;margin-bottom:16px;animation:mtSpin 3s linear infinite}
+@keyframes mtSpin{to{transform:rotate(360deg)}}
+.maintenance-box h2{color:#f0b90b;font-size:22px;justify-content:center;letter-spacing:2px;margin-bottom:12px}
+.maintenance-box p{color:#888;font-size:13px;line-height:1.6;margin-bottom:8px}
 </style>
 </head>
 <body>
-<div class="bg-fx" id="bgFx"></div>
+<div class="bg-fx"></div>
 
 <div class="auth-screen" id="authScreen">
   <div class="auth-box">
@@ -356,21 +312,24 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
       <div class="input-group"><span class="input-icon">🔒</span><input type="password" id="regPass" placeholder="Пароль (мин. 4)" maxlength="40"><button class="pass-toggle" data-target="regPass" type="button">👁</button></div>
       <div class="input-group"><span class="input-icon">🔐</span><input type="password" id="regPass2" placeholder="Повтори пароль" maxlength="40"><button class="pass-toggle" data-target="regPass2" type="button">👁</button></div>
       <div class="auth-msg err" id="regError">⚠️ <span></span></div>
-      <div class="auth-msg ok" id="regSuccess">✅ <span></span></div>
       <button class="auth-submit" id="registerBtn">Создать аккаунт</button>
     </div>
+    <div class="auth-divider"><span>или</span></div>
+    <button class="auth-google" id="googleBtn">
+      <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20H42v-.1H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3L37.6 9C33.7 5.9 29 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.7-.4-4z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C33.7 5.9 29 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20H42v-.1H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C41 35.2 44 30 44 24c0-1.3-.1-2.7-.4-4z"/></svg>
+      Войти через Google
+    </button>
     <div class="auth-hint">💾 Аккаунт хранится в Supabase</div>
   </div>
 </div>
 
 <div class="app hidden" id="app">
   <div id="ad-container"></div>
-
   <div class="topbar">
     <div class="brand"><div class="brand-logo">H</div><div class="brand-text"><b>HOME UP</b><small>Case Roulette</small></div></div>
     <div class="topbar-right">
-      <div class="balance-pill offline" id="offlinePill"><span>🌙</span><span id="offlineAmount">0</span></div>
-      <div class="balance-pill" id="balancePill"><span>🪙</span><span id="coinsAmount">0</span></div>
+      <div class="balance-pill offline"><span>🌙</span><span id="offlineAmount">0</span></div>
+      <div class="balance-pill"><span>🪙</span><span id="coinsAmount">0</span></div>
       <button class="profile-btn" id="profileBtn"><span id="topAvatar">🐺</span></button>
     </div>
   </div>
@@ -403,7 +362,6 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
             <div class="lbl">Баланс</div>
             <div class="val" id="tapBalance">0</div>
             <div class="tap-stats"><div class="stat-pill">👆 Всего: <b id="totalTaps">0</b></div><div class="stat-pill">🔥 Сессия: <b id="sessionTaps">0</b></div></div>
-            <div class="cheat-banner" id="cheatBanner">🚫 <span>Автокликер!</span></div>
           </div>
           <div class="tap-area2"><button id="tapBtn">ТАП<span class="subtext">+1 🪙</span></button></div>
         </div></div>
@@ -429,11 +387,11 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
       <section class="view" id="view-chat">
         <div class="card">
           <h2>💬 Глобальный Чат</h2>
-          <div class="chat-box" style="height: 400px;">
-            <div id="chatMessages" style="flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px;"></div>
-            <div style="display: flex; padding: 10px; border-top: 1px solid #1c1c24; gap: 8px;">
-              <input type="text" id="chatInput" placeholder="Сообщение..." maxlength="100" style="flex: 1; padding: 10px; border-radius: 8px; background: #0e0e14; border: 1.5px solid #23232a; color: #fff; outline: none;">
-              <button class="primary" id="chatSendBtn" style="padding: 0 20px;">➤</button>
+          <div class="chat-box" style="height:400px">
+            <div id="chatMessages" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px"></div>
+            <div style="display:flex;padding:10px;border-top:1px solid #1c1c24;gap:8px">
+              <input type="text" id="chatInput" placeholder="Сообщение..." maxlength="100" style="flex:1;padding:10px;border-radius:8px;background:#0e0e14;border:1.5px solid #23232a;color:#fff;outline:none;font-family:inherit">
+              <button class="primary" id="chatSendBtn" style="padding:0 20px">➤</button>
             </div>
           </div>
         </div>
@@ -445,16 +403,8 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
           <div id="newsList"></div>
         </div>
       </section>
-      <section class="view" id="view-cases">
-        <div class="card"><h2>🎁 Кейсы</h2><div class="cases-grid" id="casesGrid"></div></div>
-      </section>
-      <section class="view" id="view-craft">
-        <div class="card">
-          <h2>⚒️ Крафт</h2>
-          <div class="craft-info">Обменяй <b>5 одинаковых</b> на <b>1 лучше</b></div>
-          <div class="craft-grid" id="craftGrid"></div>
-        </div>
-      </section>
+      <section class="view" id="view-cases"><div class="card"><h2>🎁 Кейсы</h2><div class="cases-grid" id="casesGrid"></div></div></section>
+      <section class="view" id="view-craft"><div class="card"><h2>⚒️ Крафт</h2><div class="craft-info">Обменяй <b>5 одинаковых</b> на <b>1 лучше</b></div><div class="craft-grid" id="craftGrid"></div></div></section>
       <section class="view" id="view-upgrader">
         <div class="card">
           <h2>⚡ Апгрейдер</h2>
@@ -470,7 +420,7 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
               <circle cx="110" cy="110" r="90" fill="none" stroke="#1a1a22" stroke-width="16" stroke-linecap="round" stroke-dasharray="424.12 565.49" transform="rotate(-225 110 110)"/>
               <circle id="gaugeFill" cx="110" cy="110" r="90" fill="none" stroke="url(#gGrad)" stroke-width="16" stroke-linecap="round" stroke-dasharray="212.06 565.49" transform="rotate(-225 110 110)"/>
             </svg>
-            <div class="gauge-inner"><div class="gauge-pct" id="gaugePct">50%</div><div class="gauge-lbl" id="gaugeLbl">шанс</div></div>
+            <div class="gauge-inner"><div class="gauge-pct" id="gaugePct">50%</div><div class="gauge-lbl">шанс</div></div>
           </div>
           <div class="upg-panels">
             <div class="upg-panel"><div class="upg-panel-title">СТАВКА <span class="c" id="upgInvCount">0</span></div><div class="upg-scroll" id="upgInvGrid"></div></div>
@@ -514,7 +464,7 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
       </section>
       <section class="view" id="view-inventory">
         <div class="card">
-          <div class="inv-header"><h2>🎒 Инвентарь <span class="badge" id="invCount">0</span> <span class="inv-total" id="invTotal"></span></h2></div>
+          <div class="inv-header"><h2>🎒 Инвентарь <span class="badge" id="invCount">0</span></h2></div>
           <div class="inv-filters" id="invFilters">
             <button class="filter-btn active" data-invfilter="all">Все</button>
             <button class="filter-btn" data-invfilter="legendary">Леген.</button>
@@ -546,33 +496,37 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
       <section class="view" id="view-admin">
         <div class="card">
           <h2>👑 Панель Разработчика</h2>
-          <div style="margin-bottom: 20px;">
-            <h3 style="color: #fff; font-size: 14px; margin-bottom: 10px;">Выдать роль</h3>
-            <div style="display: flex; gap: 10px;">
-              <input type="text" id="adminTargetUser" placeholder="Имя игрока" style="flex: 1; padding: 10px; border-radius: 8px; background: #0e0e14; border: 1.5px solid #23232a; color: #fff;">
-              <select id="adminRoleSelect" style="width: 120px; padding: 10px; border-radius: 8px; background: #0e0e14; border: 1.5px solid #23232a; color: #fff;">
+          <div style="margin-bottom:20px">
+            <h3 style="color:#fff;font-size:14px;margin-bottom:10px">Выдать роль</h3>
+            <div style="display:flex;gap:10px">
+              <input type="text" id="adminTargetUser" placeholder="Имя игрока" class="form-input" style="flex:1">
+              <select id="adminRoleSelect" style="width:120px;padding:10px;border-radius:8px;background:#0e0e14;border:1.5px solid #23232a;color:#fff">
                 <option value="user">User</option>
                 <option value="mod">Moderator</option>
                 <option value="admin">Admin</option>
               </select>
-              <button class="primary" id="adminSetRoleBtn" style="padding: 0 15px;">Дать</button>
+              <button class="primary" id="adminSetRoleBtn" style="padding:0 15px">Дать</button>
             </div>
           </div>
-          <div style="margin-bottom: 20px;">
-            <h3 style="color: #fff; font-size: 14px; margin-bottom: 10px;">Установить 3D картинку</h3>
-            <div style="display: flex; gap: 10px;">
-              <input type="text" id="adminItemName" placeholder="Название (напр. AK-47)" style="flex: 1; padding: 10px; border-radius: 8px; background: #0e0e14; border: 1.5px solid #23232a; color: #fff;">
-              <input type="text" id="adminItemImg" placeholder="Ссылка на фото (URL)" style="flex: 1; padding: 10px; border-radius: 8px; background: #0e0e14; border: 1.5px solid #23232a; color: #fff;">
-              <button class="primary" id="adminSetSkinBtn" style="padding: 0 15px;">OK</button>
+          <div style="margin-bottom:20px">
+            <h3 style="color:#fff;font-size:14px;margin-bottom:10px">Установить 3D картинку</h3>
+            <div style="display:flex;gap:10px">
+              <input type="text" id="adminItemName" placeholder="Название" class="form-input" style="flex:1">
+              <input type="text" id="adminItemImg" placeholder="URL фото" class="form-input" style="flex:1">
+              <button class="primary" id="adminSetSkinBtn" style="padding:0 15px">OK</button>
             </div>
           </div>
-          <div>
-            <h3 style="color: #fff; font-size: 14px; margin-bottom: 10px;">Запустить Рекламу</h3>
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-              <input type="text" id="adminAdImg" placeholder="Ссылка на картинку рекламы (URL)" style="padding: 10px; border-radius: 8px; background: #0e0e14; border: 1.5px solid #23232a; color: #fff;">
-              <input type="text" id="adminAdLink" placeholder="Ссылка при клике (необязательно)" style="padding: 10px; border-radius: 8px; background: #0e0e14; border: 1.5px solid #23232a; color: #fff;">
+          <div style="margin-bottom:20px">
+            <h3 style="color:#fff;font-size:14px;margin-bottom:10px">Запустить Рекламу</h3>
+            <div class="form-stack">
+              <input type="text" id="adminAdImg" placeholder="URL картинки" class="form-input">
+              <input type="text" id="adminAdLink" placeholder="URL при клике" class="form-input">
               <button class="primary" id="adminSetAdBtn">Запустить</button>
             </div>
+          </div>
+          <div style="border-top:1px solid #2a2a34;padding-top:20px">
+            <h3 style="color:#f0b90b;font-size:14px;margin-bottom:10px">🔧 Тех. перерыв</h3>
+            <button class="primary" id="adminMaintBtn" style="width:100%">🔧 Включить</button>
           </div>
         </div>
       </section>
@@ -582,6 +536,24 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
           <div class="settings-list">
             <div class="set-row"><div class="set-info"><b>🔊 Звуки</b><small>Эффекты</small></div><div class="toggle on" data-setting="sound"></div></div>
             <div class="set-row"><div class="set-info"><b>✨ Частицы</b><small>Фон</small></div><div class="toggle on" data-setting="particles"></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <h2>📝 Никнейм</h2>
+          <div class="form-hint" id="nickHint">Можно изменить <b>1 раз</b>. Выбирай аккуратно.</div>
+          <div class="form-stack">
+            <input type="text" id="newNickInput" placeholder="Новый ник" maxlength="20" class="form-input">
+            <button class="primary" id="changeNickBtn" style="width:100%">СМЕНИТЬ НИК</button>
+          </div>
+        </div>
+        <div class="card">
+          <h2>🔑 Пароль</h2>
+          <div class="form-hint" id="passHint">Если ты входил через Google — можно установить пароль для обычного входа.</div>
+          <div class="form-stack">
+            <input type="password" id="oldPass" placeholder="Старый пароль (если есть)" maxlength="40" class="form-input">
+            <input type="password" id="newPass" placeholder="Новый пароль (мин. 4)" maxlength="40" class="form-input">
+            <input type="password" id="newPass2" placeholder="Повтори новый" maxlength="40" class="form-input">
+            <button class="primary" id="changePassBtn" style="width:100%">СМЕНИТЬ ПАРОЛЬ</button>
           </div>
         </div>
       </section>
@@ -601,6 +573,7 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
   <button class="bnav-btn" data-view="chat"><span class="bicon">💬</span><span>Чат</span></button>
   <button class="bnav-btn" data-view="news"><span class="bicon">📰</span><span>Новости</span></button>
   <button class="bnav-btn" data-view="profile"><span class="bicon">👤</span><span>Профиль</span></button>
+  <button class="bnav-btn" data-view="settings"><span class="bicon">⚙️</span><span>Настр.</span></button>
   <button class="bnav-btn" data-view="admin" id="navAdminMobile" style="display:none"><span class="bicon">👑</span><span>Админ</span></button>
 </nav>
 
@@ -613,22 +586,12 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
 <div class="modal-overlay" id="newsModal"><div class="modal">
   <button class="close-btn" id="newsModalClose">✕</button>
   <h3>📰 Новая новость</h3>
-  <div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">
+  <div class="form-stack" style="margin-top:14px">
     <input class="news-input" type="text" id="newsTitleInput" placeholder="Заголовок" maxlength="100">
     <textarea class="news-textarea" id="newsContentInput" placeholder="Текст..." maxlength="2000"></textarea>
     <div class="news-checkbox-row"><input type="checkbox" id="newsPinnedInput"><label for="newsPinnedInput">📌 Закрепить</label></div>
-    <div class="auth-msg err" id="newsError">⚠️ <span></span></div>
     <button class="primary" id="newsSubmitBtn" style="width:100%">ОПУБЛИКОВАТЬ</button>
   </div>
-</div></div>
-<div class="modal-overlay" id="modalOverlay"><div class="modal">
-  <button class="close-btn" id="modalClose">✕</button>
-  <div style="font-size:50px;text-align:center;margin-bottom:6px" id="modalIcon">🔫</div>
-  <h3 id="modalName">Предмет</h3>
-  <div style="text-align:center;font-size:10px;text-transform:uppercase;font-weight:900;margin-bottom:10px" id="modalRarity">Редкость</div>
-  <div style="text-align:center;font-size:20px;font-weight:900;color:#f0b90b;margin-bottom:10px" id="modalPrice">🪙 0</div>
-  <div style="display:flex;justify-content:space-between;font-size:11px;padding:6px 10px;background:#0e0e14;border-radius:8px;margin-bottom:12px"><span>У тебя:</span><b id="modalOwned">0</b></div>
-  <button class="primary" id="modalSellBtn" style="width:100%">ПРОДАТЬ 1</button>
 </div></div>
 <div class="modal-overlay" id="caseModal"><div class="modal">
   <button class="close-btn" id="caseModalClose">✕</button>
@@ -636,17 +599,37 @@ h2{font-size:12px;color:#f0b90b;margin-bottom:12px;letter-spacing:1.5px;text-tra
   <div style="text-align:center;font-size:11px;color:#f0b90b;font-weight:800;margin-bottom:4px" id="caseModalPrice">🪙 50</div>
   <div class="roulette-wrapper"><div class="pointer"></div><div class="roulette-track" id="track"></div></div>
   <div class="result" id="caseResult"></div>
-  <div class="case-modal-actions"><button class="primary" id="openOneBtn">x1</button><button class="secondary" id="openFiveBtn">x5</button><button class="secondary" id="openTenBtn">x10</button></div>
+  <div style="display:flex;gap:8px;justify-content:center"><button class="primary" id="openOneBtn">x1</button><button class="secondary" id="openFiveBtn">x5</button><button class="secondary" id="openTenBtn">x10</button></div>
 </div></div>
-<div class="upgrade-overlay" id="upgradeOverlay"><div class="upg-stage" id="upgStage"></div></div>
-<div class="craft-result-overlay" id="craftOverlay"><div class="craft-result-box" id="craftStage"></div></div>
+
+<div class="maintenance-overlay" id="maintenanceOverlay">
+  <div class="maintenance-box">
+    <div class="mt-icon">🔧</div>
+    <h2>ТЕХ. ПЕРЕРЫВ</h2>
+    <p>Скоро вернёмся!</p>
+    <p>Идут технические работы.</p>
+  </div>
+</div>
+
 <div class="flash" id="flash"></div><div class="toast" id="toast"></div>
 
+<!-- Подключаем SDK Supabase для Google OAuth -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-/* ===================== КОНФИГ / БАЗА ===================== */
+/* ===================== КОНФИГ ===================== */
 const SB_URL = 'https://fsxputemwveouteusdsy.supabase.co';
 const SB_KEY = 'sb_publishable_srJqOHjNtODKifwwL3j7Vg_7-ynR2L3';
 const H = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' };
+
+// Инициализация клиента Supabase
+let sbClient = null;
+try {
+  if (window.supabase && window.supabase.createClient) {
+    sbClient = window.supabase.createClient(SB_URL, SB_KEY, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+    });
+  }
+} catch(e) { console.warn('Supabase SDK не загрузился:', e); }
 
 async function db(path, opts = {}) {
   const res = await fetch(SB_URL + '/rest/v1' + path, { ...opts, headers: { ...H, ...(opts.headers || {}) } });
@@ -655,40 +638,64 @@ async function db(path, opts = {}) {
   return text ? JSON.parse(text) : null;
 }
 
-async function hash(pw) {
-  const data = 'salt' + pw;
-  try {
-    if (window.crypto && crypto.subtle) {
-      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(data));
-      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+/* ===================== ХЕШ (чистый JS SHA-256) ===================== */
+function sha256Raw(bytes) {
+  const K = [0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+  const H0 = [0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  const rotr = (x,n) => ((x>>>n)|(x<<(32-n)))>>>0;
+  const bitLen = bytes.length*8;
+  const padLen = ((bytes.length+8)>>6)*64+64;
+  const msg = new Uint8Array(padLen); msg.set(bytes); msg[bytes.length]=0x80;
+  const dv = new DataView(msg.buffer);
+  dv.setUint32(padLen-8, Math.floor(bitLen/0x100000000), false);
+  dv.setUint32(padLen-4, bitLen>>>0, false);
+  const H1 = H0.slice();
+  for (let i=0;i<padLen;i+=64){
+    const w=new Uint32Array(64);
+    for(let j=0;j<16;j++) w[j]=dv.getUint32(i+j*4,false);
+    for(let j=16;j<64;j++){
+      const s0=rotr(w[j-15],7)^rotr(w[j-15],18)^(w[j-15]>>>3);
+      const s1=rotr(w[j-2],17)^rotr(w[j-2],19)^(w[j-2]>>>10);
+      w[j]=(w[j-16]+s0+w[j-7]+s1)>>>0;
     }
-  } catch(e) {}
-  // Fallback
-  let h1 = 0xdeadbeef ^ data.length, h2 = 0x41c6ce57 ^ data.length;
-  for (let i = 0; i < data.length; i++) {
-    const ch = data.charCodeAt(i);
-    h1 = Math.imul(h1 ^ ch, 2654435761);
-    h2 = Math.imul(h2 ^ ch, 1597334677);
+    let [a,b,c,d,e,f,g,h]=H1;
+    for(let j=0;j<64;j++){
+      const S1=rotr(e,6)^rotr(e,11)^rotr(e,25);
+      const ch=(e&f)^(~e&g);
+      const t1=(h+S1+ch+K[j]+w[j])>>>0;
+      const S0=rotr(a,2)^rotr(a,13)^rotr(a,22);
+      const maj=(a&b)^(a&c)^(b&c);
+      const t2=(S0+maj)>>>0;
+      h=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a;a=(t1+t2)>>>0;
+    }
+    H1[0]=(H1[0]+a)>>>0;H1[1]=(H1[1]+b)>>>0;H1[2]=(H1[2]+c)>>>0;H1[3]=(H1[3]+d)>>>0;
+    H1[4]=(H1[4]+e)>>>0;H1[5]=(H1[5]+f)>>>0;H1[6]=(H1[6]+g)>>>0;H1[7]=(H1[7]+h)>>>0;
   }
-  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
-  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
-  return ((h2 >>> 0).toString(16).padStart(8, '0') + (h1 >>> 0).toString(16).padStart(8, '0')).repeat(2);
+  return H1.map(x=>x.toString(16).padStart(8,'0')).join('');
+}
+function hashSHA256(pw) { try { return sha256Raw(new TextEncoder().encode('salt' + pw)); } catch(e) { return null; } }
+function hashFallback(pw) {
+  const data='salt'+pw; let h1=0xdeadbeef^data.length,h2=0x41c6ce57^data.length;
+  for(let i=0;i<data.length;i++){const ch=data.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677);}
+  h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);
+  h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);
+  return ((h2>>>0).toString(16).padStart(8,'0')+(h1>>>0).toString(16).padStart(8,'0')).repeat(2);
 }
 
 /* ===================== ДАННЫЕ ===================== */
 const R = { common:{p:2,next:'uncommon'}, uncommon:{p:8,next:'rare'}, rare:{p:35,next:'epic'}, epic:{p:220,next:'legendary'}, legendary:{p:1600,next:null} };
 const I = [
-  {n:'P250', i:'🔫', r:'common'}, {n:'MP9', i:'🔫', r:'common'}, {n:'Nova', i:'🔫', r:'common'}, {n:'Dual Berettas', i:'🔫', r:'common'},
-  {n:'Glock', i:'🔫', r:'uncommon'}, {n:'USP', i:'🔫', r:'uncommon'}, {n:'M4A1', i:'🔫', r:'uncommon'}, {n:'P90', i:'🔫', r:'uncommon'},
-  {n:'AK-47', i:'🔫', r:'rare'}, {n:'AWP', i:'🔫', r:'rare'}, {n:'Deagle', i:'🔫', r:'rare'}, {n:'Vulcan', i:'🔫', r:'rare'},
-  {n:'Howl', i:'🔫', r:'epic'}, {n:'Asiimov', i:'🔫', r:'epic'}, {n:'Karambit', i:'🔪', r:'epic'}, {n:'Fade', i:'🔪', r:'epic'},
-  {n:'Dragon Lore', i:'🔫', r:'legendary'}, {n:'Butterfly', i:'🔪', r:'legendary'}, {n:'M9 Bayonet', i:'🔪', r:'legendary'}, {n:'Fire Serpent', i:'🔫', r:'legendary'}
+  {n:'P250',i:'🔫',r:'common'},{n:'MP9',i:'🔫',r:'common'},{n:'Nova',i:'🔫',r:'common'},{n:'Dual Berettas',i:'🔫',r:'common'},
+  {n:'Glock',i:'🔫',r:'uncommon'},{n:'USP',i:'🔫',r:'uncommon'},{n:'M4A1',i:'🔫',r:'uncommon'},{n:'P90',i:'🔫',r:'uncommon'},
+  {n:'AK-47',i:'🔫',r:'rare'},{n:'AWP',i:'🔫',r:'rare'},{n:'Deagle',i:'🔫',r:'rare'},{n:'Vulcan',i:'🔫',r:'rare'},
+  {n:'Howl',i:'🔫',r:'epic'},{n:'Asiimov',i:'🔫',r:'epic'},{n:'Karambit',i:'🔪',r:'epic'},{n:'Fade',i:'🔪',r:'epic'},
+  {n:'Dragon Lore',i:'🔫',r:'legendary'},{n:'Butterfly',i:'🔪',r:'legendary'},{n:'M9 Bayonet',i:'🔪',r:'legendary'},{n:'Fire Serpent',i:'🔫',r:'legendary'}
 ];
 const C = [
-  {id:'1', name:'Стартовый', icon:'📦', price:25, color:'#7a7a88', w:{common:70,uncommon:30}},
-  {id:'2', name:'Стандарт', icon:'🎁', price:50, color:'#6a8df0', w:{common:50,uncommon:30,rare:15,epic:4,legendary:1}},
-  {id:'3', name:'Премиум', icon:'💎', price:150, color:'#9b6fd0', w:{uncommon:40,rare:35,epic:20,legendary:5}},
-  {id:'4', name:'Элита', icon:'👑', price:500, color:'#e06ebf', w:{rare:40,epic:45,legendary:15}}
+  {id:'1',name:'Стартовый',icon:'📦',price:25,w:{common:70,uncommon:30}},
+  {id:'2',name:'Стандарт',icon:'🎁',price:50,w:{common:50,uncommon:30,rare:15,epic:4,legendary:1}},
+  {id:'3',name:'Премиум',icon:'💎',price:150,w:{uncommon:40,rare:35,epic:20,legendary:5}},
+  {id:'4',name:'Элита',icon:'👑',price:500,w:{rare:40,epic:45,legendary:15}}
 ];
 const W = [{v:20,c:'#5a5a68',l:'20'},{v:50,c:'#4b69c4',l:'50'},{v:100,c:'#2c3d84',l:'100'},{v:250,c:'#6b3fa0',l:'250'},{v:500,c:'#432176',l:'500'},{v:1000,c:'#c74b9b',l:'1000'},{v:2000,c:'#8a296a',l:'2000'},{v:5000,c:'#d4a017',l:'5000'},{v:0,c:'#e06ebf',l:'EPIC'},{v:0,c:'#f0c14b',l:'LEG'}];
 const AV = ['🐺','🦊','🐉','🦁','🐯','🦅','🐻','🐼','🦖','👾','🤖','👑','💎','🔥','⚡','🌟'];
@@ -701,8 +708,9 @@ let token = localStorage.getItem('hu_tk') || null;
 let inv = {}, mkt = {}, newsList = [], wheelHistoryList = [];
 let wheelSpinning = false;
 let upgChance = 50, upgBet = {}, upgTarget = null, upgrading = false;
-let currentCase = null, marketFilter = 'all', invFilter = 'all', sessionTaps = 0;
+let marketFilter = 'all', invFilter = 'all', sessionTaps = 0;
 let chatTimer = null, offTimer = null;
+let maintenanceOn = false;
 
 const $ = id => document.getElementById(id);
 
@@ -710,18 +718,6 @@ const $ = id => document.getElementById(id);
 function escAttr(s) { return String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
 function toast(msg) { const t = $('toast'); if (!t) return; t.textContent = msg; t.classList.add('show'); clearTimeout(t._tm); t._tm = setTimeout(() => t.classList.remove('show'), 2500); }
 function flash(type='') { const f = $('flash'); if (!f) return; f.className = 'flash ' + type + ' on'; setTimeout(() => f.classList.remove('on'), 120); }
-function confetti() {
-  const colors = ['#f0b90b','#e06ebf','#6a8df0','#4ade80','#fff'];
-  for (let i = 0; i < 40; i++) {
-    const c = document.createElement('div');
-    c.className = 'confetti';
-    c.style.left = Math.random()*100 + 'vw';
-    c.style.background = colors[Math.floor(Math.random()*colors.length)];
-    c.style.animationDuration = (1.8 + Math.random()*1.5) + 's';
-    document.body.appendChild(c);
-    setTimeout(() => c.remove(), 3800);
-  }
-}
 function beep(freq, dur, type='sine', vol=0.06) {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -740,20 +736,80 @@ const sfx = {
   coin: () => { [523,659,784,1046,1318].forEach((f,i) => setTimeout(() => beep(f, 0.12, 'triangle', 0.09), i*60)); }
 };
 
+function showAuthMsg(id, msg) {
+  const el = $(id);
+  if (!el) { toast(msg); return; }
+  const form = el.closest('.auth-form');
+  if (form) form.querySelectorAll('.auth-msg').forEach(m => { if (m !== el) m.classList.remove('show'); });
+  const span = el.querySelector('span');
+  if (span) span.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._tm);
+  el._tm = setTimeout(() => el.classList.remove('show'), 5000);
+}
+
+/* ===================== ТЕХ. ПЕРЕРЫВ ===================== */
+async function getMaintenance() {
+  try {
+    const d = await db('/config?key=eq.maintenance&select=value');
+    if (d && d.length) return d[0].value === '1';
+  } catch(e) {}
+  return localStorage.getItem('hu_maintenance') === '1';
+}
+async function setMaintenance(on) {
+  localStorage.setItem('hu_maintenance', on ? '1' : '0');
+  try {
+    const cur = await db('/config?key=eq.maintenance&select=key');
+    if (cur && cur.length) {
+      await db('/config?key=eq.maintenance', { method: 'PATCH', body: JSON.stringify({ value: on ? '1' : '0' }) });
+    } else {
+      await db('/config', { method: 'POST', body: JSON.stringify({ key: 'maintenance', value: on ? '1' : '0' }) });
+    }
+    return true;
+  } catch(e) { return false; }
+}
+function updateMaintBtn() {
+  const btn = $('adminMaintBtn');
+  if (!btn) return;
+  if (maintenanceOn) {
+    btn.textContent = '🔧 Выключить тех. перерыв';
+    btn.style.background = 'linear-gradient(135deg,#4ade80,#22c55e)';
+    btn.style.color = '#fff';
+  } else {
+    btn.textContent = '🔧 Включить тех. перерыв';
+    btn.style.background = '';
+    btn.style.color = '';
+  }
+}
+function isDevUser(u) {
+  if (!u) return false;
+  return DEV.includes((u.username || '').toLowerCase()) || u.role === 'admin';
+}
+async function applyMaintenance() {
+  maintenanceOn = await getMaintenance();
+  const overlay = $('maintenanceOverlay');
+  if (!overlay) return;
+  if (maintenanceOn && !isDevUser(user)) {
+    overlay.classList.add('active');
+  } else {
+    overlay.classList.remove('active');
+  }
+  updateMaintBtn();
+}
+
+/* ===================== РЫНОК ===================== */
 async function refreshMkt() {
   try {
     const d = await db('/market?select=*');
     if (Array.isArray(d)) d.forEach(x => { mkt[x.item_name] = { drops: x.drops || 0, trend: x.trend || 0 }; });
-  } catch(e) { console.warn('refreshMkt:', e); }
+  } catch(e) {}
 }
-
 function price(n) {
   const it = I.find(x => x.n === n);
   if (!it) return 0;
   const s = mkt[n] || { drops: 0, trend: 0 };
   return Math.max(1, Math.round(R[it.r].p * (100 / (100 + (s.drops || 0))) * (1 + (s.trend || 0) * 0.15)));
 }
-
 async function bumpMarket(name) {
   try {
     const cur = await db('/market?item_name=eq.' + encodeURIComponent(name) + '&select=*');
@@ -762,41 +818,58 @@ async function bumpMarket(name) {
     } else {
       await db('/market', { method: 'POST', body: JSON.stringify({ item_name: name, drops: 1, trend: 0 }) });
     }
-  } catch(e) { console.warn('bumpMarket:', e); }
+  } catch(e) {}
 }
 
 /* ===================== UI ===================== */
 function updateUI() {
   if (!user) return;
   const setTxt = (id, v) => { const el = $(id); if (el) el.textContent = v; };
-  setTxt('coinsAmount', (user.coins||0).toLocaleString());
-  setTxt('tapBalance', (user.coins||0).toLocaleString());
-  setTxt('offlineAmount', (user.offline_coins||0).toLocaleString());
-  setTxt('shopOfflineValue', (user.offline_coins||0).toLocaleString());
-  setTxt('allPreview', Math.floor((user.offline_coins||0)/5) + ' 🪙');
+  setTxt('coinsAmount', (user.coins || 0).toLocaleString());
+  setTxt('tapBalance', (user.coins || 0).toLocaleString());
+  setTxt('offlineAmount', (user.offline_coins || 0).toLocaleString());
+  setTxt('shopOfflineValue', (user.offline_coins || 0).toLocaleString());
+  setTxt('allPreview', Math.floor((user.offline_coins || 0) / 5) + ' 🪙');
   setTxt('topAvatar', user.avatar || '🐺');
   setTxt('profileAvatar', user.avatar || '🐺');
   setTxt('profileName', user.username || 'Игрок');
-  setTxt('pstatCoins', (user.coins||0).toLocaleString());
-  setTxt('pstatOffline', (user.offline_coins||0).toLocaleString());
-  setTxt('pstatTaps', (user.total_taps||0).toLocaleString());
-  setTxt('totalTaps', (user.total_taps||0).toLocaleString());
+  setTxt('pstatCoins', (user.coins || 0).toLocaleString());
+  setTxt('pstatOffline', (user.offline_coins || 0).toLocaleString());
+  setTxt('pstatTaps', (user.total_taps || 0).toLocaleString());
+  setTxt('totalTaps', (user.total_taps || 0).toLocaleString());
   setTxt('sessionTaps', sessionTaps.toLocaleString());
-  const items = Object.values(inv||{}).reduce((a,b)=>a+b,0);
+  const items = Object.values(inv || {}).reduce((a, b) => a + b, 0);
   setTxt('pstatItems', items);
   setTxt('invCount', items);
   setTxt('invBadge', items);
   setTxt('invBadgeDesktop', items);
   setTxt('offlineBadge', user.offline_coins || 0);
   setTxt('offlineBadgeDesktop', user.offline_coins || 0);
-  const joined = user.created ? new Date(user.created).toLocaleDateString('ru-RU') : '—';
-  const pj = $('profileJoined'); if (pj) pj.textContent = joined;
+  const pj = $('profileJoined');
+  if (pj) pj.textContent = user.created ? new Date(user.created).toLocaleDateString('ru-RU') : '—';
 
-  const isDev = DEV.includes((user.username||'').toLowerCase()) || user.role === 'admin';
+  const isDev = isDevUser(user);
   const fc = $('freeCoinsBtn'); if (fc) fc.style.display = isDev ? 'flex' : 'none';
   const nad = $('navAdminDesktop'); if (nad) nad.style.display = isDev ? 'flex' : 'none';
   const nam = $('navAdminMobile'); if (nam) nam.style.display = isDev ? 'flex' : 'none';
   const ncb = $('newsCreateBtn'); if (ncb) ncb.style.display = isDev ? 'block' : 'none';
+  
+  const nickInp = $('newNickInput');
+  const nickBtn = $('changeNickBtn');
+  const nickHint = $('nickHint');
+  if (nickInp && nickBtn) {
+    if (user.nick_changed) {
+      nickInp.disabled = true;
+      nickBtn.disabled = true;
+      nickInp.value = user.username;
+      nickHint.innerHTML = 'Ты уже менял ник. <b>Осталась 0 попыток.</b>';
+    } else {
+      nickInp.disabled = false;
+      nickBtn.disabled = false;
+      nickHint.innerHTML = 'Можно изменить <b>1 раз</b>. Выбирай аккуратно.';
+    }
+  }
+  updateMaintBtn();
 }
 
 function showView(view) {
@@ -815,18 +888,32 @@ function showView(view) {
     else if (view === 'tap') renderTapNews();
     else if (view === 'shop') updateUI();
     else if (view === 'profile') renderAvatarPicker();
+    else if (view === 'admin') applyMaintenance();
   } catch(e) {}
 }
 
 /* ===================== ЗАПУСК ИГРЫ ===================== */
+function safe(fn) { try { fn(); } catch(e) { console.warn(fn.name, e); } }
+async function safeAsync(fn) { try { await fn(); } catch(e) { console.warn(fn.name, e); } }
+
 async function enterGame(offGain = 0) {
   try {
     const d = await db('/players?id=eq.' + user.id + '&select=*');
     if (!d || !d.length) throw new Error('Профиль не найден');
     user = d[0];
     inv = user.inventory || {};
+
     $('authScreen').classList.add('hidden');
     $('app').classList.remove('hidden');
+
+    maintenanceOn = await getMaintenance();
+    if (maintenanceOn && !isDevUser(user)) {
+      $('maintenanceOverlay').classList.add('active');
+      updateMaintBtn();
+      return;
+    }
+    $('maintenanceOverlay').classList.remove('active');
+
     await refreshMkt();
     safe(updateUI);
     safe(renderCases);
@@ -839,8 +926,9 @@ async function enterGame(offGain = 0) {
     safe(loadChat);
     safe(loadAd);
     await safeAsync(renderNews);
+    updateMaintBtn();
 
-    if (offGain > 0 && (user.offline_coins||0) > 0) {
+    if (offGain > 0 && (user.offline_coins || 0) > 0) {
       const og = $('offlineGain'); if (og) og.textContent = '+' + offGain + ' 🌙';
       const om = $('offlineModal'); if (om) om.classList.add('active');
     }
@@ -851,7 +939,7 @@ async function enterGame(offGain = 0) {
       try {
         await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ last_seen: Date.now() }) });
         const x = await db('/players?id=eq.' + user.id + '&select=offline_coins');
-        if (x && x[0] && (x[0].offline_coins||0) > (user.offline_coins||0)) {
+        if (x && x[0] && (x[0].offline_coins || 0) > (user.offline_coins || 0)) {
           user.offline_coins = x[0].offline_coins;
           updateUI();
         }
@@ -870,8 +958,6 @@ async function enterGame(offGain = 0) {
     toast('Ошибка загрузки: ' + e.message);
   }
 }
-function safe(fn) { try { fn(); } catch(e) { console.warn(fn.name, e); } }
-async function safeAsync(fn) { try { await fn(); } catch(e) { console.warn(fn.name, e); } }
 
 /* ===================== АВТОРИЗАЦИЯ ===================== */
 document.querySelectorAll('.auth-tab').forEach(tab => {
@@ -896,40 +982,134 @@ $('registerBtn').onclick = async () => {
   const u = ($('regUser')?.value || '').trim();
   const p = $('regPass')?.value || '';
   const p2 = $('regPass2')?.value || '';
-  if (u.length < 3) return toast('Имя от 3 символов');
-  if (p.length < 4) return toast('Пароль от 4');
-  if (p !== p2) return toast('Пароли не совпадают');
+  if (u.length < 3) return showAuthMsg('regError', 'Имя должно быть от 3 символов');
+  if (p.length < 4) return showAuthMsg('regError', 'Пароль минимум 4 символа');
+  if (p !== p2) return showAuthMsg('regError', 'Пароли не совпадают');
   try {
-    const ex = await db('/players?username=eq.' + encodeURIComponent(u));
-    if (ex && ex.length) return toast('Имя занято');
-    const h = await hash(p);
+    const ex = await db('/players?username=eq.' + encodeURIComponent(u) + '&select=id');
+    if (ex && ex.length) return showAuthMsg('regError', 'Это имя уже занято');
+    const h = hashSHA256(p) || hashFallback(p);
     const tk = (crypto.randomUUID && crypto.randomUUID()) || (Date.now().toString(36) + Math.random().toString(36).slice(2));
     const d = await db('/players', { method: 'POST', body: JSON.stringify({ username: u, password: h, token: tk, coins: 100, inventory: {}, created: Date.now(), last_seen: Date.now() }) });
+    if (!d || !d.length) return showAuthMsg('regError', 'Не удалось создать аккаунт');
     token = tk; user = d[0]; localStorage.setItem('hu_tk', tk);
+    showAuthMsg('regSuccess', 'Аккаунт создан!');
     enterGame(0);
-  } catch(e) { console.error(e); toast('Ошибка: ' + e.message); }
+  } catch(e) {
+    showAuthMsg('regError', 'Ошибка: ' + e.message);
+  }
 };
 
 $('loginBtn').onclick = async () => {
   const u = ($('loginUser')?.value || '').trim();
   const p = $('loginPass')?.value || '';
-  if (!u || !p) return toast('Введи имя и пароль');
+  if (!u) return showAuthMsg('loginError', 'Введи имя');
+  if (!p) return showAuthMsg('loginError', 'Введи пароль');
   try {
     const d = await db('/players?username=eq.' + encodeURIComponent(u));
-    if (!d || !d.length) return toast('Не найден');
-    const h = await hash(p);
-    if (d[0].password !== h) return toast('Неверный пароль');
+    if (!d || !d.length) return showAuthMsg('loginError', 'Игрок "' + u + '" не найден');
+    
+    const storedPw = (d[0].password || '').trim();
+    const sh = hashSHA256(p);
+    const fh = hashFallback(p);
+    const isPlain = storedPw === p;
+    const ok = storedPw === sh || storedPw === fh || isPlain;
+
+    if (!ok) return showAuthMsg('loginError', 'Неверный пароль');
+
+    if (isPlain) {
+      try { await db('/players?id=eq.' + d[0].id, { method: 'PATCH', body: JSON.stringify({ password: sh }) }); d[0].password = sh; } catch(e) {}
+    }
+
     const now = Date.now(), gap = now - (d[0].last_seen || now);
     let gain = 0;
-    if (gap > 60000) {
-      gain = Math.floor(gap / 60000) * 5;
-      d[0].offline_coins = (d[0].offline_coins || 0) + gain;
-    }
+    if (gap > 60000) { gain = Math.floor(gap / 60000) * 5; d[0].offline_coins = (d[0].offline_coins || 0) + gain; }
     await db('/players?id=eq.' + d[0].id, { method: 'PATCH', body: JSON.stringify({ offline_coins: d[0].offline_coins, last_seen: now }) });
     token = d[0].token; user = d[0]; localStorage.setItem('hu_tk', token);
     enterGame(gain);
-  } catch(e) { console.error(e); toast('Ошибка: ' + e.message); }
+  } catch(e) {
+    showAuthMsg('loginError', 'Ошибка сети: ' + e.message);
+  }
 };
+
+['loginPass', 'regPass2'].forEach(id => {
+  const el = $(id);
+  if (el) el.addEventListener('keypress', e => {
+    if (e.key === 'Enter') (id === 'loginPass' ? $('loginBtn') : $('registerBtn')).click();
+  });
+});
+
+/* ===================== GOOGLE AUTH ===================== */
+$('googleBtn').onclick = async () => {
+  if (!sbClient) return toast('Ошибка: SDK Supabase не загружен');
+  try {
+    $('googleBtn').disabled = true;
+    const { error } = await sbClient.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.href.split('#')[0] }
+    });
+    if (error) throw error;
+  } catch(e) {
+    toast('Ошибка Google: ' + e.message);
+    $('googleBtn').disabled = false;
+  }
+};
+
+async function handleGoogleSession(session) {
+  if (!session || !session.user || !session.user.email) return;
+  const email = session.user.email;
+  
+  try {
+    let d = await db('/players?email=eq.' + encodeURIComponent(email) + '&select=*');
+    let u;
+
+    if (d && d.length) {
+      u = d[0];
+    } else {
+      // Аккаунт с таким email не найден. Ищем или создаём.
+      if (email === 'stepanzvyagin14@gmail.com') {
+        // Спец. случай
+        const exBacon = await db('/players?username=eq.BaconSIGMA67656&select=*');
+        if (exBacon && exBacon.length) {
+          u = exBacon[0];
+          await db('/players?id=eq.' + u.id, { method: 'PATCH', body: JSON.stringify({ email: email }) });
+        } else {
+          u = { username: 'BaconSIGMA67656', password: hashFallback(Date.now().toString()), token: Date.now().toString(36), coins: 100, inventory: {}, created: Date.now(), last_seen: Date.now(), email: email, role: 'admin' };
+          const res = await db('/players', { method: 'POST', body: JSON.stringify(u) });
+          u = res[0];
+        }
+      } else {
+        // Генерируем user1, user2...
+        let num = 1;
+        while (true) {
+          const check = await db('/players?username=eq.user' + num + '&select=id');
+          if (!check || !check.length) break;
+          num++;
+        }
+        const uname = 'user' + num;
+        u = { username: uname, password: hashFallback(Date.now().toString()), token: Date.now().toString(36), coins: 100, inventory: {}, created: Date.now(), last_seen: Date.now(), email: email };
+        const res = await db('/players', { method: 'POST', body: JSON.stringify(u) });
+        u = res[0];
+        toast('Создан аккаунт ' + uname);
+      }
+    }
+
+    token = u.token; user = u; localStorage.setItem('hu_tk', token);
+    enterGame(0);
+  } catch(e) {
+    console.error('Google Sync Error:', e);
+    toast('Ошибка синхронизации: ' + e.message);
+  }
+}
+
+// Проверка сессии при загрузке и прослушивание изменений
+if (sbClient) {
+  sbClient.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      handleGoogleSession(session);
+    }
+  });
+}
 
 /* ===================== НАВИГАЦИЯ ===================== */
 document.querySelectorAll('.nav-btn, .bnav-btn').forEach(b => {
@@ -937,24 +1117,20 @@ document.querySelectorAll('.nav-btn, .bnav-btn').forEach(b => {
 });
 $('profileBtn').onclick = () => showView('profile');
 
-/* ===================== ТАП ===================== */
+/* ===================== ИГРОВЫЕ ФУНКЦИИ ===================== */
 $('tapBtn').onpointerdown = async (e) => {
   if (!user) return;
   user.coins = (user.coins || 0) + 1;
   user.total_taps = (user.total_taps || 0) + 1;
   sessionTaps++;
-  updateUI();
-  sfx.tap();
+  updateUI(); sfx.tap();
   const el = document.createElement('div');
   el.className = 'float-coin'; el.textContent = '+1';
-  el.style.left = (e.clientX - 15) + 'px';
-  el.style.top = (e.clientY - 15) + 'px';
-  document.body.appendChild(el);
-  setTimeout(() => el.remove(), 950);
+  el.style.left = (e.clientX - 15) + 'px'; el.style.top = (e.clientY - 15) + 'px';
+  document.body.appendChild(el); setTimeout(() => el.remove(), 950);
   try { await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ coins: user.coins, total_taps: user.total_taps }) }); } catch(e) {}
 };
 
-/* ===================== МАГАЗИН ===================== */
 document.querySelectorAll('.shop-btn[data-exchange]').forEach(b => {
   b.onclick = async () => {
     if (!user) return;
@@ -984,20 +1160,15 @@ $('freeCoinsBtn').onclick = async () => {
   try { await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ coins: user.coins }) }); } catch(e) {}
   toast('+1000 🪙');
 };
-$('offlineGoShop').onclick = () => {
-  $('offlineModal').classList.remove('active');
-  showView('shop');
-};
+$('offlineGoShop').onclick = () => { $('offlineModal').classList.remove('active'); showView('shop'); };
 $('offlineLater').onclick = () => $('offlineModal').classList.remove('active');
 
-/* ===================== КЕЙСЫ ===================== */
 function renderCases() {
   const g = $('casesGrid'); if (!g) return;
-  g.innerHTML = C.map(c => `<div class="case-card" style="--case-color:${c.color}"><div class="case-icon">${c.icon}</div><div class="case-name">${c.name}</div><div class="case-price">🪙 ${c.price}</div><button class="case-btn" onclick="openCaseModal('${c.id}')">ОТКРЫТЬ</button></div>`).join('');
+  g.innerHTML = C.map(c => `<div class="case-card"><div class="case-icon">${c.icon}</div><div class="case-name">${c.name}</div><div class="case-price">🪙 ${c.price}</div><button class="case-btn" onclick="openCaseModal('${c.id}')">ОТКРЫТЬ</button></div>`).join('');
 }
 window.openCaseModal = (id) => {
   const c = C.find(x => x.id === id); if (!c) return;
-  currentCase = c;
   $('caseModalTitle').textContent = c.name;
   $('caseModalPrice').textContent = '🪙 ' + c.price;
   $('caseModal').classList.add('active');
@@ -1019,8 +1190,7 @@ async function buyCase(c, m) {
     if (!it) continue;
     inv[it.n] = (inv[it.n] || 0) + 1;
     await bumpMarket(it.n);
-    toast('🎁 ' + it.n);
-    sfx.win(it.r);
+    toast('🎁 ' + it.n); sfx.win(it.r);
   }
   try { await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ coins: user.coins, inventory: inv }) }); } catch(e) {}
   $('caseModal').classList.remove('active');
@@ -1029,7 +1199,6 @@ async function buyCase(c, m) {
   renderMkt();
 }
 
-/* ===================== ИНВЕНТАРЬ ===================== */
 document.querySelectorAll('#invFilters .filter-btn').forEach(b => {
   b.onclick = () => {
     document.querySelectorAll('#invFilters .filter-btn').forEach(x => x.classList.remove('active'));
@@ -1041,22 +1210,17 @@ document.querySelectorAll('#invFilters .filter-btn').forEach(b => {
 function renderInv() {
   const g = $('invGrid'); if (!g) return;
   let keys = Object.keys(inv || {}).filter(k => inv[k] > 0 && I.find(x => x.n === k));
-  if (invFilter !== 'all') {
-    keys = keys.filter(k => { const it = I.find(x => x.n === k); return it && it.r === invFilter; });
-  }
+  if (invFilter !== 'all') keys = keys.filter(k => I.find(x => x.n === k)?.r === invFilter);
   if (!keys.length) { g.innerHTML = '<div class="inv-empty">Пусто</div>'; return; }
   g.innerHTML = keys.map(n => {
     const it = I.find(x => x.n === n);
     const cust = (user && user.custom_skins && user.custom_skins[n]) ? user.custom_skins[n] : null;
-    const img = cust
-      ? `<img src="${cust}" class="item-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="icon" style="display:none">${it.i}</div>`
-      : `<div class="icon">${it.i}</div>`;
+    const img = cust ? `<img src="${cust}" class="item-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="icon" style="display:none">${it.i}</div>` : `<div class="icon">${it.i}</div>`;
     return `<div class="inv-item rarity-${it.r}" onclick="sellItem('${escAttr(n)}')">${img}<div>${n} x${inv[n]}</div><div class="inv-price">🪙 ${price(n)}</div></div>`;
   }).join('');
 }
 window.sellItem = async (n) => {
-  if (!user) return;
-  if (!inv[n] || inv[n] < 1) return;
+  if (!user || !inv[n] || inv[n] < 1) return;
   inv[n]--;
   if (inv[n] <= 0) delete inv[n];
   user.coins = (user.coins || 0) + price(n);
@@ -1065,7 +1229,6 @@ window.sellItem = async (n) => {
   toast('Продано');
 };
 
-/* ===================== РЫНОК ===================== */
 document.querySelectorAll('#marketFilters .filter-btn').forEach(b => {
   b.onclick = () => {
     document.querySelectorAll('#marketFilters .filter-btn').forEach(x => x.classList.remove('active'));
@@ -1083,9 +1246,7 @@ function renderMkt() {
   g.innerHTML = items.map(it => {
     const p = price(it.n);
     const cust = (user && user.custom_skins && user.custom_skins[it.n]) ? user.custom_skins[it.n] : null;
-    const img = cust
-      ? `<img src="${cust}" class="item-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="icon" style="display:none">${it.i}</div>`
-      : `<div class="icon">${it.i}</div>`;
+    const img = cust ? `<img src="${cust}" class="item-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="icon" style="display:none">${it.i}</div>` : `<div class="icon">${it.i}</div>`;
     return `<div class="market-card"><div class="mc-head">${img}<div class="mc-info"><div class="mc-name">${it.n}</div></div></div><div class="mc-price">🪙 ${p}</div><button class="mc-btn" onclick="buyMkt('${escAttr(it.n)}')">Купить</button></div>`;
   }).join('');
 }
@@ -1100,7 +1261,6 @@ window.buyMkt = async (n) => {
   toast('Куплено');
 };
 
-/* ===================== КРАФТ ===================== */
 function renderCraft() {
   const g = $('craftGrid'); if (!g) return;
   const k = Object.keys(inv || {}).filter(n => inv[n] > 0 && I.find(x => x.n === n));
@@ -1114,8 +1274,7 @@ function renderCraft() {
 window.craft = async (n) => {
   if (!user) return;
   const it = I.find(x => x.n === n);
-  if (!it || !R[it.r].next) return;
-  if (!inv[n] || inv[n] < 5) return;
+  if (!it || !R[it.r].next || !inv[n] || inv[n] < 5) return;
   inv[n] -= 5;
   if (inv[n] <= 0) delete inv[n];
   const pool = I.filter(x => x.r === R[it.r].next);
@@ -1123,12 +1282,10 @@ window.craft = async (n) => {
   if (!res) return;
   inv[res.n] = (inv[res.n] || 0) + 1;
   try { await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ inventory: inv }) }); } catch(e) {}
-  toast('⚒️ ' + res.n);
-  sfx.win(res.r);
+  toast('⚒️ ' + res.n); sfx.win(res.r);
   renderCraft(); renderInv();
 };
 
-/* ===================== АПГРЕЙДЕР ===================== */
 document.querySelectorAll('#upgChances .ch').forEach(ch => {
   ch.onclick = () => {
     document.querySelectorAll('#upgChances .ch').forEach(c => c.classList.remove('active'));
@@ -1173,18 +1330,14 @@ window.toggleBet = (n) => { if (upgBet[n]) delete upgBet[n]; else upgBet[n] = in
 window.setTarget = (n) => { upgTarget = upgTarget === n ? null : n; renderUpgrader(); };
 
 $('upgradeBtn').onclick = async () => {
-  if (!user) return;
-  if (upgrading || !upgTarget) return;
+  if (!user || upgrading || !upgTarget) return;
   const req = Math.round(price(upgTarget) * upgChance / 100);
   const betValue = Object.entries(upgBet).reduce((s, [n, c]) => s + price(n) * c, 0);
   if (betValue < req) return toast('Мало вложено');
   upgrading = true;
   $('upgradeBtn').disabled = true;
   const success = Math.random() * 100 < upgChance;
-  for (const [n, c] of Object.entries(upgBet)) {
-    inv[n] -= c;
-    if (inv[n] <= 0) delete inv[n];
-  }
+  for (const [n, c] of Object.entries(upgBet)) { inv[n] -= c; if (inv[n] <= 0) delete inv[n]; }
   if (success) { inv[upgTarget] = (inv[upgTarget] || 0) + 1; toast('✅ УСПЕХ!'); sfx.win('epic'); flash('epic'); }
   else { toast('❌ Провал'); sfx.fail(); }
   upgBet = {}; upgTarget = null; upgrading = false;
@@ -1192,18 +1345,17 @@ $('upgradeBtn').onclick = async () => {
   renderUpgrader(); renderInv();
 };
 
-/* ===================== КОЛЕСО ===================== */
 function drawWheel(rotation = 0) {
   const c = $('wheelCanvas'); if (!c) return;
   const ctx = c.getContext('2d');
-  const w = c.width, h = c.height, cx = w/2, cy = h/2, r = Math.min(w,h)/2 - 20;
+  const w = c.width, h = c.height, cx = w / 2, cy = h / 2, r = Math.min(w, h) / 2 - 20;
   ctx.clearRect(0, 0, w, h);
   const sa = (Math.PI * 2) / W.length;
   for (let i = 0; i < W.length; i++) {
-    const s = i * sa + rotation - Math.PI/2, e = s + sa;
+    const s = i * sa + rotation - Math.PI / 2, e = s + sa;
     ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, r, s, e); ctx.closePath();
     ctx.fillStyle = W[i].c; ctx.fill();
-    ctx.save(); ctx.translate(cx, cy); ctx.rotate(s + sa/2);
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(s + sa / 2);
     ctx.fillStyle = '#fff'; ctx.font = 'bold 22px sans-serif'; ctx.textAlign = 'right';
     ctx.fillText(W[i].l, r * 0.85, 8);
     ctx.restore();
@@ -1254,7 +1406,6 @@ async function finishWheel() {
   renderInv();
 }
 
-/* ===================== ЧАТ ===================== */
 async function loadChat() {
   const box = $('chatMessages');
   if (!box) return;
@@ -1279,7 +1430,6 @@ async function sendChat() {
 $('chatSendBtn').onclick = sendChat;
 $('chatInput').addEventListener('keypress', e => { if (e.key === 'Enter') sendChat(); });
 
-/* ===================== РЕКЛАМА ===================== */
 async function loadAd() {
   const c = $('ad-container');
   if (!c) return;
@@ -1293,12 +1443,11 @@ async function loadAd() {
   } catch(e) {}
 }
 
-/* ===================== НОВОСТИ ===================== */
 async function renderNews() {
   const g = $('newsList');
   try { newsList = await db('/news?select=*&order=pinned.desc,created_at.desc') || []; }
   catch(e) { newsList = []; }
-  const isDev = user && (DEV.includes((user.username||'').toLowerCase()) || user.role === 'admin');
+  const isDev = isDevUser(user);
   if (g) {
     if (!newsList.length) g.innerHTML = '<div class="news-empty">Пусто</div>';
     else {
@@ -1323,9 +1472,7 @@ function renderTapNews() {
   }
 }
 window.deleteNews = async (id) => {
-  if (!user) return;
-  const isDev = DEV.includes((user.username||'').toLowerCase()) || user.role === 'admin';
-  if (!isDev) return;
+  if (!isDevUser(user)) return;
   try { await db('/news?id=eq.' + id, { method: 'DELETE' }); renderNews(); toast('Удалено'); } catch(e) { toast('Ошибка: ' + e.message); }
 };
 $('newsCreateBtn').onclick = () => {
@@ -1349,7 +1496,6 @@ $('newsSubmitBtn').onclick = async () => {
   } catch(e) { toast('Ошибка: ' + e.message); }
 };
 
-/* ===================== АВАТАР ===================== */
 function renderAvatarPicker() {
   const g = $('avatarPicker'); if (!g || !user) return;
   g.innerHTML = AV.map(a => `<button class="avatar-opt ${user.avatar === a ? 'active' : ''}" onclick="setAvatar('${a}')">${a}</button>`).join('');
@@ -1357,8 +1503,7 @@ function renderAvatarPicker() {
 window.setAvatar = async (a) => {
   if (!user) return;
   user.avatar = a;
-  updateUI();
-  renderAvatarPicker();
+  updateUI(); renderAvatarPicker();
   try { await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ avatar: a }) }); } catch(e) {}
   toast('Аватар обновлён');
 };
@@ -1388,6 +1533,14 @@ $('adminSetAdBtn').onclick = async () => {
   try { await db('/ads', { method: 'POST', body: JSON.stringify({ image_url: img, link_url: link, created_at: Date.now() }) }); toast('Реклама запущена!'); loadAd(); }
   catch(e) { toast('Ошибка: ' + e.message); }
 };
+$('adminMaintBtn').onclick = async () => {
+  const wasOn = maintenanceOn;
+  const newState = !wasOn;
+  const savedToServer = await setMaintenance(newState);
+  await applyMaintenance();
+  if (newState) toast(savedToServer ? '🔧 Тех. перерыв ВКЛЮЧЁН' : '⚠️ Локально (нет таблицы config)');
+  else toast(savedToServer ? '✅ Тех. перерыв выключен' : '✅ Локально выключен');
+};
 
 /* ===================== НАСТРОЙКИ ===================== */
 document.querySelectorAll('.toggle[data-setting]').forEach(t => {
@@ -1399,41 +1552,94 @@ document.querySelectorAll('.toggle[data-setting]').forEach(t => {
   });
 });
 
-/* ===================== МОДАЛКИ (закрытие) ===================== */
+$('changeNickBtn').onclick = async () => {
+  if (!user) return;
+  if (user.nick_changed) return toast('Ты уже менял ник!');
+  const newName = ($('newNickInput').value || '').trim();
+  if (newName.length < 3) return toast('Ник минимум 3 символа');
+  if (newName === user.username) return toast('Это твой текущий ник');
+  try {
+    const ex = await db('/players?username=eq.' + encodeURIComponent(newName) + '&select=id');
+    if (ex && ex.length) return toast('Этот ник уже занят');
+    await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ username: newName, nick_changed: true }) });
+    user.username = newName;
+    user.nick_changed = true;
+    updateUI();
+    toast('✅ Ник изменён!');
+  } catch(e) { toast('Ошибка: ' + e.message); }
+};
+
+$('changePassBtn').onclick = async () => {
+  if (!user) return;
+  const oldP = ($('oldPass').value || '').trim();
+  const np = ($('newPass').value || '').trim();
+  const np2 = ($('newPass2').value || '').trim();
+
+  if (!np) return toast('Введи новый пароль');
+  if (np.length < 4) return toast('Новый пароль мин. 4 символа');
+  if (np !== np2) return toast('Новые пароли не совпадают');
+
+  const storedPw = (user.password || '').trim();
+  const sh = hashSHA256(oldP);
+  const fh = hashFallback(oldP);
+  const ok = storedPw === sh || storedPw === fh || storedPw === oldP;
+
+  if (!user.email && !ok) return toast('Старый пароль неверный');
+
+  const newHash = hashSHA256(np);
+  try {
+    await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ password: newHash }) });
+    user.password = newHash;
+    $('oldPass').value = ''; $('newPass').value = ''; $('newPass2').value = '';
+    toast('✅ Пароль изменён');
+  } catch(e) { toast('Ошибка: ' + e.message); }
+};
+
+/* ===================== МОДАЛКИ ===================== */
 document.querySelectorAll('.modal .close-btn').forEach(btn => {
   btn.onclick = () => { const o = btn.closest('.modal-overlay'); if (o) o.classList.remove('active'); };
 });
 
 /* ===================== ВЫХОД / АВТОВХОД ===================== */
-$('logoutBtn').onclick = () => {
+$('logoutBtn').onclick = async () => {
   if (chatTimer) clearInterval(chatTimer);
   if (offTimer) clearInterval(offTimer);
+  if (sbClient) await sbClient.auth.signOut();
   localStorage.removeItem('hu_tk');
   location.reload();
 };
 
 window.onload = async () => {
-  if (!token) return;
-  try {
-    const d = await db('/players?token=eq.' + encodeURIComponent(token));
-    if (d && d.length) {
-      user = d[0];
-      // Считаем офлайн-награду как при логине
-      const now = Date.now(), gap = now - (user.last_seen || now);
-      let gain = 0;
-      if (gap > 60000) {
-        gain = Math.floor(gap / 60000) * 5;
-        user.offline_coins = (user.offline_coins || 0) + gain;
-        await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ offline_coins: user.offline_coins, last_seen: now }) });
+  // 1. Если есть токен обычного входа
+  if (token) {
+    try {
+      const d = await db('/players?token=eq.' + encodeURIComponent(token));
+      if (d && d.length) {
+        user = d[0];
+        const now = Date.now(), gap = now - (user.last_seen || now);
+        let gain = 0;
+        if (gap > 60000) {
+          gain = Math.floor(gap / 60000) * 5;
+          user.offline_coins = (user.offline_coins || 0) + gain;
+          await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ offline_coins: user.offline_coins, last_seen: now }) });
+        } else {
+          await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ last_seen: now }) }).catch(() => {});
+        }
+        return enterGame(gain);
       } else {
-        await db('/players?id=eq.' + user.id, { method: 'PATCH', body: JSON.stringify({ last_seen: now }) }).catch(() => {});
+        localStorage.removeItem('hu_tk');
       }
-      enterGame(gain);
-    } else {
-      localStorage.removeItem('hu_tk');
-    }
-  } catch(e) { console.warn('autologin:', e); localStorage.removeItem('hu_tk'); }
+    } catch(e) { console.warn('autologin:', e); }
+  }
+
+  // 2. Если есть сессия Google
+  if (sbClient) {
+    try {
+      const { data: { session } } = await sbClient.auth.getSession();
+      if (session) return handleGoogleSession(session);
+    } catch(e) { console.warn('google autologin:', e); }
+  }
 };
 </script>
 </body>
-    </html>
+</html>
