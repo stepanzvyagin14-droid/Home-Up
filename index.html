@@ -29,7 +29,7 @@
             --color-border-hover: #f0b90b;
             --color-border-active: rgba(240, 185, 11, 0.8);
             
-            /* Золотая палитра (Акценты) */
+            /* Золотая палитра */
             --color-gold: #f0b90b;
             --color-gold-light: #ffe488;
             --color-gold-dark: #8a6600;
@@ -77,9 +77,7 @@
         /* ======================================================================
            2. СБРОС СТИЛЕЙ И БАЗОВЫЕ НАСТРОЙКИ
            ====================================================================== */
-        *,
-        *::before,
-        *::after {
+        *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
@@ -111,22 +109,11 @@
         }
 
         /* Кастомный скроллбар */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--color-bg-main);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--color-gold-dark);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--color-gold);
-        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--color-bg-main); }
+        ::-webkit-scrollbar-thumb { background: var(--color-gold-dark); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--color-gold); }
 
-        /* Заголовки */
         h1, h2, h3, h4, h5, h6 {
             font-weight: 900;
             letter-spacing: 0.5px;
@@ -134,7 +121,6 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
-        /* Кнопки и ссылки */
         button {
             font-family: inherit;
             outline: none;
@@ -146,93 +132,43 @@
         /* ======================================================================
            3. АНИМАЦИИ (KEYFRAMES)
            ====================================================================== */
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            0% { opacity: 0; transform: translateY(30px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slideDown {
-            0% { opacity: 0; transform: translateY(-30px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 10px var(--color-gold-glow); }
-            50% { box-shadow: 0 0 30px var(--color-gold-glow), 0 0 50px var(--color-gold-glow); }
-            100% { box-shadow: 0 0 10px var(--color-gold-glow); }
-        }
-
-        @keyframes spinSlow {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes flyUpCube {
-            0% { top: 110vh; opacity: 0; }
-            10% { opacity: 0.8; }
-            90% { opacity: 0.8; }
-            100% { top: -20vh; opacity: 0; }
-        }
-
-        @keyframes spin3DCube {
-            0% { transform: rotateX(0) rotateY(0) rotateZ(0); }
-            100% { transform: rotateX(360deg) rotateY(720deg) rotateZ(360deg); }
-        }
-
-        @keyframes tapRippleEffect {
-            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
-            100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
-        }
-
-        @keyframes discoBackground {
-            0% { background-color: #ff0000; }
-            20% { background-color: #00ff00; }
-            40% { background-color: #0000ff; }
-            60% { background-color: #ffff00; }
-            80% { background-color: #ff00ff; }
-            100% { background-color: #ff0000; }
-        }
-
-        @keyframes slideDownBanner {
-            0% { top: -150px; opacity: 0; }
-            100% { top: 15px; opacity: 1; }
-        }
-
-        @keyframes slideUpBanner {
-            0% { top: 15px; opacity: 1; }
-            100% { top: -150px; opacity: 0; }
-        }
+        @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+        @keyframes slideUp { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
+        @keyframes spinSlow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes tapRipple { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.5); opacity: 0; } }
+        @keyframes discoBg { 0% { background-color: #ff0000; } 20% { background-color: #00ff00; } 40% { background-color: #0000ff; } 60% { background-color: #ffff00; } 80% { background-color: #ff00ff; } 100% { background-color: #ff0000; } }
+        @keyframes slideDownBanner { 0% { top: -150px; opacity: 0; } 100% { top: 15px; opacity: 1; } }
+        @keyframes slideUpBanner { 0% { top: 15px; opacity: 1; } 100% { top: -150px; opacity: 0; } }
+        @keyframes floatCoin { 0% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-15px) rotate(180deg); } 100% { transform: translateY(0px) rotate(360deg); } }
 
         /* ======================================================================
-           4. ЭКРАН ЗАГРУЗКИ
+           4. ЭКРАНЫ
            ====================================================================== */
-        .loading-screen {
+        .screen {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--color-bg-main);
-            z-index: 9999;
-            display: flex;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 10;
+            display: none; 
             flex-direction: column;
+            background-color: var(--color-bg-main);
+            overflow-y: auto;
+        }
+
+        .screen.active {
+            display: flex;
+            animation: fadeIn 0.4s ease;
+        }
+
+        /* Загрузка */
+        #loadingScreen {
             justify-content: center;
             align-items: center;
-            transition: opacity 0.5s ease;
+            z-index: 9999;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
+            display: flex; 
         }
 
-        .loading-screen.hidden {
-            opacity: 0;
-            pointer-events: none;
-            display: none; /* Жесткое скрытие */
-        }
-
-        .loading-spinner {
+        .spinner {
             width: 70px;
             height: 70px;
             border: 4px solid rgba(240, 185, 11, 0.1);
@@ -253,24 +189,13 @@
         }
 
         /* ======================================================================
-           5. ЭКРАН АВТОРИЗАЦИИ
+           5. АВТОРИЗАЦИЯ
            ====================================================================== */
-        .auth-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: radial-gradient(circle at center, #111116 0%, #000000 100%);
-            z-index: 100;
-            display: flex;
+        #authScreen {
             justify-content: center;
             align-items: center;
             padding: 20px;
-        }
-
-        .auth-screen.hidden {
-            display: none;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
         }
 
         .auth-box {
@@ -282,6 +207,8 @@
             border-radius: var(--radius-lg);
             padding: 35px 30px;
             box-shadow: var(--shadow-lg);
+            position: relative;
+            z-index: 2;
             animation: slideUp var(--transition-smooth);
         }
 
@@ -294,7 +221,6 @@
             font-weight: 900;
             background: linear-gradient(90deg, var(--color-gold), #ffffff, var(--color-gold));
             -webkit-background-clip: text;
-            background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 25px;
             filter: drop-shadow(0 0 15px var(--color-gold-glow));
@@ -302,7 +228,7 @@
 
         .auth-tabs {
             display: flex;
-            background: #000000;
+            background: #000;
             border-radius: var(--radius-md);
             padding: 6px;
             margin-bottom: 25px;
@@ -327,10 +253,6 @@
             box-shadow: 0 5px 15px var(--color-gold-glow);
         }
 
-        .input-group {
-            margin-bottom: 15px;
-        }
-
         .input-field {
             width: 100%;
             background: var(--color-bg-input);
@@ -342,18 +264,12 @@
             font-family: inherit;
             outline: none;
             transition: all 0.3s ease;
+            margin-bottom: 15px;
         }
 
         .input-field:focus {
             border-color: var(--color-gold);
             box-shadow: 0 0 15px rgba(240, 185, 11, 0.2);
-        }
-        
-        /* Подсветка ошибки */
-        .input-field.error {
-            border-color: var(--color-danger);
-            background: rgba(248, 113, 113, 0.1);
-            animation: shake 0.3s;
         }
 
         .btn-primary {
@@ -377,31 +293,15 @@
             box-shadow: 0 0 0 var(--color-gold-dark), 0 5px 10px rgba(0, 0, 0, 0.5);
         }
 
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
         /* ======================================================================
-           6. ОСНОВНОЕ ПРИЛОЖЕНИЕ (КАРКАС)
+           6. ОСНОВНОЕ ПРИЛОЖЕНИЕ
            ====================================================================== */
-        .app-screen {
-            display: none;
+        #appScreen {
             flex-direction: column;
-            position: relative;
-            z-index: 1;
             min-height: 100vh;
         }
 
-        .app-screen.active {
-            display: flex;
-            animation: fadeIn 0.4s ease;
-        }
-
-        /* Шапка */
-        .app-header {
+        header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -425,7 +325,7 @@
         }
 
         .balance-box {
-            background: #000000;
+            background: #000;
             padding: 8px 16px;
             border-radius: 30px;
             border: 1px solid var(--color-border-main);
@@ -438,16 +338,23 @@
             box-shadow: var(--shadow-inset);
         }
 
-        /* Компоновка (ИСПРАВЛЕНО: flex row) */
-        .app-layout {
+        .balance-box.offline {
+            color: var(--color-purple);
+            border-color: rgba(167, 139, 250, 0.3);
+        }
+
+        .layout {
             display: flex;
             gap: 20px;
             flex: 1;
-            flex-direction: row; 
+            flex-direction: row;
         }
 
-        /* Сайдбар (ПК) */
-        .app-sidebar {
+        @media (max-width: 899px) {
+            .layout { flex-direction: column; }
+        }
+
+        aside {
             display: none;
             width: 250px;
             flex-shrink: 0;
@@ -464,9 +371,7 @@
         }
 
         @media (min-width: 900px) {
-            .app-sidebar {
-                display: flex;
-            }
+            aside { display: flex; }
         }
 
         .nav-btn {
@@ -486,13 +391,11 @@
             font-family: inherit;
         }
 
-        .nav-btn .nav-icon {
-            font-size: 20px;
-        }
+        .nav-btn .nav-icon { font-size: 20px; }
 
         .nav-btn:hover {
             background: rgba(240, 185, 11, 0.05);
-            color: #ffffff;
+            color: #fff;
             transform: translateX(5px);
         }
 
@@ -502,14 +405,12 @@
             border-left: 4px solid var(--color-gold);
         }
 
-        /* Контентная часть */
-        .app-content {
+        main {
             flex: 1;
             min-width: 0;
             overflow: hidden;
         }
 
-        /* Класс .view (ИСПРАВЛЕНО) */
         .view {
             display: none;
             animation: fadeIn 0.3s ease;
@@ -531,12 +432,10 @@
             width: 100%;
         }
 
-        /* Мобильное меню (СКРОЛЛ) */
+        /* Мобильное меню */
         .mobile-nav {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            bottom: 0; left: 0; right: 0;
             background: rgba(5, 5, 5, 0.98);
             backdrop-filter: blur(15px);
             display: flex;
@@ -549,14 +448,10 @@
             gap: 10px;
         }
 
-        .mobile-nav::-webkit-scrollbar {
-            display: none;
-        }
+        .mobile-nav::-webkit-scrollbar { display: none; }
 
         @media (min-width: 900px) {
-            .mobile-nav {
-                display: none;
-            }
+            .mobile-nav { display: none; }
         }
 
         .mob-btn {
@@ -589,13 +484,13 @@
            7. ИГРОВЫЕ КОМПОНЕНТЫ
            ====================================================================== */
         
-        /* Тапалка */
+        /* Тапалка (Кнопка улучшена) */
         .tap-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 55vh;
+            min-height: 60vh;
         }
 
         .tap-balance-display {
@@ -603,7 +498,16 @@
             font-weight: 900;
             color: var(--color-gold);
             text-shadow: 0 0 30px var(--color-gold-glow);
-            margin-bottom: 40px;
+            margin-bottom: 20px;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        .tap-multiplier {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            margin-bottom: 30px;
+            font-weight: bold;
         }
 
         .tap-button-wrapper {
@@ -611,31 +515,50 @@
             width: 220px;
             height: 220px;
             border-radius: 50%;
-            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 15px 0 var(--color-gold-dark), 0 25px 50px var(--color-gold-glow);
+            background: radial-gradient(circle at 30% 30%, #ffe488, #f0b90b 40%, #8a6600 90%);
+            box-shadow: 
+                0 15px 0 #5a4400,
+                0 25px 50px rgba(240, 185, 11, 0.4),
+                inset 0 -10px 20px rgba(0,0,0,0.3),
+                inset 0 10px 20px rgba(255,255,255,0.4);
+            cursor: pointer;
+            transition: transform 0.05s, box-shadow 0.05s;
+            overflow: hidden;
         }
 
-        .tap-button {
-            width: 100%;
-            height: 100%;
+        .tap-button-wrapper:active {
+            transform: translateY(12px);
+            box-shadow: 
+                0 3px 0 #5a4400,
+                0 10px 20px rgba(240, 185, 11, 0.4),
+                inset 0 -5px 10px rgba(0,0,0,0.3),
+                inset 0 5px 10px rgba(255,255,255,0.4);
+        }
+
+        .tap-button-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 15%;
+            left: 20%;
+            width: 40%;
+            height: 20%;
+            background: rgba(255,255,255,0.5);
             border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #ffffff, var(--color-gold) 20%, var(--color-gold-dark) 80%);
-            border: none;
+            transform: rotate(-45deg);
+            filter: blur(4px);
+            pointer-events: none;
+        }
+
+        .tap-button-text {
             font-size: 32px;
             font-weight: 900;
-            color: var(--color-text-black);
-            cursor: pointer;
-            transition: transform 0.05s ease;
+            color: #1a1a1a;
             letter-spacing: 3px;
-            position: relative;
             z-index: 2;
-        }
-
-        .tap-button:active {
-            transform: translateY(12px);
+            text-shadow: 0 2px 4px rgba(255,255,255,0.4);
         }
 
         .tap-ripple {
@@ -644,7 +567,7 @@
             left: 50%;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.4);
             border-radius: 50%;
             transform: translate(-50%, -50%);
             opacity: 0;
@@ -653,10 +576,10 @@
         }
 
         .tap-ripple.animating {
-            animation: tapRippleEffect 0.4s ease-out;
+            animation: tapRipple 0.4s ease-out;
         }
 
-        /* Сетки предметов */
+        /* Сетки */
         .items-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
@@ -693,6 +616,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 100%;
+        }
+
+        .item-icon img {
+            max-width: 100%;
+            max-height: 60px;
+            object-fit: contain;
         }
 
         .item-name {
@@ -730,19 +660,105 @@
         .r-rare { border-bottom: 3px solid var(--color-purple); }
         .r-epic { border-bottom: 3px solid #e06ebf; }
         .r-legendary { border-bottom: 3px solid var(--color-gold); box-shadow: inset 0 -10px 20px rgba(240, 185, 11, 0.1); }
-        .r-secret { border-bottom: 3px solid var(--color-secret); box-shadow: inset 0 -10px 20px rgba(0, 255, 255, 0.2); }
+        .r-secret { border-bottom: 3px solid #00ffff; box-shadow: inset 0 -10px 20px rgba(0, 255, 255, 0.2); }
 
         /* ======================================================================
            8. СПЕЦИФИЧЕСКИЕ РАЗДЕЛЫ
            ====================================================================== */
         
+        /* Колесо Фортуны */
+        .wheel-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 30px auto;
+            border-radius: 50%;
+            box-shadow: 0 0 40px var(--color-gold-glow), inset 0 0 20px #000;
+            background: #111;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 40px;
+            z-index: 10;
+            text-shadow: 0 0 15px #f0b90b, 0 0 30px #f0b90b;
+            color: var(--color-gold);
+            line-height: 1;
+        }
+
+        .wheel-svg {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            transition: transform 5s cubic-bezier(0.1, 0.8, 0.1, 1);
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.8));
+        }
+
+        .wheel-center-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--color-gold-light), var(--color-gold-dark));
+            border: 2px solid #fff;
+            box-shadow: 0 0 20px var(--color-gold);
+            z-index: 5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 900;
+            color: #000;
+            font-size: 12px;
+            cursor: default;
+        }
+
+        /* Перерождение (ОБНОВЛЕНО) */
+        .rebirth-card {
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.15) 0%, #000 100%);
+            border: 1px solid var(--color-purple);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .rebirth-level {
+            font-size: 24px;
+            color: var(--color-purple);
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px var(--color-purple);
+        }
+
+        .rebirth-explanation {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            margin-bottom: 20px;
+            line-height: 1.6;
+            text-align: left;
+            background: rgba(0,0,0,0.5);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
         /* Апгрейдер */
         .upg-container {
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 100%;
             max-width: 500px;
             margin: 0 auto;
+            box-sizing: border-box;
         }
 
         .upg-circle-wrap {
@@ -779,10 +795,7 @@
 
         .upg-inner-text {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -845,38 +858,25 @@
             flex-direction: column;
             align-items: center;
             gap: 5px;
-        }
-
-        .chance-btns {
-            display: flex;
-            gap: 8px;
             width: 100%;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-            justify-content: center;
         }
 
-        .chance-btn {
-            flex: 1;
-            min-width: 60px;
-            padding: 12px;
-            background: #111111;
-            border: 1px solid var(--color-border-main);
-            color: var(--color-text-muted);
-            font-weight: 900;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            transition: 0.2s ease;
+        .upg-slot .slot-content img {
+            max-width: 100px;
+            max-height: 60px;
+            object-fit: contain;
         }
 
-        .chance-btn.active {
-            background: var(--color-gold);
-            color: var(--color-text-black);
-            border-color: var(--color-gold);
-            box-shadow: 0 0 15px var(--color-gold-glow);
+        /* Кнопка Апгрейда - фикс */
+        #btnDoUpg {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 16px;
+            box-sizing: border-box;
         }
 
-        /* Кейсы */
+        /* Кейсы (Анимация) */
         .roulette-wrap {
             overflow: hidden;
             position: relative;
@@ -906,6 +906,13 @@
             justify-content: center;
             padding: 10px;
             border-bottom: 3px solid #222222;
+            flex-shrink: 0;
+        }
+
+        .roulette-item img {
+            max-width: 80px;
+            max-height: 60px;
+            object-fit: contain;
         }
 
         .roulette-pointer {
@@ -968,48 +975,15 @@
             box-shadow: 0 0 20px rgba(240, 185, 11, 0.1);
         }
 
-        .auc-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .auc-icon {
-            font-size: 35px;
-            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
-        }
-
-        .auc-details {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .auc-name {
-            font-size: 15px;
-            font-weight: 900;
-        }
-
-        .auc-seller {
-            font-size: 11px;
-            color: var(--color-text-muted);
-            margin-top: 2px;
-        }
-
-        .auc-right {
-            text-align: right;
-        }
-
-        .auc-price {
-            font-size: 18px;
-            font-weight: 900;
-            color: var(--color-gold);
-        }
-
-        .auc-profit {
-            font-size: 12px;
-            font-weight: 900;
-            margin-top: 4px;
-        }
+        .auc-info { display: flex; align-items: center; gap: 15px; }
+        .auc-icon { font-size: 35px; filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5)); }
+        .auc-icon img { max-width: 50px; max-height: 40px; object-fit: contain; }
+        .auc-details { display: flex; flex-direction: column; }
+        .auc-name { font-size: 15px; font-weight: 900; }
+        .auc-seller { font-size: 11px; color: var(--color-text-muted); margin-top: 2px; }
+        .auc-right { text-align: right; }
+        .auc-price { font-size: 18px; font-weight: 900; color: var(--color-gold); }
+        .auc-profit { font-size: 12px; font-weight: 900; margin-top: 4px; }
 
         .btn-buy-auc {
             background: linear-gradient(180deg, var(--color-success), #15803d);
@@ -1025,39 +999,27 @@
             transition: 0.1s ease;
         }
 
-        .btn-buy-auc:active {
-            transform: translateY(4px);
-            box-shadow: none;
-        }
+        .btn-buy-auc:active { transform: translateY(4px); box-shadow: none; }
 
-        /* Новости */
-        .news-card {
+        /* Бонусы */
+        .bonus-card {
             background: #0a0a0a;
             border: 1px solid var(--color-border-main);
-            border-left: 4px solid var(--color-gold);
-            border-radius: var(--radius-md);
+            border-radius: 15px;
             padding: 20px;
-            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
-        .news-title {
-            font-size: 18px;
-            font-weight: 900;
-            color: var(--color-gold);
-            margin-bottom: 8px;
-        }
+        .bonus-title { font-size: 18px; font-weight: 900; color: var(--color-gold); margin-bottom: 10px; }
+        .bonus-timer { font-size: 14px; color: var(--color-text-muted); font-weight: bold; margin-bottom: 15px; }
 
-        .news-meta {
-            font-size: 11px;
-            color: var(--color-text-muted);
-            margin-bottom: 15px;
-        }
-
-        .news-content {
-            font-size: 14px;
-            line-height: 1.6;
-            white-space: pre-wrap;
-        }
+        /* Обменник */
+        .shop-card { background: #0a0a0a; border: 1px solid var(--color-border-main); border-radius: 15px; padding: 30px; text-align: center; }
+        .shop-balance { font-size: 50px; font-weight: 900; color: var(--color-purple); margin: 20px 0; text-shadow: 0 0 20px rgba(167, 139, 250, 0.5); }
 
         /* Чат */
         .chat-container {
@@ -1070,57 +1032,15 @@
             border: 1px solid var(--color-border-main);
         }
 
-        .chat-messages {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .chat-msg { font-size: 13px; line-height: 1.4; }
+        .chat-msg .author { color: var(--color-gold); font-weight: 900; margin-right: 5px; }
+        .chat-input-area { display: flex; padding: 12px; border-top: 1px solid var(--color-border-main); background: #0a0a0a; }
+        .chat-input-area input { flex: 1; background: #000000; border: 1px solid var(--color-border-main); padding: 12px; border-radius: 8px; color: #ffffff; outline: none; margin-right: 10px; font-family: inherit; }
+        .blur-word { filter: blur(4px); cursor: pointer; transition: 0.2s; user-select: none; }
+        .blur-word:hover { filter: blur(0px); }
 
-        .chat-msg {
-            font-size: 13px;
-            line-height: 1.4;
-        }
-
-        .chat-msg .author {
-            color: var(--color-gold);
-            font-weight: 900;
-            margin-right: 5px;
-        }
-
-        .chat-input-area {
-            display: flex;
-            padding: 12px;
-            border-top: 1px solid var(--color-border-main);
-            background: #0a0a0a;
-        }
-
-        .chat-input-area input {
-            flex: 1;
-            background: #000000;
-            border: 1px solid var(--color-border-main);
-            padding: 12px;
-            border-radius: 8px;
-            color: #ffffff;
-            outline: none;
-            margin-right: 10px;
-            font-family: inherit;
-        }
-
-        /* Блюр матов */
-        .blur-word {
-            filter: blur(4px);
-            cursor: pointer;
-            transition: 0.2s;
-            user-select: none;
-        }
-        .blur-word:hover {
-            filter: blur(0px);
-        }
-
-        /* Топ 10 */
+        /* Лидеры */
         .top-item {
             display: flex;
             justify-content: space-between;
@@ -1136,67 +1056,19 @@
             overflow: hidden;
         }
 
-        .top-item:hover {
-            transform: scale(1.02);
-            border-color: var(--color-gold);
-            box-shadow: 0 0 20px rgba(240,185,11,0.2);
-        }
-
-        .top-1 {
-            background: linear-gradient(90deg, rgba(240,185,11,0.15) 0%, #000 100%);
-            border-color: var(--color-gold);
-            box-shadow: 0 0 15px rgba(240,185,11,0.3);
-        }
-
-        .top-1::before {
-            content: '👑';
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 40px;
-            opacity: 0.15;
-        }
-
-        .top-2 {
-            border-color: #cccccc;
-            background: linear-gradient(90deg, rgba(200,200,200,0.1) 0%, #000 100%);
-        }
-
-        .top-3 {
-            border-color: #cd7f32;
-            background: linear-gradient(90deg, rgba(205,127,50,0.1) 0%, #000 100%);
-        }
-
-        .top-rank {
-            font-size: 22px;
-            font-weight: 900;
-            width: 40px;
-            text-align: center;
-            color: var(--color-gold);
-            text-shadow: 0 0 10px var(--color-gold-glow);
-        }
-
-        .top-name {
-            flex: 1;
-            font-weight: 900;
-            font-size: 16px;
-            margin-left: 10px;
-        }
-
-        .top-coins {
-            font-weight: 900;
-            color: var(--color-gold);
-            font-size: 16px;
-        }
+        .top-item:hover { transform: scale(1.02); border-color: var(--color-gold); box-shadow: 0 0 20px rgba(240,185,11,0.2); }
+        .top-1 { background: linear-gradient(90deg, rgba(240,185,11,0.15) 0%, #000 100%); border-color: var(--color-gold); box-shadow: 0 0 15px rgba(240,185,11,0.3); }
+        .top-1::before { content: '👑'; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 40px; opacity: 0.15; }
+        .top-2 { border-color: #cccccc; background: linear-gradient(90deg, rgba(200,200,200,0.1) 0%, #000 100%); }
+        .top-3 { border-color: #cd7f32; background: linear-gradient(90deg, rgba(205,127,50,0.1) 0%, #000 100%); }
+        .top-rank { font-size: 22px; font-weight: 900; width: 40px; text-align: center; color: var(--color-gold); text-shadow: 0 0 10px var(--color-gold-glow); }
+        .top-name { flex: 1; font-weight: 900; font-size: 16px; margin-left: 10px; }
+        .top-coins { font-weight: 900; color: var(--color-gold); font-size: 16px; }
 
         /* Модалки */
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0, 0, 0, 0.9);
             backdrop-filter: blur(8px);
             display: none;
@@ -1227,8 +1099,7 @@
 
         .modal-close {
             position: absolute;
-            top: 15px;
-            right: 15px;
+            top: 15px; right: 15px;
             background: #1a1a1a;
             border: none;
             color: #ffffff;
@@ -1277,7 +1148,7 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* Глобальный баннер */
+        /* Глобальный Баннер */
         .global-banner {
             position: fixed;
             top: 15px;
@@ -1298,13 +1169,8 @@
             animation: slideDownBanner 0.5s ease-out;
         }
 
-        .global-banner.hide {
-            animation: slideUpBanner 0.5s ease-in forwards;
-        }
-
-        .disco-mode {
-            animation: discoBackground 1s infinite linear !important;
-        }
+        .global-banner.hide { animation: slideUpBanner 0.5s ease-in forwards; }
+        .disco-mode { animation: discoBg 1s infinite linear !important; }
 
         /* Античит */
         .anti-cheat {
@@ -1324,78 +1190,44 @@
             text-align: center;
         }
 
-        .anti-cheat.show {
-            transform: translateX(-50%) translateY(0);
-        }
+        .anti-cheat.show { transform: translateX(-50%) translateY(0); }
 
         /* Админка */
-        .admin-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-            gap: 10px;
-        }
+        .admin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
+        .admin-btn { background: #111111; border: 1px solid var(--color-border-main); color: #ffffff; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 12px; cursor: pointer; text-align: center; transition: 0.2s ease; }
+        .admin-btn:hover { background: #222222; border-color: var(--color-gold); color: var(--color-gold); }
+        .admin-btn.danger:hover { background: #2a0a0a; border-color: var(--color-danger); color: var(--color-danger); }
 
-        .admin-btn {
-            background: #111111;
-            border: 1px solid var(--color-border-main);
-            color: #ffffff;
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 12px;
-            cursor: pointer;
-            text-align: center;
-            transition: 0.2s ease;
-        }
-
-        .admin-btn:hover {
-            background: #222222;
-            border-color: var(--color-gold);
-            color: var(--color-gold);
-        }
-
-        .admin-btn.danger:hover {
-            background: #2a0a0a;
-            border-color: var(--color-danger);
-            color: var(--color-danger);
-        }
-
-        /* Медиа-запросы */
+        /* Адаптив */
         @media (max-width: 899px) {
-            body {
-                padding: 8px 8px 100px 8px;
-            }
-            .app-layout {
-                flex-direction: column;
-            }
-            .app-sidebar {
-                display: none !important;
-            }
-            .card-panel {
-                padding: 15px;
-            }
-            .items-grid {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            }
-            .upg-slots {
-                flex-direction: column;
-            }
+            body { padding: 8px 8px 100px 8px; }
+            .layout { flex-direction: column; }
+            aside { display: none !important; }
+            .card-panel { padding: 15px; }
+            .items-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+            .upg-slots { flex-direction: column; }
         }
     </style>
 </head>
 <body>
 
-<!-- ФОН -->
+<!-- ==========================================================================
+     ФОН
+     ========================================================================== -->
 <div class="bg-cubes" id="bgCubes"></div>
 
-<!-- ЗАГРУЗКА -->
-<div class="screen active loading-screen" id="loadingScreen">
-    <div class="loading-spinner"></div>
+<!-- ==========================================================================
+     ЭКРАН ЗАГРУЗКИ
+     ========================================================================== -->
+<div class="screen active" id="loadingScreen">
+    <div class="spinner"></div>
     <div class="loading-text">HOME UP</div>
 </div>
 
-<!-- АВТОРИЗАЦИЯ -->
-<div class="screen auth-screen hidden" id="authScreen">
+<!-- ==========================================================================
+     ЭКРАН АВТОРИЗАЦИИ
+     ========================================================================== -->
+<div class="screen" id="authScreen" style="display: none;">
     <div class="auth-box">
         <div class="auth-logo">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:36px; height:36px;">
@@ -1409,30 +1241,23 @@
             <div class="auth-tab" onclick="AuthSystem.switchTab('reg')">РЕГИСТРАЦИЯ</div>
         </div>
         <div id="loginForm">
-            <div class="input-group">
-                <input type="text" id="logUser" class="input-field" placeholder="Логин" autocomplete="username">
-            </div>
-            <div class="input-group">
-                <input type="password" id="logPass" class="input-field" placeholder="Пароль" autocomplete="current-password">
-            </div>
-            <button class="btn-primary" onclick="AuthSystem.login()">ВОЙТИ В ИГРУ</button>
+            <input type="text" id="logUser" class="input-field" placeholder="Логин" autocomplete="username">
+            <input type="password" id="logPass" class="input-field" placeholder="Пароль" autocomplete="current-password">
+            <button class="btn-primary" onclick="AuthSystem.login()">ВОЙТИ</button>
         </div>
         <div id="regForm" style="display:none;">
-            <div class="input-group">
-                <input type="text" id="regUser" class="input-field" placeholder="Логин (от 3 символов)" autocomplete="username">
-            </div>
-            <div class="input-group">
-                <input type="password" id="regPass" class="input-field" placeholder="Пароль (от 6 символов)" autocomplete="new-password">
-            </div>
-            <button class="btn-primary" onclick="AuthSystem.register()">СОЗДАТЬ АККАУНТ</button>
+            <input type="text" id="regUser" class="input-field" placeholder="Логин (от 3 символов)" autocomplete="username">
+            <input type="password" id="regPass" class="input-field" placeholder="Пароль (от 6 символов)" autocomplete="new-password">
+            <button class="btn-primary" onclick="AuthSystem.register()">СОЗДАТЬ</button>
         </div>
     </div>
 </div>
 
-<!-- ОСНОВНОЕ ПРИЛОЖЕНИЕ -->
-<div class="screen app-screen" id="appScreen">
-    
-    <header class="app-header">
+<!-- ==========================================================================
+     ОСНОВНОЕ ПРИЛОЖЕНИЕ
+     ========================================================================== -->
+<div class="screen" id="appScreen" style="display: none;">
+    <header>
         <div class="brand-logo">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px; height:28px;">
                 <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="2"/>
@@ -1441,25 +1266,27 @@
             HOME UP
         </div>
         <div style="display:flex; gap:10px; align-items:center;">
+            <div class="balance-box offline" id="offlineBalanceBox">🌙 <span id="uiOfflineCoins">0</span></div>
             <div class="balance-box">🪙 <span id="uiCoins">0</span></div>
             <button class="btn-primary" style="width:auto; padding:8px 15px; font-size:12px; box-shadow:none;" onclick="AuthSystem.logout()">ВЫЙТИ</button>
         </div>
     </header>
 
-    <div class="app-layout">
-        
-        <!-- БОКОВОЕ МЕНЮ (ПК) -->
-        <aside class="app-sidebar">
+    <div class="layout">
+        <aside>
             <div style="padding:15px; text-align:center; border-bottom:1px solid var(--color-border-main); margin-bottom:15px;">
                 <div style="font-size:36px; margin-bottom:5px;" id="sidebarAvatar">🐺</div>
                 <div style="font-weight:900; font-size:14px;" id="sidebarName">Игрок</div>
             </div>
             <button class="nav-btn active" data-view="tap" onclick="Navigation.switchView('tap')"><span class="nav-icon">👆</span> Тапалка</button>
-            <button class="nav-btn" data-view="news" onclick="Navigation.switchView('news')"><span class="nav-icon">📰</span> Новости</button>
-            <button class="nav-btn" data-view="cases" onclick="Navigation.switchView('cases')"><span class="nav-icon">🎁</span> Кейсы</button>
+            <button class="nav-btn" data-view="bonus" onclick="Navigation.switchView('bonus')"><span class="nav-icon">🎁</span> Бонусы</button>
+            <button class="nav-btn" data-view="wheel" onclick="Navigation.switchView('wheel')"><span class="nav-icon">🎡</span> Колесо</button>
+            <button class="nav-btn" data-view="rebirth" onclick="Navigation.switchView('rebirth')"><span class="nav-icon">🔥</span> Перерождение</button>
+            <button class="nav-btn" data-view="cases" onclick="Navigation.switchView('cases')"><span class="nav-icon">📦</span> Кейсы</button>
             <button class="nav-btn" data-view="upgrader" onclick="Navigation.switchView('upgrader')"><span class="nav-icon">⚡</span> Апгрейдер</button>
             <button class="nav-btn" data-view="market" onclick="Navigation.switchView('market')"><span class="nav-icon">🏪</span> Рынок</button>
             <button class="nav-btn" data-view="inventory" onclick="Navigation.switchView('inventory')"><span class="nav-icon">🎒</span> Инвентарь</button>
+            <button class="nav-btn" data-view="shop" onclick="Navigation.switchView('shop')"><span class="nav-icon">🌙</span> Обменник</button>
             <button class="nav-btn" data-view="top" onclick="Navigation.switchView('top')"><span class="nav-icon">🏆</span> Лидеры</button>
             <button class="nav-btn" data-view="profile" onclick="Navigation.switchView('profile')"><span class="nav-icon">👤</span> Профиль</button>
             <button class="nav-btn" data-view="chat" onclick="Navigation.switchView('chat')"><span class="nav-icon">💬</span> Чат</button>
@@ -1467,46 +1294,90 @@
             <button class="nav-btn" data-view="admin" id="navAdmin" style="display:none; color:var(--color-danger);" onclick="Navigation.switchView('admin')"><span class="nav-icon">👑</span> Админка</button>
         </aside>
 
-        <!-- КОНТЕНТ -->
-        <main class="app-content">
-            
+        <main>
             <!-- ТАПАЛКА -->
             <div class="view active" id="view-tap">
                 <div class="card-panel tap-container">
                     <div class="tap-balance-display" id="tapBalance">0</div>
-                    <div class="tap-button-wrapper">
+                    <div class="tap-multiplier" id="tapMultiplier">Множитель: x1</div>
+                    <div class="tap-button-wrapper" onclick="GameEngine.handleTap(event)">
                         <div class="tap-ripple" id="tapRipple"></div>
-                        <button class="tap-button" id="tapBtn" onclick="GameEngine.handleTap(event)">ТАП</button>
+                        <div class="tap-button-text">ТАП</div>
                     </div>
                 </div>
             </div>
 
-            <!-- НОВОСТИ -->
-            <div class="view" id="view-news">
+            <!-- БОНУСЫ -->
+            <div class="view" id="view-bonus">
                 <div class="card-panel">
-                    <h2 style="margin-bottom:20px; color:var(--color-gold); font-size:20px;">Новости</h2>
-                    <div id="newsAdminForm" style="display:none; background:#111; padding:20px; border-radius:12px; margin-bottom:25px; border:1px solid var(--color-border-main);">
-                        <h3 style="font-size:15px; margin-bottom:12px; color:#fff;">Добавить новость</h3>
-                        <input type="text" id="newsTitle" class="input-field" placeholder="Заголовок">
-                        <textarea id="newsContent" class="input-field" style="height:100px; resize:none;" placeholder="Текст новости..."></textarea>
-                        <button class="btn-primary" onclick="NewsSystem.addNews()">ОПУБЛИКОВАТЬ</button>
+                    <h2 style="margin-bottom:20px; color:var(--color-gold);">Ежедневные награды</h2>
+                    <div class="bonus-card">
+                        <div class="bonus-title">Ежедневный бонус</div>
+                        <div class="bonus-timer" id="dailyTimerText">Загрузка...</div>
+                        <button class="btn-primary" id="dailyClaimBtn" onclick="BonusSystem.claimDaily()" style="max-width:300px;">ЗАБРАТЬ</button>
                     </div>
-                    <div id="newsList"></div>
+                    <div class="bonus-card">
+                        <div class="bonus-title">Бесплатный кейс (раз в 12ч)</div>
+                        <div class="bonus-timer" id="freeCaseTimerText">Загрузка...</div>
+                        <button class="btn-primary" id="freeCaseClaimBtn" onclick="BonusSystem.claimFreeCase()" style="max-width:300px; background:linear-gradient(180deg, var(--color-purple), #7c3aed);">ЗАБРАТЬ КЕЙС</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ОБМЕННИК -->
+            <div class="view" id="view-shop">
+                <div class="card-panel">
+                    <h2 style="margin-bottom:20px; color:var(--color-gold);">Обменник Офлайн-Коинов</h2>
+                    <div class="shop-card">
+                        <p style="color:var(--color-text-muted); margin-bottom:20px;">Обменивайте лунные монеты на золотые.<br>Курс: <b>5 🌙 = 10 🪙</b></p>
+                        <div class="shop-balance"><span id="shopOfflineValue">0</span> 🌙</div>
+                        <button class="btn-primary" onclick="ShopSystem.exchangeAll()" style="max-width:300px; margin:0 auto; background:linear-gradient(180deg, var(--color-purple), #7c3aed);">ОБМЕНЯТЬ ВСЁ</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- КОЛЕСО ФОРТУНЫ -->
+            <div class="view" id="view-wheel">
+                <div class="card-panel" style="text-align:center;">
+                    <h2 style="margin-bottom:20px; color:var(--color-gold);">Колесо Фортуны</h2>
+                    <div class="wheel-container">
+                        <div class="wheel-pointer">▼</div>
+                        <svg class="wheel-svg" id="fortuneWheel" viewBox="0 0 100 100"></svg>
+                        <div class="wheel-center-btn">GO</div>
+                    </div>
+                    <button class="btn-primary" id="spinWheelBtn" onclick="WheelSystem.spin()" style="max-width:300px; margin:0 auto;">КРУТИТЬ (500 🪙)</button>
+                </div>
+            </div>
+
+            <!-- ПЕРЕРОЖДЕНИЕ (ОБНОВЛЕНО) -->
+            <div class="view" id="view-rebirth">
+                <div class="card-panel">
+                    <h2 style="margin-bottom:20px; color:var(--color-gold);">Перерождение</h2>
+                    <div class="rebirth-card">
+                        <div class="rebirth-level" id="rebirthLevelText">Уровень: 0</div>
+                        <div class="rebirth-explanation">
+                            <p style="margin-bottom:10px;"><b>Что это дает?</b></p>
+                            <p style="margin-bottom:10px;">Вы тратите монеты и сбрасываете инвентарь.</p>
+                            <p style="margin-bottom:10px;">Взамен ваш множитель тапа <b>УДВАИВАЕТСЯ</b> (x1 -> x2 -> x4 -> x8...).</p>
+                            <p>Стоимость следующего: <span id="rebirthReqText" style="color:var(--color-danger); font-weight:bold;">1 000 000 🪙</span></p>
+                        </div>
+                        <button class="btn-primary" id="rebirthBtn" onclick="RebirthSystem.doRebirth()" style="max-width:300px; margin:0 auto; background:linear-gradient(180deg, var(--color-purple), #7c3aed);">ПЕРЕРОДИТЬСЯ</button>
+                    </div>
                 </div>
             </div>
 
             <!-- КЕЙСЫ -->
             <div class="view" id="view-cases">
                 <div class="card-panel">
-                    <h2 style="margin-bottom:20px; color:var(--color-gold); font-size:20px;">Кейсы</h2>
+                    <h2 style="margin-bottom:20px; color:var(--color-gold);">Кейсы</h2>
                     <div class="items-grid" id="caseGrid"></div>
                 </div>
             </div>
 
-            <!-- АПГРЕЙДЕР -->
+            <!-- АПГРЕЙДЕР (ОБНОВЛЕНО) -->
             <div class="view" id="view-upgrader">
                 <div class="card-panel">
-                    <h2 style="margin-bottom:20px; color:var(--color-gold); text-align:center; font-size:20px;">Апгрейдер</h2>
+                    <h2 style="margin-bottom:20px; color:var(--color-gold); text-align:center;">Апгрейдер</h2>
                     <div class="upg-container">
                         <div class="upg-circle-wrap">
                             <svg class="upg-svg" viewBox="0 0 200 200">
@@ -1521,7 +1392,7 @@
                                 <circle class="upg-fill-circle" id="upgCircle" cx="100" cy="100" r="90"></circle>
                             </svg>
                             <div class="upg-inner-text">
-                                <div class="upg-percent" id="upgPercentText">50%</div>
+                                <div class="upg-percent" id="upgPercentText">0%</div>
                                 <div class="upg-chance-text">ШАНС</div>
                             </div>
                         </div>
@@ -1535,14 +1406,7 @@
                                 <div class="slot-content" id="upgTargetText">＋ Выбрать</div>
                             </div>
                         </div>
-                        <div class="chance-btns">
-                            <button class="chance-btn" onclick="UpgraderSystem.setChance(10, this)">10%</button>
-                            <button class="chance-btn" onclick="UpgraderSystem.setChance(30, this)">30%</button>
-                            <button class="chance-btn active" onclick="UpgraderSystem.setChance(50, this)">50%</button>
-                            <button class="chance-btn" onclick="UpgraderSystem.setChance(70, this)">70%</button>
-                            <button class="chance-btn" onclick="UpgraderSystem.setChance(90, this)">90%</button>
-                        </div>
-                        <button class="btn-primary" id="btnDoUpg" onclick="UpgraderSystem.processUpgrade()" disabled>ЗАПУСТИТЬ АПГРЕЙД</button>
+                        <button class="btn-primary" id="btnDoUpg" onclick="UpgraderSystem.processUpgrade()" disabled style="max-width:400px;">ЗАПУСТИТЬ АПГРЕЙД</button>
                     </div>
                 </div>
             </div>
@@ -1550,7 +1414,7 @@
             <!-- РЫНОК -->
             <div class="view" id="view-market">
                 <div class="card-panel">
-                    <h2 style="margin-bottom:20px; color:var(--color-gold); font-size:20px;">Торговая Площадка</h2>
+                    <h2 style="margin-bottom:20px; color:var(--color-gold);">Торговая Площадка</h2>
                     <div class="market-tabs" style="display:flex; gap:5px; margin-bottom:20px; background:#000; padding:6px; border-radius:10px; border:1px solid var(--color-border-light);">
                         <div class="m-tab active" style="flex:1; padding:10px; text-align:center; color:var(--color-text-black); font-weight:900; font-size:13px; cursor:pointer; border-radius:8px; background:var(--color-gold);" onclick="MarketSystem.switchTab('buy', this)">Купить</div>
                         <div class="m-tab" style="flex:1; padding:10px; text-align:center; color:var(--color-text-muted); font-weight:900; font-size:13px; cursor:pointer; border-radius:8px;" onclick="MarketSystem.switchTab('auction', this)">Аукцион</div>
@@ -1566,7 +1430,7 @@
             <!-- ИНВЕНТАРЬ -->
             <div class="view" id="view-inventory">
                 <div class="card-panel">
-                    <h2 style="margin-bottom:20px; color:var(--color-gold); font-size:20px;">Инвентарь</h2>
+                    <h2 style="margin-bottom:20px; color:var(--color-gold);">Инвентарь</h2>
                     <div class="items-grid" id="invGrid"></div>
                 </div>
             </div>
@@ -1574,7 +1438,7 @@
             <!-- ЛИДЕРЫ -->
             <div class="view" id="view-top">
                 <div class="card-panel">
-                    <h2 style="margin-bottom:20px; color:var(--color-gold); font-size:20px;">Топ 10 Игроков</h2>
+                    <h2 style="margin-bottom:20px; color:var(--color-gold);">Топ 10 Игроков</h2>
                     <div id="topList"></div>
                 </div>
             </div>
@@ -1582,7 +1446,7 @@
             <!-- ПРОФИЛЬ -->
             <div class="view" id="view-profile">
                 <div class="card-panel">
-                    <h2 style="margin-bottom:20px; color:var(--color-gold); font-size:20px;">Профиль</h2>
+                    <h2 style="margin-bottom:20px; color:var(--color-gold);">Профиль</h2>
                     <div class="profile-search" style="display:flex; gap:10px; margin-bottom:25px;">
                         <input type="text" id="searchProfileInput" class="input-field" style="flex:1; margin-bottom:0;" placeholder="Введите ник игрока...">
                         <button class="btn-primary" style="width:auto; padding:0 25px;" onclick="ProfileSystem.searchProfile()">НАЙТИ</button>
@@ -1602,7 +1466,7 @@
             <!-- ЧАТ -->
             <div class="view" id="view-chat">
                 <div class="card-panel">
-                    <h2 style="margin-bottom:20px; color:var(--color-gold); font-size:20px;">Чат</h2>
+                    <h2 style="margin-bottom:20px; color:var(--color-gold);">Чат</h2>
                     <div class="chat-container">
                         <div class="chat-messages" id="chatMessages"></div>
                         <div class="chat-input-area">
@@ -1616,7 +1480,7 @@
             <!-- НАСТРОЙКИ -->
             <div class="view" id="view-settings">
                 <div class="card-panel">
-                    <h2 style="margin-bottom:20px; color:var(--color-gold); font-size:20px;">Настройки</h2>
+                    <h2 style="margin-bottom:20px; color:var(--color-gold);">Настройки</h2>
                     <h3 style="font-size:14px; margin-bottom:10px; color:var(--color-text-muted);">Аватар</h3>
                     <div id="avatarPicker" style="display:grid; grid-template-columns:repeat(6, 1fr); gap:10px; margin-bottom:25px;"></div>
                     <h3 style="font-size:14px; margin-bottom:10px; color:var(--color-text-muted);">Смена Ника</h3>
@@ -1629,27 +1493,48 @@
                 </div>
             </div>
 
-            <!-- АДМИНКА -->
+            <!-- АДМИНКА (ОБНОВЛЕНО) -->
             <div class="view" id="view-admin">
                 <div class="card-panel" style="border-color:var(--color-danger);">
-                    <h2 style="margin-bottom:20px; color:var(--color-danger); font-size:20px;">👑 Админ Панель</h2>
-                    <input type="text" id="admTargetUser" class="input-field" placeholder="Введите ник игрока для действий...">
+                    <h2 style="margin-bottom:20px; color:var(--color-danger);">👑 Админ Панель</h2>
+                    <input type="text" id="admTargetUser" class="input-field" placeholder="Введите ник игрока...">
                     
                     <h3 style="margin-bottom:10px; font-size:14px; color:var(--color-text-muted);">Глобальные действия</h3>
                     <div class="admin-grid" style="margin-bottom:25px;">
-                        <input type="text" id="admGlobalMsg" class="input-field" style="grid-column: 1/-1; margin-bottom:5px;" placeholder="Текст баннера для всех на 10 сек...">
+                        <input type="text" id="admGlobalMsg" class="input-field" style="grid-column: 1/-1; margin-bottom:5px;" placeholder="Текст баннера...">
                         <button class="admin-btn" style="grid-column: 1/-1; background:linear-gradient(90deg, #ff0055, #ffaa00); color:#fff;" onclick="AdminSystem.sendGlobalBanner()">📢 ОТПРАВИТЬ БАННЕР</button>
-                        <button class="admin-btn danger" style="grid-column: 1/-1;" onclick="AdminSystem.triggerDisco()">🕺 ВКЛЮЧИТЬ ДИСКОТЕКУ</button>
+                        <button class="admin-btn danger" style="grid-column: 1/-1;" onclick="AdminSystem.triggerDisco()">🕺 ДИСКОТЕКА</button>
                     </div>
 
                     <h3 style="margin-bottom:10px; font-size:14px; color:var(--color-text-muted);">Выдать деньги</h3>
-                    <div class="admin-grid" style="margin-bottom:25px;">
-                        <button class="admin-btn" onclick="AdminSystem.action('money', 10000)">+10 000 🪙</button>
-                        <button class="admin-btn" onclick="AdminSystem.action('money', 100000)">+100 000 🪙</button>
-                        <button class="admin-btn" onclick="AdminSystem.action('money', 1000000)">+1 000 000 🪙</button>
+                    <div class="admin-grid" style="margin-bottom:15px; grid-template-columns: 1fr 1fr;">
+                        <input type="number" id="admGiveAmount" class="input-field" style="grid-column: 1/-1; margin-bottom:5px;" placeholder="Сумма (например 1000000)">
+                        <button class="admin-btn" onclick="AdminSystem.giveCustomMoney()" style="grid-column: 1/-1; background:var(--color-gold); color:#000;">ВЫДАТЬ СУММУ ИГРОКУ</button>
                     </div>
 
-                    <h3 style="margin-bottom:10px; font-size:14px; color:var(--color-text-muted);">Бан (Причина, Время)</h3>
+                    <h3 style="margin-bottom:10px; font-size:14px; color:var(--color-text-muted);">Выдать себе</h3>
+                    <div class="admin-grid" style="margin-bottom:25px;">
+                        <input type="number" id="admSelfAmount" class="input-field" style="grid-column: 1/-1; margin-bottom:5px;" placeholder="Сколько монет выдать СЕБЕ?">
+                        <button class="admin-btn" onclick="AdminSystem.giveSelfMoney()" style="grid-column: 1/-1; background:linear-gradient(90deg, #a78bfa, #7c3aed); color:#fff;">ВЫДАТЬ СЕБЕ</button>
+                    </div>
+
+                    <h3 style="margin-bottom:10px; font-size:14px; color:var(--color-text-muted);">Добавить оружие (Base64)</h3>
+                    <div style="background:#111; padding:15px; border-radius:10px; margin-bottom:25px;">
+                        <input type="text" id="admWeaponName" class="input-field" placeholder="Название (AK-47 | Custom)">
+                        <input type="number" id="admWeaponPrice" class="input-field" placeholder="Цена">
+                        <select id="admWeaponRarity" class="input-field">
+                            <option value="common">Обычное</option>
+                            <option value="uncommon">Необычное</option>
+                            <option value="rare">Редкое</option>
+                            <option value="epic">Эпическое</option>
+                            <option value="legendary">Легендарное</option>
+                            <option value="secret">Секретное</option>
+                        </select>
+                        <input type="file" id="admWeaponImage" class="input-field" accept="image/*" style="padding:10px;">
+                        <button class="admin-btn" onclick="AdminSystem.addCustomWeapon()" style="background:var(--color-success); color:#000; width:100%;">ЗАГРУЗИТЬ ОРУЖИЕ</button>
+                    </div>
+
+                    <h3 style="margin-bottom:10px; font-size:14px; color:var(--color-text-muted);">Бан</h3>
                     <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:25px; background:#111; padding:15px; border-radius:10px;">
                         <input type="text" id="banReasonInput" class="input-field" placeholder="Причина бана..." style="margin-bottom:0;">
                         <select id="banTimeSelect" class="input-field" style="margin-bottom:0;">
@@ -1661,15 +1546,6 @@
                         </select>
                         <button class="admin-btn danger" onclick="AdminSystem.banPlayer()">ЗАБАНИТЬ</button>
                     </div>
-
-                    <h3 style="margin-bottom:10px; font-size:14px; color:var(--color-text-muted);">Список забаненных</h3>
-                    <div id="bannedList" style="margin-bottom:20px; max-height:200px; overflow-y:auto; background:#080808; border-radius:10px; padding:10px; border:1px solid var(--color-border-light);"></div>
-
-                    <h3 style="margin-bottom:10px; font-size:14px; color:var(--color-text-muted);">Модерация</h3>
-                    <div class="admin-grid">
-                        <button class="admin-btn" onclick="AdminSystem.action('unban', 1)">Разбанить</button>
-                        <button class="admin-btn danger" onclick="AdminSystem.action('wipe', 1)">Очистить инвентарь</button>
-                    </div>
                 </div>
             </div>
         </main>
@@ -1678,11 +1554,14 @@
     <!-- МОБИЛЬНОЕ МЕНЮ -->
     <div class="mobile-nav">
         <button class="mob-btn active" data-view="tap" onclick="Navigation.switchView('tap')"><span>👆</span>Тап</button>
-        <button class="mob-btn" data-view="news" onclick="Navigation.switchView('news')"><span>📰</span>Новости</button>
-        <button class="mob-btn" data-view="cases" onclick="Navigation.switchView('cases')"><span>🎁</span>Кейсы</button>
+        <button class="mob-btn" data-view="bonus" onclick="Navigation.switchView('bonus')"><span>🎁</span>Бонусы</button>
+        <button class="mob-btn" data-view="wheel" onclick="Navigation.switchView('wheel')"><span>🎡</span>Колесо</button>
+        <button class="mob-btn" data-view="rebirth" onclick="Navigation.switchView('rebirth')"><span>🔥</span>Ребёрн</button>
+        <button class="mob-btn" data-view="cases" onclick="Navigation.switchView('cases')"><span>📦</span>Кейсы</button>
         <button class="mob-btn" data-view="upgrader" onclick="Navigation.switchView('upgrader')"><span>⚡</span>Апгр</button>
         <button class="mob-btn" data-view="market" onclick="Navigation.switchView('market')"><span>🏪</span>Рынок</button>
         <button class="mob-btn" data-view="inventory" onclick="Navigation.switchView('inventory')"><span>🎒</span>Инв.</button>
+        <button class="mob-btn" data-view="shop" onclick="Navigation.switchView('shop')"><span>🌙</span>Обмен</button>
         <button class="mob-btn" data-view="top" onclick="Navigation.switchView('top')"><span>🏆</span>Топ</button>
         <button class="mob-btn" data-view="profile" onclick="Navigation.switchView('profile')"><span>👤</span>Профиль</button>
         <button class="mob-btn" data-view="chat" onclick="Navigation.switchView('chat')"><span>💬</span>Чат</button>
@@ -1697,14 +1576,14 @@
         <button class="modal-close" onclick="Utils.closeModal('modalItemView')">×</button>
         <div style="text-align:center; font-size:70px; margin-bottom:15px;" id="viewIcon">🔫</div>
         <h3 style="text-align:center; margin-bottom:5px; font-size:20px;" id="viewName">Предмет</h3>
-        <div style="text-align:center; color:var(--gold); font-weight:900; margin-bottom:20px; font-size:18px;" id="viewPrice">0 🪙</div>
+        <div style="text-align:center; color:var(--color-gold); font-weight:900; margin-bottom:20px; font-size:18px;" id="viewPrice">0 🪙</div>
         <div id="viewActionBuy" style="display:none;">
             <button class="btn-primary" onclick="MarketSystem.buySelectedItem()">КУПИТЬ</button>
         </div>
         <div id="viewActionSell" style="display:none;">
-            <p style="font-size:12px; color:var(--text-muted); text-align:center; margin-bottom:10px;">Бот выкупает: 1% = 2 сек. Макс: 200%.</p>
+            <p style="font-size:12px; color:var(--color-text-muted); text-align:center; margin-bottom:10px;">Бот выкупает: 1% = 2 сек. Макс: 200%.</p>
             <input type="number" id="sellCustomPrice" class="input-field" placeholder="Своя цена" oninput="MarketSystem.updateSellProfit()">
-            <div id="sellProfitText" style="text-align:center; font-size:14px; font-weight:900; margin-bottom:20px; color:var(--text-muted);"></div>
+            <div id="sellProfitText" style="text-align:center; font-size:14px; font-weight:900; margin-bottom:20px; color:var(--color-text-muted);"></div>
             <button class="btn-primary" onclick="MarketSystem.sellSelectedItem()">ВЫСТАВИТЬ НА АУКЦИОН</button>
         </div>
     </div>
@@ -1715,8 +1594,8 @@
         <button class="modal-close" onclick="Utils.closeModal('modalPlayerProfile')">×</button>
         <div style="text-align:center; font-size:70px; margin-bottom:15px;" id="otherAvatar">🐺</div>
         <h3 style="text-align:center; margin-bottom:5px; font-size:20px;" id="otherName">Никнейм</h3>
-        <div style="text-align:center; color:var(--gold); font-weight:900; margin-bottom:20px; font-size:18px;" id="otherBalance">0 🪙</div>
-        <h4 style="margin-bottom:12px; font-size:15px; color:var(--text-muted);">Инвентарь:</h4>
+        <div style="text-align:center; color:var(--color-gold); font-weight:900; margin-bottom:20px; font-size:18px;" id="otherBalance">0 🪙</div>
+        <h4 style="margin-bottom:12px; font-size:15px; color:var(--color-text-muted);">Инвентарь:</h4>
         <div class="items-grid" id="otherInventory" style="grid-template-columns: repeat(3, 1fr);"></div>
     </div>
 </div>
@@ -1732,14 +1611,14 @@
 <div class="modal-overlay" id="modalCaseOpen">
     <div class="modal-box" style="max-width: 650px;">
         <button class="modal-close" onclick="Utils.closeModal('modalCaseOpen')">×</button>
-        <h3 style="margin-bottom:20px; text-align:center; color:var(--gold); font-size:22px;" id="caseTitle">Кейс</h3>
+        <h3 style="margin-bottom:20px; text-align:center; color:var(--color-gold); font-size:22px;" id="caseTitle">Кейс</h3>
         <div style="display:flex; justify-content:center; gap:10px; margin-bottom:20px;">
             <button class="btn-primary" style="width:auto; padding:10px 20px; font-size:14px;" onclick="CaseSystem.startRoll(1)">x1</button>
             <button class="btn-primary" style="width:auto; padding:10px 20px; font-size:14px;" onclick="CaseSystem.startRoll(3)">x3</button>
             <button class="btn-primary" style="width:auto; padding:10px 20px; font-size:14px;" onclick="CaseSystem.startRoll(5)">x5</button>
         </div>
         <div id="rouletteZone" style="max-height: 50vh; overflow-y: auto;"></div>
-        <div id="caseResultText" style="text-align:center; font-weight:900; margin-top:20px; color:var(--gold); font-size:16px;"></div>
+        <div id="caseResultText" style="text-align:center; font-weight:900; margin-top:20px; color:var(--color-gold); font-size:16px;"></div>
     </div>
 </div>
 
@@ -1749,7 +1628,7 @@
 
 <script>
     // ==========================================================================
-    // 1. КОНФИГУРАЦИЯ СИСТЕМЫ И БАЗА ДАННЫХ
+    // 1. КОНФИГУРАЦИЯ
     // ==========================================================================
     const Config = {
         SUPABASE_URL: 'https://fsxputemwveouteusdsy.supabase.co',
@@ -1764,58 +1643,105 @@
     };
 
     // ==========================================================================
-    // 2. ИГРОВЫЕ ДАННЫЕ (БАЗА ПРЕДМЕТОВ)
+    // 2. БАЗА ПРЕДМЕТОВ (100+ ШТУК)
     // ==========================================================================
     const ItemDatabase = [
+        // Пистолеты
+        { n: 'Glock-18 | Фаде', i: '🔫', p: 50000, r: 'legendary' },
+        { n: 'Glock-18 | Водный', i: '🔫', p: 2000, r: 'rare' },
+        { n: 'USP-S | Убийство', i: '🔫', p: 45000, r: 'legendary' },
+        { n: 'USP-S | Неонуар', i: '🔫', p: 35000, r: 'epic' },
+        { n: 'P2000 | Огненный', i: '🔫', p: 1500, r: 'rare' },
+        { n: 'P250 | Азимов', i: '🔫', p: 500, r: 'uncommon' },
         { n: 'P250 | Песок', i: '🔫', p: 100, r: 'common' },
-        { n: 'Glock | Кобальт', i: '🔫', p: 200, r: 'common' },
-        { n: 'MP9 | Гроза', i: '🔫', p: 350, r: 'common' },
-        { n: 'USP | Убийство', i: '🔫', p: 300, r: 'common' },
         { n: 'Five-SeveN | Кейс', i: '🔫', p: 250, r: 'common' },
+        { n: 'Five-SeveN | Игрушка', i: '🔫', p: 6000, r: 'epic' },
         { n: 'Tec-9 | Ядерный', i: '🔫', p: 400, r: 'common' },
-        { n: 'Граната | Флеш', i: '💣', p: 200, r: 'common' },
-        { n: 'Граната | ХЕ', i: '💣', p: 300, r: 'common' },
-        { n: 'Молотов | Огонь', i: '🧨', p: 150, r: 'common' },
-        { n: 'FAMAS | Кибер', i: '🔫', p: 600, r: 'uncommon' },
-        { n: 'UMP | Мгновение', i: '🔫', p: 900, r: 'uncommon' },
-        { n: 'Galil | Череп', i: '🔫', p: 1200, r: 'uncommon' },
+        { n: 'Tec-9 | Осколок', i: '🔫', p: 2500, r: 'rare' },
+        { n: 'CZ75-Auto | Виктория', i: '🔫', p: 10000, r: 'epic' },
+        { n: 'Desert Eagle | Код', i: '🔫', p: 13000, r: 'epic' },
+        { n: 'Desert Eagle | Пламя', i: '🔫', p: 60000, r: 'legendary' },
+        { n: 'R8 | Восход', i: '🔫', p: 7000, r: 'epic' },
+        { n: 'R8 | Заря', i: '🔫', p: 800, r: 'uncommon' },
+
+        // Пистолеты-пулеметы
+        { n: 'MP9 | Гроза', i: '🔫', p: 350, r: 'common' },
+        { n: 'MP9 | Звездный', i: '🔫', p: 4500, r: 'rare' },
         { n: 'MAC-10 | Неон', i: '🔫', p: 700, r: 'uncommon' },
-        { n: 'Bizon | Кобальт', i: '🔫', p: 850, r: 'uncommon' },
-        { n: 'XM1014 | Транзит', i: '🔫', p: 1100, r: 'uncommon' },
-        { n: 'Броня | Кевлар', i: '🛡️', p: 650, r: 'uncommon' },
-        { n: 'Дефузер', i: '🛠️', p: 1000, r: 'uncommon' },
-        { n: 'SSG 08 | Дерево', i: '🔫', p: 2000, r: 'rare' },
+        { n: 'MAC-10 | Диско', i: '🔫', p: 5000, r: 'rare' },
         { n: 'MP7 | Импульс', i: '🔫', p: 2500, r: 'rare' },
+        { n: 'MP7 | Шторм', i: '🔫', p: 1500, r: 'uncommon' },
+        { n: 'UMP-45 | Мгновение', i: '🔫', p: 900, r: 'uncommon' },
+        { n: 'UMP-45 | Ослепление', i: '🔫', p: 1200, r: 'uncommon' },
+        { n: 'PP-Bizon | Кобальт', i: '🔫', p: 850, r: 'uncommon' },
+        { n: 'PP-Bizon | Вихрь', i: '🔫', p: 3000, r: 'rare' },
         { n: 'P90 | Азимов', i: '🔫', p: 3500, r: 'rare' },
-        { n: 'M4A4 | Вой', i: '🔫', p: 5000, r: 'rare' },
-        { n: 'Nova | Полярный', i: '🔫', p: 1800, r: 'rare' },
-        { n: 'MAG-7 | Справедливость', i: '🔫', p: 2200, r: 'rare' },
-        { n: 'Negev | Лев', i: '🔫', p: 3000, r: 'rare' },
-        { n: 'Sawed | Змейка', i: '🔫', p: 4500, r: 'rare' },
-        { n: 'Сайга | Вихрь', i: '🔫', p: 5000, r: 'rare' },
+        { n: 'P90 | Киберпанк', i: '🔫', p: 15000, r: 'epic' },
+        { n: 'P90 | Дракон', i: '🔫', p: 55000, r: 'legendary' },
+
+        // Винтовки
         { n: 'AK-47 | Красная', i: '🔫', p: 7000, r: 'epic' },
-        { n: 'AWP | Азимов', i: '🎯', p: 10000, r: 'epic' },
-        { n: 'Deagle | Код', i: '🔫', p: 13000, r: 'epic' },
-        { n: 'M4A1-S | Принт', i: '🔫', p: 16000, r: 'epic' },
-        { n: 'SG 553 | Интеграл', i: '🔫', p: 6500, r: 'epic' },
-        { n: 'AUG | Хаос', i: '🔫', p: 8000, r: 'epic' },
-        { n: 'FAMAS | Ролан', i: '🔫', p: 9000, r: 'epic' },
-        { n: 'Galil | Феникс', i: '🔫', p: 11000, r: 'epic' },
         { n: 'AK-47 | Вулкан', i: '🔫', p: 20000, r: 'legendary' },
-        { n: 'AWP | Гипер', i: '🎯', p: 28000, r: 'legendary' },
-        { n: 'AK-47 | Змей', i: '🔫', p: 40000, r: 'legendary' },
-        { n: 'AWP | Дракон', i: '🎯', p: 100000, r: 'legendary' },
-        { n: 'Керамбит | Град', i: '🔪', p: 250000, r: 'legendary' },
-        { n: 'M4A1-S | Золотой', i: '🔫', p: 18000, r: 'legendary' },
+        { n: 'AK-47 | Огненный', i: '🔫', p: 45000, r: 'legendary' },
         { n: 'AK-47 | Гидра', i: '🔫', p: 25000, r: 'legendary' },
-        { n: 'AWP | Гриб', i: '🎯', p: 35000, r: 'legendary' },
+        { n: 'M4A4 | Вой', i: '🔫', p: 5000, r: 'rare' },
         { n: 'M4A4 | Король', i: '🔫', p: 45000, r: 'legendary' },
-        { n: 'Штык | Градиент', i: '🗡️', p: 200000, r: 'legendary' },
-        { n: 'Кукри | Волна', i: '🗡️', p: 120000, r: 'legendary' },
-        { n: 'Штык-нож | Тигр', i: '🗡️', p: 150000, r: 'legendary' },
-        { n: 'Бабочка | Рубин', i: '🔪', p: 500000, r: 'secret' },
-        { n: 'Керамбит | Убийство', i: '🔪', p: 800000, r: 'secret' },
-        { n: 'Топор | Смерть', i: '🪓', p: 350000, r: 'secret' }
+        { n: 'M4A4 | Азимов', i: '🔫', p: 12000, r: 'epic' },
+        { n: 'M4A1-S | Принт', i: '🔫', p: 16000, r: 'epic' },
+        { n: 'M4A1-S | Золотой', i: '🔫', p: 18000, r: 'legendary' },
+        { n: 'M4A1-S | Паутина', i: '🔫', p: 6500, r: 'epic' },
+        { n: 'FAMAS | Кибер', i: '🔫', p: 600, r: 'uncommon' },
+        { n: 'FAMAS | Ролан', i: '🔫', p: 9000, r: 'epic' },
+        { n: 'Galil AR | Череп', i: '🔫', p: 1200, r: 'uncommon' },
+        { n: 'Galil AR | Феникс', i: '🔫', p: 11000, r: 'epic' },
+        { n: 'AUG | Хаос', i: '🔫', p: 8000, r: 'epic' },
+        { n: 'AUG | Император', i: '🔫', p: 3000, r: 'rare' },
+        { n: 'SG 553 | Интеграл', i: '🔫', p: 6500, r: 'epic' },
+        { n: 'SG 553 | Мутант', i: '🔫', p: 2000, r: 'rare' },
+
+        // Снайперские
+        { n: 'AWP | Азимов', i: '🎯', p: 10000, r: 'epic' },
+        { n: 'AWP | Гипер', i: '🎯', p: 28000, r: 'legendary' },
+        { n: 'AWP | Дракон', i: '🎯', p: 100000, r: 'legendary' },
+        { n: 'AWP | Гриб', i: '🎯', p: 35000, r: 'legendary' },
+        { n: 'AWP | Неон', i: '🎯', p: 15000, r: 'epic' },
+        { n: 'SSG 08 | Дерево', i: '🎯', p: 2000, r: 'rare' },
+        { n: 'SSG 08 | Кровь', i: '🎯', p: 800, r: 'uncommon' },
+        { n: 'SCAR-20 | Каркас', i: '🎯', p: 4000, r: 'rare' },
+        { n: 'G3SG1 | Флюид', i: '🎯', p: 4000, r: 'rare' },
+
+        // Дробовики и Пулеметы
+        { n: 'Nova | Полярный', i: '🔫', p: 1800, r: 'rare' },
+        { n: 'Nova | Гипер', i: '🔫', p: 700, r: 'uncommon' },
+        { n: 'XM1014 | Транзит', i: '🔫', p: 1100, r: 'uncommon' },
+        { n: 'XM1014 | Пламя', i: '🔫', p: 4000, r: 'rare' },
+        { n: 'MAG-7 | Справедливость', i: '🔫', p: 2200, r: 'rare' },
+        { n: 'MAG-7 | Кибер', i: '🔫', p: 900, r: 'uncommon' },
+        { n: 'Sawed-Off | Змейка', i: '🔫', p: 4500, r: 'rare' },
+        { n: 'Sawed-Off | Дракон', i: '🔫', p: 1200, r: 'uncommon' },
+        { n: 'Negev | Лев', i: '🔫', p: 3000, r: 'rare' },
+        { n: 'Negev | Мощь', i: '🔫', p: 800, r: 'uncommon' },
+        { n: 'M249 | Азимов', i: '🔫', p: 6000, r: 'epic' },
+        { n: 'M249 | Огонь', i: '🔫', p: 1500, r: 'uncommon' },
+
+        // Ножи и Перчатки
+        { n: '★ Керамбит | Градиент', i: '🔪', p: 250000, r: 'legendary' },
+        { n: '★ Керамбит | Убийство', i: '🔪', p: 800000, r: 'secret' },
+        { n: '★ Керамбит | Доплер', i: '🔪', p: 450000, r: 'secret' },
+        { n: '★ Бабочка | Рубин', i: '🔪', p: 500000, r: 'secret' },
+        { n: '★ Бабочка | Сапфир', i: '🔪', p: 550000, r: 'secret' },
+        { n: '★ Штык-нож | Градиент', i: '🗡️', p: 200000, r: 'legendary' },
+        { n: '★ Штык-нож | Тигр', i: '🗡️', p: 150000, r: 'legendary' },
+        { n: '★ Кукри | Волна', i: '🗡️', p: 120000, r: 'legendary' },
+        { n: '★ Кукри | Убийство', i: '🗡️', p: 180000, r: 'legendary' },
+        { n: '★ Топор | Смерть', i: '🪓', p: 350000, r: 'secret' },
+        { n: '★ Топор | Пламя', i: '🪓', p: 280000, r: 'legendary' },
+        { n: '★ Штык | Кровь', i: '🗡️', p: 100000, r: 'legendary' },
+        { n: '★ Топор | Золото', i: '🪓', p: 400000, r: 'secret' },
+        { n: '★ Перчатки | Кровь', i: '🧤', p: 150000, r: 'legendary' },
+        { n: '★ Перчатки | Кобальт', i: '🧤', p: 120000, r: 'legendary' },
+        { n: '★ Перчатки | Специя', i: '🧤', p: 80000, r: 'epic' },
+        { n: '★ Перчатки | Король', i: '🧤', p: 300000, r: 'secret' }
     ];
 
     const CaseDatabase = [
@@ -1826,7 +1752,7 @@
         { id: 5, name: 'Божественный', price: 100000, icon: '👑', weights: { common: 0, uncommon: 0, rare: 0, epic: 10, legendary: 80, secret: 10 } }
     ];
 
-    const BAD_WORDS = ['хуй', 'пизд', 'бля', 'ебал', 'сука', 'мудак', 'говно', 'жопа', 'долбо', 'уеб', 'мразь'];
+    const BAD_WORDS = ['хуй', 'пизд', 'бля', 'ебал', 'сука', 'мудак', 'говно', 'жопа'];
 
     // ==========================================================================
     // 3. ГЛОБАЛЬНОЕ СОСТОЯНИЕ
@@ -1842,7 +1768,6 @@
         upgrader: {
             betItem: null,
             targetItem: null,
-            chance: 50,
             isRolling: false,
             modalMode: 'bet'
         },
@@ -1854,11 +1779,12 @@
         
         lastGlobalEventId: 0,
         currentCase: null,
-        lastChatClear: Date.now()
+        lastChatClear: Date.now(),
+        wheelSpinning: false
     };
 
     // ==========================================================================
-    // 4. АУДИО СИСТЕМА
+    // 4. АУДИО
     // ==========================================================================
     class AudioSystem {
         constructor() { this.ctx = null; }
@@ -1910,21 +1836,28 @@
     const Sound = new AudioSystem();
 
     document.addEventListener('click', (e) => {
-        if (e.target.closest('button') || e.target.closest('.item-card') || e.target.closest('.nav-btn') || e.target.closest('.mob-btn') || e.target.closest('.upg-slot') || e.target.closest('.chance-btn') || e.target.closest('.top-item')) {
+        if (e.target.closest('button') || e.target.closest('.item-card') || e.target.closest('.nav-btn') || e.target.closest('.mob-btn') || e.target.closest('.upg-slot') || e.target.closest('.chance-btn') || e.target.closest('.top-item') || e.target.closest('.tap-button-wrapper')) {
             Sound.playClick();
         }
     });
 
     // ==========================================================================
-    // 5. УТИЛИТЫ И ФИКС ОШИБОК
+    // 5. УТИЛИТЫ
     // ==========================================================================
     const Utils = {
         async api(endpoint, options = {}) {
             try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+                
                 const res = await fetch(Config.SUPABASE_URL + '/rest/v1' + endpoint, {
                     ...options,
+                    signal: controller.signal,
                     headers: { ...Config.HEADERS, ...(options.headers || {}) }
                 });
+                
+                clearTimeout(timeoutId);
+                
                 const text = await res.text();
                 if (!res.ok) {
                     let errorMsg = 'Ошибка сети';
@@ -1976,11 +1909,11 @@
         
         getItemIcon(item) {
             if (!item || !item.i) return '📦';
-            if (item.i.startsWith('http')) {
-                const found = ItemDatabase.find(x => x.n === item.n);
-                return found ? found.i : '📦'; 
+            // Если это Base64 или URL - возвращаем img
+            if (item.i.startsWith('http') || item.i.startsWith('data:image')) {
+                return `<img src="${item.i}" alt="${item.n}" style="max-width:100%;max-height:80px;object-fit:contain;">`;
             }
-            return item.i;
+            return item.i; 
         },
         
         getItemPrice(item) {
@@ -2025,11 +1958,10 @@
             return devId;
         }
     };
-
     window.Utils = Utils;
 
     // ==========================================================================
-    // 6. МОДУЛЬ АВТОРИЗАЦИИ (С ЗАЩИТОЙ ОТ БАНА ПО УСТРОЙСТВУ)
+    // 6. АВТОРИЗАЦИЯ
     // ==========================================================================
     const AuthSystem = {
         switchTab(tab) {
@@ -2047,7 +1979,6 @@
             if (!u || !p) return Utils.showToast('Заполните поля!', true);
 
             try {
-                // Проверка на бан устройства
                 const devBan = await Utils.api(`/players?device_id=eq.${devId}&role=eq.banned&select=*`);
                 if (devBan && devBan.length) {
                     return Utils.showToast(`Устройство забанено! Причина: ${devBan[0].ban_reason || 'Не указана'}`, true);
@@ -2063,7 +1994,6 @@
                         const leftMins = Math.ceil((usr.ban_until - Date.now()) / 60000);
                         return Utils.showToast(`Забанен на ${leftMins} мин. Причина: ${usr.ban_reason}`, true);
                     } else {
-                        // Бан истек
                         await Utils.api(`/players?id=eq.${usr.id}`, { method: 'PATCH', body: JSON.stringify({ role: 'user' }) });
                         usr.role = 'user';
                     }
@@ -2073,10 +2003,18 @@
                     return Utils.showToast('Неверный пароль', true);
                 }
 
-                // Привязка устройства
+                const now = Date.now();
+                const lastSeen = usr.last_seen || now;
+                const diffMins = Math.floor((now - lastSeen) / 60000);
+                let offlineGain = 0;
+                if (diffMins > 0) {
+                    offlineGain = diffMins * 5;
+                    usr.offline_coins = (usr.offline_coins || 0) + offlineGain;
+                }
+
                 await Utils.api(`/players?id=eq.${usr.id}`, {
                     method: 'PATCH',
-                    body: JSON.stringify({ device_id: devId })
+                    body: JSON.stringify({ device_id: devId, last_seen: now, offline_coins: usr.offline_coins })
                 });
 
                 AppState.currentUser = usr;
@@ -2084,6 +2022,10 @@
                 localStorage.setItem('hu_token', usr.token);
 
                 this.enterGame();
+                
+                if (offlineGain > 0) {
+                    setTimeout(() => Utils.showToast(`Вы получили +${offlineGain} 🌙 (офлайн-коины)`, false), 1000);
+                }
             } catch (e) {
                 Utils.showToast('Ошибка: ' + e.message, true);
             }
@@ -2098,7 +2040,6 @@
             if (p.length < 6) return Utils.showToast('Пароль от 6 символов', true);
 
             try {
-                // Проверка на бан устройства
                 const devBan = await Utils.api(`/players?device_id=eq.${devId}&role=eq.banned&select=*`);
                 if (devBan && devBan.length) {
                     return Utils.showToast(`Устройство забанено! Регистрация запрещена.`, true);
@@ -2116,7 +2057,12 @@
                     role: 'user', 
                     avatar: '🐺', 
                     last_seen: Date.now(),
-                    device_id: devId
+                    device_id: devId,
+                    offline_coins: 0,
+                    last_daily_claim: 0,
+                    last_free_case: 0,
+                    rebirth_level: 0,
+                    tap_multiplier: 1
                 };
                 
                 const res = await Utils.api('/players', { method: 'POST', body: JSON.stringify(newUser) });
@@ -2131,13 +2077,10 @@
         },
 
         enterGame() {
-            document.getElementById('loadingScreen').classList.remove('hidden');
-            setTimeout(() => {
-                document.getElementById('loadingScreen').classList.add('hidden');
-                document.getElementById('authScreen').classList.add('hidden');
-                document.getElementById('appScreen').classList.add('active');
-                GameEngine.initApp();
-            }, 500);
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('authScreen').style.display = 'none';
+            document.getElementById('appScreen').style.display = 'flex';
+            GameEngine.initApp();
         },
 
         logout() {
@@ -2145,11 +2088,10 @@
             location.reload();
         }
     };
-
     window.AuthSystem = AuthSystem;
 
     // ==========================================================================
-    // 7. МОДУЛЬ НАВИГАЦИИ
+    // 7. НАВИГАЦИЯ
     // ==========================================================================
     const Navigation = {
         switchView(id) {
@@ -2170,9 +2112,13 @@
             if (id === 'market') AuctionSystem.load();
             if (id === 'news') NewsSystem.load();
             if (id === 'admin') AdminSystem.loadBannedList();
+            if (id === 'bonus') BonusSystem.updateUI();
+            if (id === 'shop') ShopSystem.updateUI();
+            if (id === 'wheel') {
+                setTimeout(() => WheelSystem.renderWheel(), 100);
+            }
         }
     };
-
     window.Navigation = Navigation;
 
     // ==========================================================================
@@ -2185,14 +2131,13 @@
             if (AppState.currentUser.username.toLowerCase() === Config.ADMIN_USERNAME.toLowerCase()) {
                 document.getElementById('navAdmin').style.display = 'flex';
                 document.getElementById('navAdminMob').style.display = 'flex';
-                document.getElementById('newsAdminForm').style.display = 'block';
             }
 
             try {
                 const cfg = await Utils.api('/config?select=*');
                 const itemsCfg = cfg.find(c => c.key === 'items_data');
                 
-                if (!itemsCfg) {
+                if (!itemsCfg || !itemsCfg.value || itemsCfg.value === '[]') {
                     AppState.allGameItems = [...ItemDatabase];
                     await Utils.api('/config', { 
                         method: 'POST', 
@@ -2212,15 +2157,22 @@
             LeaderboardSystem.load();
             ChatSystem.load();
             SettingsSystem.renderAvatars();
-            NewsSystem.load();
             AuctionSystem.load();
+            BonusSystem.updateUI();
+            RebirthSystem.updateUI();
+            WheelSystem.renderWheel();
+            ShopSystem.updateUI();
         },
 
         updateAllUIs() {
             const u = AppState.currentUser;
             if (!u) return;
 
+            const mult = u.tap_multiplier || 1;
+            const off = u.offline_coins || 0;
+
             document.getElementById('uiCoins').textContent = Utils.formatNumber(u.coins);
+            document.getElementById('uiOfflineCoins').textContent = Utils.formatNumber(off);
             document.getElementById('tapBalance').textContent = Utils.formatNumber(u.coins);
             document.getElementById('sidebarAvatar').textContent = u.avatar || '🐺';
             document.getElementById('sidebarName').textContent = u.username;
@@ -2228,6 +2180,7 @@
             document.getElementById('profName').textContent = u.username;
             document.getElementById('profBalance').textContent = Utils.formatNumber(u.coins);
             document.getElementById('profRole').textContent = u.username.toLowerCase() === Config.ADMIN_USERNAME.toLowerCase() ? 'Создатель' : 'Игрок';
+            document.getElementById('tapMultiplier').textContent = `Множитель: x${mult}`;
             
             const itemsCount = Object.values(AppState.userInventory).reduce((a, b) => a + b, 0);
             document.getElementById('profItemsCount').textContent = itemsCount;
@@ -2254,7 +2207,9 @@
                 return;
             }
 
-            AppState.currentUser.coins++;
+            const mult = AppState.currentUser.tap_multiplier || 1;
+            AppState.currentUser.coins += mult;
+
             document.getElementById('uiCoins').textContent = Utils.formatNumber(AppState.currentUser.coins);
             document.getElementById('tapBalance').textContent = Utils.formatNumber(AppState.currentUser.coins);
 
@@ -2274,11 +2229,322 @@
             }, 1000);
         }
     };
-
     window.GameEngine = GameEngine;
 
     // ==========================================================================
-    // 9. МОДУЛЬ РЫНКА
+    // 9. ОБМЕННИК
+    // ==========================================================================
+    const ShopSystem = {
+        updateUI() {
+            if (!AppState.currentUser) return;
+            document.getElementById('shopOfflineValue').textContent = Utils.formatNumber(AppState.currentUser.offline_coins || 0);
+        },
+
+        async exchangeAll() {
+            const off = AppState.currentUser.offline_coins || 0;
+            if (off <= 0) return Utils.showToast('У вас нет офлайн-коинов!', true);
+
+            const regularCoins = off * 2;
+
+            AppState.currentUser.offline_coins = 0;
+            AppState.currentUser.coins = (AppState.currentUser.coins || 0) + regularCoins;
+
+            await Utils.api(`/players?id=eq.${AppState.currentUser.id}`, {
+                method: 'PATCH',
+                body: JSON.stringify({ offline_coins: 0, coins: AppState.currentUser.coins })
+            });
+
+            GameEngine.updateAllUIs();
+            this.updateUI();
+            Utils.showToast(`Обменяно ${off} 🌙 на ${regularCoins} 🪙!`);
+            Sound.playWin();
+        }
+    };
+    window.ShopSystem = ShopSystem;
+
+    // ==========================================================================
+    // 10. БОНУСЫ
+    // ==========================================================================
+    const BonusSystem = {
+        updateUI() {
+            if (!AppState.currentUser) return;
+            
+            const now = Date.now();
+            
+            const lastDaily = AppState.currentUser.last_daily_claim || 0;
+            const dailyReady = (now - lastDaily) >= 86400000;
+            const dailyBtn = document.getElementById('dailyClaimBtn');
+            const dailyText = document.getElementById('dailyTimerText');
+            
+            if (dailyReady) {
+                dailyBtn.disabled = false;
+                dailyBtn.style.opacity = '1';
+                dailyBtn.textContent = 'ЗАБРАТЬ';
+                dailyText.textContent = 'Доступно!';
+                dailyText.style.color = 'var(--color-success)';
+            } else {
+                dailyBtn.disabled = true;
+                dailyBtn.style.opacity = '0.5';
+                dailyText.textContent = `Через: ${this.formatTime(86400000 - (now - lastDaily))}`;
+                dailyText.style.color = 'var(--color-text-muted)';
+            }
+
+            const lastFree = AppState.currentUser.last_free_case || 0;
+            const freeReady = (now - lastFree) >= 43200000;
+            const freeBtn = document.getElementById('freeCaseClaimBtn');
+            const freeText = document.getElementById('freeCaseTimerText');
+            
+            if (freeReady) {
+                freeBtn.disabled = false;
+                freeBtn.style.opacity = '1';
+                freeBtn.textContent = 'ЗАБРАТЬ КЕЙС';
+                freeText.textContent = 'Доступно!';
+                freeText.style.color = 'var(--color-success)';
+            } else {
+                freeBtn.disabled = true;
+                freeBtn.style.opacity = '0.5';
+                freeText.textContent = `Через: ${this.formatTime(43200000 - (now - lastFree))}`;
+                freeText.style.color = 'var(--color-text-muted)';
+            }
+        },
+
+        formatTime(ms) {
+            const h = Math.floor(ms / 3600000);
+            const m = Math.floor((ms % 3600000) / 60000);
+            const s = Math.floor((ms % 60000) / 1000);
+            return `${h}ч ${m}м ${s}с`;
+        },
+
+        async claimDaily() {
+            if (!AppState.currentUser) return;
+            const now = Date.now();
+            if (now - (AppState.currentUser.last_daily_claim || 0) < 86400000) return Utils.showToast('Рано!', true);
+
+            AppState.currentUser.last_daily_claim = now;
+            AppState.currentUser.coins += 5000;
+            
+            await Utils.api(`/players?id=eq.${AppState.currentUser.id}`, {
+                method: 'PATCH',
+                body: JSON.stringify({ coins: AppState.currentUser.coins, last_daily_claim: now })
+            });
+            
+            GameEngine.updateAllUIs();
+            this.updateUI();
+            Utils.showToast('Вы получили 5000 🪙!');
+            Sound.playWin();
+        },
+
+        async claimFreeCase() {
+            if (!AppState.currentUser) return;
+            const now = Date.now();
+            if (now - (AppState.currentUser.last_free_case || 0) < 43200000) return Utils.showToast('Рано!', true);
+
+            AppState.currentUser.last_free_case = now;
+            
+            await Utils.api(`/players?id=eq.${AppState.currentUser.id}`, {
+                method: 'PATCH',
+                body: JSON.stringify({ last_free_case: now })
+            });
+            
+            this.updateUI();
+            AppState.currentCase = CaseDatabase[0];
+            CaseSystem.startRoll(1, true);
+        }
+    };
+    window.BonusSystem = BonusSystem;
+
+    // ==========================================================================
+    // 11. КОЛЕСО ФОРТУНЫ
+    // ==========================================================================
+    const WheelSystem = {
+        segments: [
+            { text: '1000', color: '#f0b90b', value: 1000 },
+            { text: 'Скин', color: '#a78bfa', value: 'item' },
+            { text: '500', color: '#4ade80', value: 500 },
+            { text: 'ПУСТО', color: '#333333', value: 0 },
+            { text: '5000', color: '#f0b90b', value: 5000 },
+            { text: 'Скин', color: '#a78bfa', value: 'item' },
+            { text: '100', color: '#4ade80', value: 100 },
+            { text: 'ПУСТО', color: '#333333', value: 0 }
+        ],
+
+        renderWheel() {
+            const svg = document.getElementById('fortuneWheel');
+            if (!svg) return;
+            
+            svg.innerHTML = '';
+            const cx = 50, cy = 50, r = 48;
+            const angleStep = 360 / this.segments.length;
+
+            this.segments.forEach((seg, i) => {
+                const startAngle = i * angleStep;
+                const endAngle = (i + 1) * angleStep;
+
+                const startRad = (startAngle - 90) * Math.PI / 180;
+                const endRad = (endAngle - 90) * Math.PI / 180;
+
+                const x1 = cx + r * Math.cos(startRad);
+                const y1 = cy + r * Math.sin(startRad);
+                const x2 = cx + r * Math.cos(endRad);
+                const y2 = cy + r * Math.sin(endRad);
+
+                const largeArc = angleStep > 180 ? 1 : 0;
+
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2} Z`);
+                path.setAttribute('fill', seg.color);
+                path.setAttribute('stroke', '#000');
+                path.setAttribute('stroke-width', '0.5');
+                svg.appendChild(path);
+
+                const textRadius = r * 0.7;
+                const textAngle = startAngle + angleStep / 2 - 90;
+                const textRad = textAngle * Math.PI / 180;
+                const tx = cx + textRadius * Math.cos(textRad);
+                const ty = cy + textRadius * Math.sin(textRad);
+
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', tx);
+                text.setAttribute('y', ty);
+                text.setAttribute('fill', seg.color === '#333333' ? '#888' : '#000');
+                text.setAttribute('font-size', '3');
+                text.setAttribute('font-weight', 'bold');
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('dominant-baseline', 'middle');
+                text.setAttribute('transform', `rotate(${textAngle + 90}, ${tx}, ${ty})`);
+                text.textContent = seg.text;
+                svg.appendChild(text);
+            });
+        },
+
+        async spin() {
+            if (AppState.wheelSpinning) return;
+            if (AppState.currentUser.coins < 500) return Utils.showToast('Нужно 500 🪙 для прокрутки', true);
+
+            AppState.wheelSpinning = true;
+            AppState.currentUser.coins -= 500;
+            GameEngine.updateAllUIs();
+
+            const svg = document.getElementById('fortuneWheel');
+            svg.style.transition = 'none';
+            svg.style.transform = 'rotate(0deg)';
+            
+            const winIndex = Math.floor(Math.random() * this.segments.length);
+            const angleStep = 360 / this.segments.length;
+            const targetAngle = 360 - (winIndex * angleStep + angleStep / 2);
+            const totalRotation = 360 * 5 + targetAngle;
+
+            await new Promise(r => setTimeout(r, 50));
+            
+            svg.style.transition = 'transform 4s cubic-bezier(0.1, 0.8, 0.1, 1)';
+            svg.style.transform = `rotate(${totalRotation}deg)`;
+
+            setTimeout(async () => {
+                const seg = this.segments[winIndex];
+                let msg = '';
+                
+                if (seg.value === 'item') {
+                    const pool = AppState.allGameItems.filter(x => x.r === 'rare' || x.r === 'epic');
+                    const item = pool[Math.floor(Math.random() * pool.length)];
+                    AppState.userInventory[item.n] = (AppState.userInventory[item.n] || 0) + 1;
+                    msg = `Вы выиграли: ${item.n}!`;
+                    await Utils.api(`/players?id=eq.${AppState.currentUser.id}`, {
+                        method: 'PATCH',
+                        body: JSON.stringify({ inventory: AppState.userInventory, coins: AppState.currentUser.coins })
+                    });
+                } else {
+                    AppState.currentUser.coins += seg.value;
+                    msg = `Вы выиграли: ${seg.value} 🪙!`;
+                    await Utils.api(`/players?id=eq.${AppState.currentUser.id}`, {
+                        method: 'PATCH',
+                        body: JSON.stringify({ coins: AppState.currentUser.coins })
+                    });
+                }
+
+                GameEngine.updateAllUIs();
+                InventorySystem.render();
+                Utils.showToast(msg);
+                if (seg.value !== 0) Sound.playWin();
+                
+                AppState.wheelSpinning = false;
+                svg.style.transition = 'none';
+                svg.style.transform = `rotate(${targetAngle}deg)`;
+            }, 4000);
+        }
+    };
+    window.WheelSystem = WheelSystem;
+
+    // ==========================================================================
+    // 12. ПЕРЕРОЖДЕНИЕ (ДИНАМИЧЕСКАЯ СТОИМОСТЬ)
+    // ==========================================================================
+    const RebirthSystem = {
+        getReqCost(level) {
+            // 1-е перерождение: 1 000 000, 2-е: 2 000 000, 3-е: 4 000 000...
+            return 1000000 * Math.pow(2, level);
+        },
+
+        updateUI() {
+            if (!AppState.currentUser) return;
+            
+            const lvl = AppState.currentUser.rebirth_level || 0;
+            const mult = AppState.currentUser.tap_multiplier || 1;
+            const req = this.getReqCost(lvl);
+            
+            document.getElementById('rebirthLevelText').textContent = `Уровень: ${lvl} (Множитель: x${mult})`;
+            document.getElementById('rebirthReqText').textContent = `${Utils.formatNumber(req)} 🪙`;
+            
+            const btn = document.getElementById('rebirthBtn');
+            if (AppState.currentUser.coins >= req) {
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                document.getElementById('rebirthReqText').style.color = 'var(--color-success)';
+            } else {
+                btn.disabled = true;
+                btn.style.opacity = '0.5';
+                document.getElementById('rebirthReqText').style.color = 'var(--color-danger)';
+            }
+        },
+
+        async doRebirth() {
+            if (!AppState.currentUser) return;
+            
+            const lvl = AppState.currentUser.rebirth_level || 0;
+            const req = this.getReqCost(lvl);
+            
+            if (AppState.currentUser.coins < req) return;
+
+            if (!confirm(`Вы уверены? Вы потратите ${Utils.formatNumber(req)} монет и потеряете инвентарь!`)) return;
+
+            const newLvl = lvl + 1;
+            const newMult = (AppState.currentUser.tap_multiplier || 1) * 2;
+
+            AppState.currentUser.coins -= req;
+            AppState.currentUser.inventory = {};
+            AppState.currentUser.rebirth_level = newLvl;
+            AppState.currentUser.tap_multiplier = newMult;
+            AppState.userInventory = {};
+
+            await Utils.api(`/players?id=eq.${AppState.currentUser.id}`, {
+                method: 'PATCH',
+                body: JSON.stringify({
+                    coins: AppState.currentUser.coins,
+                    inventory: {},
+                    rebirth_level: newLvl,
+                    tap_multiplier: newMult
+                })
+            });
+
+            GameEngine.updateAllUIs();
+            InventorySystem.render();
+            this.updateUI();
+            Utils.showToast(`Вы переродились! Уровень: ${newLvl}, Множитель: x${newMult}`, false);
+            Sound.playWin();
+        }
+    };
+    window.RebirthSystem = RebirthSystem;
+
+    // ==========================================================================
+    // 13. РЫНОК
     // ==========================================================================
     const MarketSystem = {
         render() {
@@ -2309,11 +2575,11 @@
             document.querySelectorAll('.m-tab').forEach(t => {
                 t.classList.remove('active');
                 t.style.background = 'transparent';
-                t.style.color = 'var(--text-muted)';
+                t.style.color = 'var(--color-text-muted)';
             });
             el.classList.add('active');
-            el.style.background = 'var(--gold)';
-            el.style.color = 'var(--text-black)';
+            el.style.background = 'var(--color-gold)';
+            el.style.color = 'var(--color-text-black)';
 
             document.getElementById('mkt-buy').style.display = tab === 'buy' ? 'block' : 'none';
             document.getElementById('mkt-auction').style.display = tab === 'auction' ? 'block' : 'none';
@@ -2327,7 +2593,7 @@
             
             AppState.viewedItem = { name: it.n, mode: mode, basePrice: Utils.getPrice(Utils.getItemPrice(it)) };
             
-            document.getElementById('viewIcon').textContent = Utils.getItemIcon(it);
+            document.getElementById('viewIcon').innerHTML = Utils.getItemIcon(it);
             document.getElementById('viewName').textContent = it.n;
             document.getElementById('viewPrice').textContent = Utils.formatNumber(AppState.viewedItem.basePrice) + ' 🪙';
             
@@ -2356,10 +2622,10 @@
             const profit = Utils.getProfitPercent(AppState.viewedItem.basePrice, inputVal);
             if (profit >= 0) {
                 profitText.textContent = `Выгодно на +${profit}%`;
-                profitText.style.color = 'var(--success)';
+                profitText.style.color = 'var(--color-success)';
             } else {
                 profitText.textContent = `Убыток: ${profit}%`;
-                profitText.style.color = 'var(--danger)';
+                profitText.style.color = 'var(--color-danger)';
             }
         },
 
@@ -2417,11 +2683,10 @@
             Utils.closeModal('modalItemView');
         }
     };
-
     window.MarketSystem = MarketSystem;
 
     // ==========================================================================
-    // 10. МОДУЛЬ ИНВЕНТАРЯ
+    // 14. ИНВЕНТАРЬ
     // ==========================================================================
     const InventorySystem = {
         render() {
@@ -2454,11 +2719,10 @@
             }).join('');
         }
     };
-
     window.InventorySystem = InventorySystem;
 
     // ==========================================================================
-    // 11. МОДУЛЬ АУКЦИОНА
+    // 15. АУКЦИОН
     // ==========================================================================
     const AuctionSystem = {
         async load() {
@@ -2498,7 +2762,7 @@
                                 <div class="auc-profit ${profitClass}">${profitPrefix}${profit}%</div>
                                 ${!isMine 
                                     ? `<button class="btn-buy-auc" onclick="AuctionSystem.buyLot(${a.id}, '${a.item_name}', ${a.price})">КУПИТЬ</button>` 
-                                    : `<div style="font-size:11px; color:var(--gold); margin-top:10px;">Ваш лот</div>`
+                                    : `<div style="font-size:11px; color:var(--color-gold); margin-top:10px;">Ваш лот</div>`
                                 }
                             </div>
                         </div>
@@ -2532,11 +2796,10 @@
             Utils.showToast('Куплено с аукциона!');
         }
     };
-
     window.AuctionSystem = AuctionSystem;
 
     // ==========================================================================
-    // 12. МОДУЛЬ КЕЙСОВ
+    // 16. КЕЙСЫ
     // ==========================================================================
     const CaseSystem = {
         render() {
@@ -2560,9 +2823,9 @@
             document.getElementById('modalCaseOpen').classList.add('active');
         },
 
-        async startRoll(count) {
+        async startRoll(count, isFree = false) {
             if (!AppState.currentCase) return;
-            const total = AppState.currentCase.price * count;
+            const total = isFree ? 0 : AppState.currentCase.price * count;
             if (AppState.currentUser.coins < total) return Utils.showToast('Мало монет', true);
 
             AppState.currentUser.coins -= total;
@@ -2592,7 +2855,7 @@
                 for (let j = 0; j < 40; j++) {
                     const d = j === 35 ? win : AppState.allGameItems[Math.floor(Math.random() * AppState.allGameItems.length)];
                     track += `<div class="roulette-item r-${d.r}">
-                        <span style="font-size:30px;">${Utils.getItemIcon(d)}</span>
+                        ${Utils.getItemIcon(d)}
                         <span style="font-size:10px; margin-top:8px; text-align:center;">${d.n}</span>
                     </div>`;
                 }
@@ -2607,7 +2870,9 @@
                     if (!t) continue;
                     const w = t.children[35];
                     if (!w) continue;
-                    t.style.transform = `translateX(-${w.offsetLeft + w.offsetWidth/2 - t.parentElement.offsetWidth/2}px)`;
+                    void t.offsetWidth; 
+                    const scroll = w.offsetLeft + w.offsetWidth / 2 - t.parentElement.offsetWidth / 2;
+                    t.style.transform = `translateX(-${scroll}px)`;
                 }
                 Sound.playWin();
 
@@ -2627,43 +2892,46 @@
             }, 100);
         }
     };
-
     window.CaseSystem = CaseSystem;
 
     // ==========================================================================
-    // 13. МОДУЛЬ АПГРЕЙДЕРА (ПОЧИНЕН)
+    // 17. АПГРЕЙДЕР
     // ==========================================================================
     const UpgraderSystem = {
         updateUI() {
             const st = AppState.upgrader;
             
-            document.getElementById('upgPercentText').textContent = st.chance + '%';
-            document.getElementById('upgCircle').style.strokeDashoffset = 565 - (565 * (st.chance / 100));
-            
             const b = AppState.allGameItems.find(x => x.n === st.betItem);
             const t = AppState.allGameItems.find(x => x.n === st.targetItem);
             
-            document.getElementById('upgBetText').innerHTML = b ? `${Utils.getItemIcon(b)} ${b.n}` : '＋ Выбрать';
-            document.getElementById('upgTargetText').innerHTML = t ? `${Utils.getItemIcon(t)} ${t.n}` : '＋ Выбрать';
-            
+            document.getElementById('upgBetText').innerHTML = b ? Utils.getItemIcon(b) + ' ' + b.n : '＋ Выбрать';
+            document.getElementById('upgTargetText').innerHTML = t ? Utils.getItemIcon(t) + ' ' + t.n : '＋ Выбрать';
+
+            let chance = 0;
             const btn = document.getElementById('btnDoUpg');
-            // Проверяем, что предметы выбраны, есть в инвентаре и цель дороже
+            
+            if (b && t) {
+                const betPrice = Utils.getItemPrice(b);
+                const targetPrice = Utils.getItemPrice(t);
+                
+                if (targetPrice > betPrice) {
+                    chance = (betPrice / targetPrice) * 100;
+                    if (chance > 99) chance = 99;
+                    if (chance < 1) chance = 1;
+                } else {
+                    chance = 0;
+                }
+            }
+            
+            const chanceDisplay = Math.round(chance);
+
+            document.getElementById('upgPercentText').textContent = chanceDisplay + '%';
+            document.getElementById('upgCircle').style.strokeDashoffset = 565 - (565 * (chanceDisplay / 100));
+            
             const valid = b && t && AppState.userInventory[b.n] > 0 && Utils.getItemPrice(t) > Utils.getItemPrice(b);
             
             btn.disabled = !valid || st.isRolling;
             btn.style.opacity = valid ? '1' : '0.5';
-        },
-
-        setChance(val, btnElement) {
-            if (AppState.upgrader.isRolling) return;
-            
-            AppState.upgrader.chance = val;
-            // Снимаем выделение со всех кнопок шанса
-            document.querySelectorAll('.chance-btn').forEach(btn => btn.classList.remove('active'));
-            // Добавляем выделение на нажатую
-            btnElement.classList.add('active');
-            
-            this.updateUI();
         },
 
         openModal(mode) {
@@ -2680,7 +2948,7 @@
                 g.innerHTML = keys.map(n => {
                     const it = AppState.allGameItems.find(x => x.n === n);
                     return `<div class="item-card r-${it.r}" onclick="UpgraderSystem.pickItem('${n}')">
-                        <span class="item-icon">${Utils.getItemIcon(it)}</span>
+                        ${Utils.getItemIcon(it)}
                         <span class="item-name">${n}</span>
                     </div>`;
                 }).join('');
@@ -2688,7 +2956,7 @@
                 title.textContent = 'Выберите цель';
                 g.innerHTML = AppState.allGameItems.map(it => `
                     <div class="item-card r-${it.r}" onclick="UpgraderSystem.pickItem('${it.n}')">
-                        <span class="item-icon">${Utils.getItemIcon(it)}</span>
+                        ${Utils.getItemIcon(it)}
                         <span class="item-name">${it.n}</span>
                     </div>
                 `).join('');
@@ -2697,7 +2965,6 @@
         },
 
         pickItem(name) {
-            // В зависимости от того, что выбирали (bet или target), записываем в состояние
             if (AppState.upgrader.modalMode === 'bet') {
                 AppState.upgrader.betItem = name;
             } else {
@@ -2719,13 +2986,18 @@
                 return Utils.showToast('Ошибка предметов', true);
             }
 
+            const betPrice = Utils.getItemPrice(b);
+            const targetPrice = Utils.getItemPrice(t);
+            let chance = (betPrice / targetPrice) * 100;
+            if (chance > 99) chance = 99;
+            if (chance < 1) chance = 1;
+
             st.isRolling = true;
             document.getElementById('btnDoUpg').textContent = 'КРУТИМ...';
             
-            const win = Math.random() * 100 < st.chance;
+            const win = Math.random() * 100 < chance;
             await new Promise(r => setTimeout(r, 1500));
 
-            // Списываем предмет
             AppState.userInventory[b.n]--;
             if (AppState.userInventory[b.n] <= 0) {
                 delete AppState.userInventory[b.n];
@@ -2752,66 +3024,10 @@
             this.updateUI();
         }
     };
-
     window.UpgraderSystem = UpgraderSystem;
 
     // ==========================================================================
-    // 14. МОДУЛЬ НОВОСТЕЙ
-    // ==========================================================================
-    const NewsSystem = {
-        async load() {
-            try {
-                const d = await Utils.api('/news?select=*&order=created_at.desc');
-                const list = document.getElementById('newsList');
-                
-                if (!d || !d.length) {
-                    list.innerHTML = '<div style="color:#555; text-align:center;">Новостей пока нет</div>';
-                    return;
-                }
-                
-                list.innerHTML = d.map(n => `
-                    <div class="news-card">
-                        <div class="news-title">${n.title}</div>
-                        <div class="news-meta">Автор: ${n.author} • ${new Date(n.created_at).toLocaleString()}</div>
-                        <div class="news-content">${n.content}</div>
-                    </div>
-                `).join('');
-            } catch (e) {
-                console.error(e);
-            }
-        },
-
-        async addNews() {
-            if (AppState.currentUser.username.toLowerCase() !== Config.ADMIN_USERNAME.toLowerCase()) {
-                return Utils.showToast('Нет прав', true);
-            }
-            
-            const title = document.getElementById('newsTitle').value.trim();
-            const content = document.getElementById('newsContent').value.trim();
-            
-            if (!title || !content) return Utils.showToast('Заполните все поля', true);
-
-            await Utils.api('/news', {
-                method: 'POST',
-                body: JSON.stringify({ 
-                    title, 
-                    content, 
-                    author: AppState.currentUser.username, 
-                    created_at: Date.now() 
-                })
-            });
-
-            document.getElementById('newsTitle').value = '';
-            document.getElementById('newsContent').value = '';
-            Utils.showToast('Новость добавлена!');
-            this.load();
-        }
-    };
-
-    window.NewsSystem = NewsSystem;
-
-    // ==========================================================================
-    // 15. МОДУЛЬ ПРОФИЛЕЙ
+    // 18. ПРОФИЛИ
     // ==========================================================================
     const ProfileSystem = {
         async searchProfile() {
@@ -2837,7 +3053,7 @@
                         const it = AppState.allGameItems.find(x => x.n === n) || { i: '📦', r: 'common' };
                         return `
                             <div class="item-card r-${it.r}" style="padding:10px;">
-                                <span class="item-icon" style="font-size:30px;">${Utils.getItemIcon(it)}</span>
+                                ${Utils.getItemIcon(it)}
                                 <span class="item-name" style="font-size:10px;">${n}</span>
                                 <span class="item-price" style="font-size:11px;">x${p.inventory[n]}</span>
                             </div>
@@ -2850,11 +3066,10 @@
             }
         }
     };
-
     window.ProfileSystem = ProfileSystem;
 
     // ==========================================================================
-    // 16. МОДУЛЬ ЧАТА (С БЛЮРОМ И АВТООЧИСТКОЙ)
+    // 19. ЧАТ
     // ==========================================================================
     const ChatSystem = {
         censorText(t) { 
@@ -2873,14 +3088,13 @@
         async load() {
             try {
                 const oneHourAgo = Date.now() - (60 * 60 * 1000);
-                // Запрашиваем только сообщения за последний час
                 const d = await Utils.api(`/chat?created_at=gt.${oneHourAgo}&order=created_at.desc&limit=40`);
                 const box = document.getElementById('chatMessages');
                 if (!box) return;
                 
                 box.innerHTML = d.reverse().map(m => `
                     <div class="chat-msg">
-                        <span class="author" style="color: ${m.role === 'system' ? 'var(--danger)' : 'var(--gold)'}">${m.username}:</span>${this.censorText(m.message)}
+                        <span class="author" style="color: ${m.role === 'system' ? 'var(--color-danger)' : 'var(--color-gold)'}">${m.username}:</span>${this.censorText(m.message)}
                     </div>
                 `).join('');
                 box.scrollTop = box.scrollHeight;
@@ -2897,7 +3111,6 @@
             }
             
             if (this.hasBadWords(txt)) {
-                // Мут на 10 минут за мат
                 AppState.currentUser.muted_until = Date.now() + 600000;
                 await Utils.api(`/players?id=eq.${AppState.currentUser.id}`, { 
                     method: 'PATCH', 
@@ -2919,11 +3132,10 @@
             this.load();
         }
     };
-
     window.ChatSystem = ChatSystem;
 
     // ==========================================================================
-    // 17. МОДУЛЬ ЛИДЕРБОРДА
+    // 20. ЛИДЕРБОРД
     // ==========================================================================
     const LeaderboardSystem = {
         async load() {
@@ -2948,11 +3160,10 @@
             } catch(e) {}
         }
     };
-
     window.LeaderboardSystem = LeaderboardSystem;
 
     // ==========================================================================
-    // 18. МОДУЛЬ НАСТРОЕК
+    // 21. НАСТРОЙКИ
     // ==========================================================================
     const SettingsSystem = {
         renderAvatars() {
@@ -3011,13 +3222,104 @@
             document.getElementById('newPassInput').value = '';
         }
     };
-
     window.SettingsSystem = SettingsSystem;
 
     // ==========================================================================
-    // 19. МОДУЛЬ АДМИНИСТРАТОРА (С БАНОМ ПО ПРИЧИНЕ, ВРЕМЕНИ И УСТРОЙСТВУ)
+    // 22. АДМИНИСТРАТОР (С ЗАГРУЗКОЙ ОРУЖИЯ)
     // ==========================================================================
     const AdminSystem = {
+        async giveSelfMoney() {
+            if (AppState.currentUser.username.toLowerCase() !== Config.ADMIN_USERNAME.toLowerCase()) return Utils.showToast('Нет прав', true);
+            
+            const amountInput = document.getElementById('admSelfAmount').value;
+            const amount = parseInt(amountInput);
+            
+            if (isNaN(amount) || amount <= 0) return Utils.showToast('Введите корректную сумму', true);
+            
+            AppState.currentUser.coins += amount;
+            
+            await Utils.api(`/players?id=eq.${AppState.currentUser.id}`, { 
+                method: 'PATCH', 
+                body: JSON.stringify({ coins: AppState.currentUser.coins }) 
+            });
+            
+            GameEngine.updateAllUIs();
+            Utils.showToast(`Вы выдали себе ${Utils.formatNumber(amount)} монет!`);
+            Sound.playWin();
+        },
+
+        async addCustomWeapon() {
+            if (AppState.currentUser.username.toLowerCase() !== Config.ADMIN_USERNAME.toLowerCase()) return Utils.showToast('Нет прав', true);
+            
+            const name = document.getElementById('admWeaponName').value.trim();
+            const price = parseInt(document.getElementById('admWeaponPrice').value);
+            const rarity = document.getElementById('admWeaponRarity').value;
+            const fileInput = document.getElementById('admWeaponImage');
+            const file = fileInput.files[0];
+            
+            if (!name || isNaN(price) || !file) return Utils.showToast('Заполните все поля', true);
+            
+            // Проверка размера (Максимум 16 МБ)
+            if (file.size > 16 * 1024 * 1024) return Utils.showToast('Картинка слишком большая (макс 16 МБ)', true);
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const base64Image = e.target.result;
+                
+                const newItem = {
+                    n: name,
+                    i: base64Image, // Сохраняем как Base64
+                    p: price,
+                    r: rarity
+                };
+                
+                AppState.allGameItems.push(newItem);
+                
+                try {
+                    // Сохраняем в БД (config)
+                    await Utils.api('/config', {
+                        method: 'POST',
+                        headers: { 'Prefer': 'resolution=merge-duplicates' },
+                        body: JSON.stringify({ key: 'items_data', value: JSON.stringify(AppState.allGameItems) })
+                    });
+                    
+                    // Обновляем UI
+                    MarketSystem.render();
+                    CaseSystem.render();
+                    Utils.showToast(`Оружие "${name}" успешно добавлено!`);
+                    
+                    // Очищаем поля
+                    document.getElementById('admWeaponName').value = '';
+                    document.getElementById('admWeaponPrice').value = '';
+                    fileInput.value = '';
+                } catch (err) {
+                    Utils.showToast('Ошибка сохранения: ' + err.message, true);
+                }
+            };
+            reader.readAsDataURL(file);
+        },
+
+        async giveCustomMoney() {
+            if (AppState.currentUser.username.toLowerCase() !== Config.ADMIN_USERNAME.toLowerCase()) return Utils.showToast('Нет прав', true);
+            
+            const amount = parseInt(document.getElementById('admGiveAmount').value);
+            if (isNaN(amount) || amount <= 0) return Utils.showToast('Введите корректную сумму', true);
+            
+            const t = document.getElementById('admTargetUser').value.trim();
+            if (!t) return Utils.showToast('Введите ник', true);
+            
+            const p = await Utils.api(`/players?username=eq.${encodeURIComponent(t)}&select=*`);
+            if (!p.length) return Utils.showToast('Игрок не найден', true);
+            
+            const target = p[0];
+            await Utils.api(`/players?id=eq.${target.id}`, { 
+                method: 'PATCH', 
+                body: JSON.stringify({ coins: target.coins + amount }) 
+            });
+            
+            Utils.showToast(`Выдано ${Utils.formatNumber(amount)} монет игроку ${target.username}`);
+        },
+
         async action(action, value) {
             if (AppState.currentUser.username.toLowerCase() !== Config.ADMIN_USERNAME.toLowerCase()) return Utils.showToast('Нет прав', true);
             
@@ -3028,22 +3330,8 @@
             if (!p.length) return Utils.showToast('Игрок не найден', true);
             
             const target = p[0];
-            const targetInv = target.inventory || {};
 
-            if (action === 'money') {
-                await Utils.api(`/players?id=eq.${target.id}`, { 
-                    method: 'PATCH', 
-                    body: JSON.stringify({ coins: target.coins + value }) 
-                });
-                Utils.showToast(`Выдано ${Utils.formatNumber(value)} монет`);
-            } else if (action === 'giveItem') {
-                targetInv[value] = (targetInv[value] || 0) + 1;
-                await Utils.api(`/players?id=eq.${target.id}`, { 
-                    method: 'PATCH', 
-                    body: JSON.stringify({ inventory: targetInv }) 
-                });
-                Utils.showToast(`Выдан предмет: ${value}`);
-            } else if (action === 'unban') {
+            if (action === 'unban') {
                 await Utils.api(`/players?id=eq.${target.id}`, { 
                     method: 'PATCH', 
                     body: JSON.stringify({ role: 'user', ban_reason: null, ban_until: null }) 
@@ -3074,7 +3362,6 @@
             const target = p[0];
             const banUntil = Date.now() + timeMs;
             
-            // Баним в БД
             await Utils.api(`/players?id=eq.${target.id}`, { 
                 method: 'PATCH', 
                 body: JSON.stringify({ 
@@ -3084,7 +3371,6 @@
                 }) 
             });
             
-            // Уведомление в чат
             const timeText = timeMs >= 9999999999999 ? 'Навсегда' : `${Math.round(timeMs/3600000)}ч.`;
             await Utils.api('/chat', {
                 method: 'POST',
@@ -3115,7 +3401,7 @@
                 list.innerHTML = d.map(p => `
                     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #222; padding:8px 0;">
                         <div>
-                            <div style="font-weight:bold; color:var(--danger); font-size:13px;">${p.username}</div>
+                            <div style="font-weight:bold; color:var(--color-danger); font-size:13px;">${p.username}</div>
                             <div style="font-size:10px; color:#888;">${p.ban_reason || 'Без причины'}</div>
                         </div>
                         <button class="admin-btn" style="padding:4px 8px; font-size:10px;" onclick="AdminSystem.action('unban', 1)">Разбан</button>
@@ -3151,11 +3437,10 @@
             }
         }
     };
-
     window.AdminSystem = AdminSystem;
 
     // ==========================================================================
-    // 20. ГЛОБАЛЬНЫЕ СОБЫТИЯ И БОТ
+    // 23. ГЛОБАЛЬНЫЕ СОБЫТИЯ И БОТ
     // ==========================================================================
     setInterval(async () => {
         if (!AppState.currentUser) return;
@@ -3221,7 +3506,7 @@
     }, 5000);
 
     // ==========================================================================
-    // 21. АВТООЧИСТКА ЧАТА (Раз в час)
+    // 24. АВТООЧИСТКА ЧАТА
     // ==========================================================================
     setInterval(async () => {
         if (!AppState.currentUser) return;
@@ -3240,18 +3525,18 @@
     }, 60000);
 
     // ==========================================================================
-    // 22. ЗАПУСК С ЗАЩИТОЙ ОТ ВЕЧНОЙ ЗАГРУЗКИ
+    // 25. ЗАПУСК
     // ==========================================================================
     window.onload = async () => {
         Utils.spawnCubes();
         CaseSystem.render();
         
-        // Жесткий таймер: скрываем загрузку через 3 секунды, что бы ни случилось
+        // Принудительное скрытие загрузки через 3 секунды при любом раскладе
         setTimeout(() => {
             const ls = document.getElementById('loadingScreen');
-            if (ls && !ls.classList.contains('hidden')) {
-                ls.classList.add('hidden');
-                document.getElementById('authScreen').classList.remove('hidden');
+            if (ls && ls.style.display !== 'none') {
+                ls.style.display = 'none';
+                document.getElementById('authScreen').style.display = 'flex';
             }
         }, 3000);
 
@@ -3260,21 +3545,41 @@
             try {
                 const d = await Utils.api(`/players?token=eq.${tk}&select=*`);
                 if (d && d.length) {
-                    if (d[0].role === 'banned') {
+                    let usr = d[0];
+                    
+                    if (usr.role === 'banned') {
                         localStorage.removeItem('hu_token');
-                        document.getElementById('loadingScreen').classList.add('hidden');
-                        document.getElementById('authScreen').classList.remove('hidden');
-                        return Utils.showToast(`Вы забанены! Причина: ${d[0].ban_reason}`, true);
+                        document.getElementById('loadingScreen').style.display = 'none';
+                        document.getElementById('authScreen').style.display = 'flex';
+                        return Utils.showToast(`Вы забанены! Причина: ${usr.ban_reason}`, true);
+                    }
+
+                    const now = Date.now();
+                    const lastSeen = usr.last_seen || now;
+                    const diffMins = Math.floor((now - lastSeen) / 60000);
+                    let offlineGain = 0;
+                    if (diffMins > 0) {
+                        offlineGain = diffMins * 5;
+                        usr.offline_coins = (usr.offline_coins || 0) + offlineGain;
                     }
                     
-                    AppState.currentUser = d[0];
-                    AppState.userInventory = AppState.currentUser.inventory || {};
+                    await Utils.api(`/players?id=eq.${usr.id}`, {
+                        method: 'PATCH',
+                        body: JSON.stringify({ last_seen: now, offline_coins: usr.offline_coins })
+                    });
                     
-                    document.getElementById('loadingScreen').classList.add('hidden');
-                    document.getElementById('authScreen').classList.add('hidden');
-                    document.getElementById('appScreen').classList.add('active');
+                    AppState.currentUser = usr;
+                    AppState.userInventory = usr.inventory || {};
+                    
+                    document.getElementById('loadingScreen').style.display = 'none';
+                    document.getElementById('authScreen').style.display = 'none';
+                    document.getElementById('appScreen').style.display = 'flex';
                     
                     GameEngine.initApp();
+                    
+                    if (offlineGain > 0) {
+                        setTimeout(() => Utils.showToast(`Вы получили +${offlineGain} 🌙 (офлайн-коины)`, false), 1000);
+                    }
                     return;
                 }
             } catch (e) {
@@ -3282,8 +3587,8 @@
             }
         }
         
-        document.getElementById('loadingScreen').classList.add('hidden');
-        document.getElementById('authScreen').classList.remove('hidden');
+        document.getElementById('loadingScreen').style.display = 'none';
+        document.getElementById('authScreen').style.display = 'flex';
     };
 </script>
 </body>
