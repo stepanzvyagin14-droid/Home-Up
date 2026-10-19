@@ -6,42 +6,26 @@
     <meta name="theme-color" content="#000000">
     <meta name="description" content="HOME UP Premium 3D - Игровая платформа">
     <title>HOME UP | Premium 3D Edition</title>
-    
-    <!-- ==========================================================================
-         БЛОК СТИЛЕЙ (CSS)
-         Максимально подробное описание всех компонентов, без сжатия.
-         ========================================================================== -->
     <style>
-        /* ======================================================================
-           1. ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ И НАСТРОЙКИ (ЧЕРНО-ЗОЛОТАЯ ТЕМА)
-           ====================================================================== */
+        /* ===== ПЕРЕМЕННЫЕ ===== */
         :root {
-            /* Основные цвета фона */
             --color-bg-main: #000000;
             --color-bg-secondary: #050505;
             --color-bg-card: rgba(10, 10, 10, 0.95);
             --color-bg-card-hover: rgba(20, 20, 20, 0.98);
             --color-bg-input: #080808;
-            
-            /* Цвета границ */
             --color-border-light: rgba(255, 255, 255, 0.05);
             --color-border-main: rgba(240, 185, 11, 0.25);
             --color-border-hover: #f0b90b;
             --color-border-active: rgba(240, 185, 11, 0.8);
-            
-            /* Золотая палитра */
             --color-gold: #f0b90b;
             --color-gold-light: #ffe488;
             --color-gold-dark: #8a6600;
             --color-gold-glow: rgba(240, 185, 11, 0.4);
-            
-            /* Текстовые цвета */
             --color-text-main: #ffffff;
             --color-text-muted: #888899;
             --color-text-dark: #555566;
             --color-text-black: #000000;
-            
-            /* Статусные цвета */
             --color-success: #4ade80;
             --color-success-dark: #22c55e;
             --color-danger: #f87171;
@@ -49,34 +33,24 @@
             --color-info: #6a8df0;
             --color-purple: #a78bfa;
             --color-secret: #00ffff;
-            
-            /* Тени */
             --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.3);
             --shadow-md: 0 10px 20px rgba(0, 0, 0, 0.5);
             --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.7);
             --shadow-gold: 0 10px 30px rgba(240, 185, 11, 0.3);
             --shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.5);
-            
-            /* Скругления */
             --radius-sm: 8px;
             --radius-md: 14px;
             --radius-lg: 20px;
             --radius-xl: 30px;
             --radius-round: 50%;
-            
-            /* Шрифты */
             --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            
-            /* Анимации */
             --transition-fast: 0.15s ease;
             --transition-normal: 0.3s ease;
             --transition-smooth: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             --transition-bounce: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
-        /* ======================================================================
-           2. СБРОС СТИЛЕЙ И БАЗОВЫЕ НАСТРОЙКИ
-           ====================================================================== */
+        /* ===== СБРОС ===== */
         *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
@@ -108,7 +82,6 @@
             position: relative;
         }
 
-        /* Кастомный скроллбар */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: var(--color-bg-main); }
         ::-webkit-scrollbar-thumb { background: var(--color-gold-dark); border-radius: 4px; }
@@ -129,9 +102,7 @@
             cursor: pointer;
         }
 
-        /* ======================================================================
-           3. АНИМАЦИИ (KEYFRAMES)
-           ====================================================================== */
+        /* ===== АНИМАЦИИ ===== */
         @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
         @keyframes slideUp { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
         @keyframes spinSlow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -141,9 +112,7 @@
         @keyframes slideUpBanner { 0% { top: 15px; opacity: 1; } 100% { top: -150px; opacity: 0; } }
         @keyframes floatCoin { 0% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-15px) rotate(180deg); } 100% { transform: translateY(0px) rotate(360deg); } }
 
-        /* ======================================================================
-           4. ЭКРАНЫ
-           ====================================================================== */
+        /* ===== ЭКРАНЫ ===== */
         .screen {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -159,7 +128,6 @@
             animation: fadeIn 0.4s ease;
         }
 
-        /* Загрузка */
         #loadingScreen {
             justify-content: center;
             align-items: center;
@@ -188,9 +156,7 @@
             text-shadow: 0 0 20px var(--color-gold-glow);
         }
 
-        /* ======================================================================
-           5. АВТОРИЗАЦИЯ
-           ====================================================================== */
+        /* ===== АВТОРИЗАЦИЯ ===== */
         #authScreen {
             justify-content: center;
             align-items: center;
@@ -288,14 +254,17 @@
             transition: 0.1s ease;
         }
 
-        .btn-primary:active {
+        .btn-primary:active:not(:disabled) {
             transform: translateY(6px);
             box-shadow: 0 0 0 var(--color-gold-dark), 0 5px 10px rgba(0, 0, 0, 0.5);
         }
 
-        /* ======================================================================
-           6. ОСНОВНОЕ ПРИЛОЖЕНИЕ
-           ====================================================================== */
+        .btn-primary:disabled {
+            cursor: not-allowed;
+            filter: grayscale(0.3);
+        }
+
+        /* ===== ОСНОВНОЕ ПРИЛОЖЕНИЕ ===== */
         #appScreen {
             flex-direction: column;
             min-height: 100vh;
@@ -312,6 +281,8 @@
             border: 1px solid var(--color-border-main);
             margin-bottom: 20px;
             box-shadow: var(--shadow-md);
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .brand-logo {
@@ -408,7 +379,17 @@
         main {
             flex: 1;
             min-width: 0;
-            overflow: hidden;
+            /* ИСПРАВЛЕНИЕ: убрали overflow:hidden — иначе кнопка апгрейдера обрезалась */
+            overflow-x: hidden;
+            overflow-y: visible;
+            padding-bottom: 20px;
+        }
+
+        /* ИСПРАВЛЕНИЕ: отступ под мобильную навигацию */
+        @media (max-width: 899px) {
+            main {
+                padding-bottom: 90px;
+            }
         }
 
         .view {
@@ -480,11 +461,7 @@
             margin-bottom: 4px;
         }
 
-        /* ======================================================================
-           7. ИГРОВЫЕ КОМПОНЕНТЫ
-           ====================================================================== */
-        
-        /* Тапалка (Кнопка улучшена) */
+        /* ===== ИГРОВЫЕ КОМПОНЕНТЫ ===== */
         .tap-container {
             display: flex;
             flex-direction: column;
@@ -579,7 +556,6 @@
             animation: tapRipple 0.4s ease-out;
         }
 
-        /* Сетки */
         .items-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
@@ -654,7 +630,6 @@
         .profit-up { color: var(--color-success); }
         .profit-down { color: var(--color-danger); }
 
-        /* Редкости */
         .r-common { border-bottom: 3px solid #7a7a88; }
         .r-uncommon { border-bottom: 3px solid var(--color-info); }
         .r-rare { border-bottom: 3px solid var(--color-purple); }
@@ -662,11 +637,7 @@
         .r-legendary { border-bottom: 3px solid var(--color-gold); box-shadow: inset 0 -10px 20px rgba(240, 185, 11, 0.1); }
         .r-secret { border-bottom: 3px solid #00ffff; box-shadow: inset 0 -10px 20px rgba(0, 255, 255, 0.2); }
 
-        /* ======================================================================
-           8. СПЕЦИФИЧЕСКИЕ РАЗДЕЛЫ
-           ====================================================================== */
-        
-        /* Колесо Фортуны */
+        /* ===== КОЛЕСО ===== */
         .wheel-container {
             position: relative;
             width: 300px;
@@ -722,7 +693,7 @@
             cursor: default;
         }
 
-        /* Перерождение (ОБНОВЛЕНО) */
+        /* ===== ПЕРЕРОЖДЕНИЕ ===== */
         .rebirth-card {
             background: linear-gradient(135deg, rgba(167, 139, 250, 0.15) 0%, #000 100%);
             border: 1px solid var(--color-purple);
@@ -750,7 +721,7 @@
             border-radius: 10px;
         }
 
-        /* Апгрейдер */
+        /* ===== АПГРЕЙДЕР (ИСПРАВЛЕНО) ===== */
         .upg-container {
             display: flex;
             flex-direction: column;
@@ -759,6 +730,7 @@
             max-width: 500px;
             margin: 0 auto;
             box-sizing: border-box;
+            padding-bottom: 25px; /* ИСПРАВЛЕНИЕ: запас под 3D-тень кнопки */
         }
 
         .upg-circle-wrap {
@@ -867,16 +839,19 @@
             object-fit: contain;
         }
 
-        /* Кнопка Апгрейда - фикс */
+        /* ИСПРАВЛЕНИЕ: кнопка апгрейдера — теперь нормально "высунута" (виден 3D-эффект) */
         #btnDoUpg {
             width: 100%;
             max-width: 400px;
-            margin: 0 auto;
+            margin: 10px auto 0;
             padding: 16px;
             box-sizing: border-box;
+            position: relative;
+            z-index: 2;
+            flex-shrink: 0;
         }
 
-        /* Кейсы (Анимация) */
+        /* ===== КЕЙСЫ ===== */
         .roulette-wrap {
             overflow: hidden;
             position: relative;
@@ -927,7 +902,7 @@
             transform: translateX(-50%);
         }
 
-        /* Аукцион */
+        /* ===== АУКЦИОН ===== */
         .auction-feed {
             background: #050505;
             border: 1px solid var(--color-border-main);
@@ -1001,7 +976,6 @@
 
         .btn-buy-auc:active { transform: translateY(4px); box-shadow: none; }
 
-        /* Бонусы */
         .bonus-card {
             background: #0a0a0a;
             border: 1px solid var(--color-border-main);
@@ -1017,11 +991,9 @@
         .bonus-title { font-size: 18px; font-weight: 900; color: var(--color-gold); margin-bottom: 10px; }
         .bonus-timer { font-size: 14px; color: var(--color-text-muted); font-weight: bold; margin-bottom: 15px; }
 
-        /* Обменник */
         .shop-card { background: #0a0a0a; border: 1px solid var(--color-border-main); border-radius: 15px; padding: 30px; text-align: center; }
         .shop-balance { font-size: 50px; font-weight: 900; color: var(--color-purple); margin: 20px 0; text-shadow: 0 0 20px rgba(167, 139, 250, 0.5); }
 
-        /* Чат */
         .chat-container {
             height: 400px;
             display: flex;
@@ -1040,7 +1012,6 @@
         .blur-word { filter: blur(4px); cursor: pointer; transition: 0.2s; user-select: none; }
         .blur-word:hover { filter: blur(0px); }
 
-        /* Лидеры */
         .top-item {
             display: flex;
             justify-content: space-between;
@@ -1065,7 +1036,6 @@
         .top-name { flex: 1; font-weight: 900; font-size: 16px; margin-left: 10px; }
         .top-coins { font-weight: 900; color: var(--color-gold); font-size: 16px; }
 
-        /* Модалки */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -1122,7 +1092,6 @@
             border-color: var(--color-danger);
         }
 
-        /* Уведомления */
         #toast {
             position: fixed;
             bottom: 100px;
@@ -1148,7 +1117,6 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* Глобальный Баннер */
         .global-banner {
             position: fixed;
             top: 15px;
@@ -1172,7 +1140,6 @@
         .global-banner.hide { animation: slideUpBanner 0.5s ease-in forwards; }
         .disco-mode { animation: discoBg 1s infinite linear !important; }
 
-        /* Античит */
         .anti-cheat {
             position: fixed;
             top: 20px;
@@ -1192,13 +1159,13 @@
 
         .anti-cheat.show { transform: translateX(-50%) translateY(0); }
 
-        /* Админка */
+        /* ===== АДМИНКА ===== */
         .admin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
         .admin-btn { background: #111111; border: 1px solid var(--color-border-main); color: #ffffff; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 12px; cursor: pointer; text-align: center; transition: 0.2s ease; }
         .admin-btn:hover { background: #222222; border-color: var(--color-gold); color: var(--color-gold); }
         .admin-btn.danger:hover { background: #2a0a0a; border-color: var(--color-danger); color: var(--color-danger); }
 
-        /* Адаптив */
+        /* ===== АДАПТИВ ===== */
         @media (max-width: 899px) {
             body { padding: 8px 8px 100px 8px; }
             .layout { flex-direction: column; }
@@ -1206,27 +1173,21 @@
             .card-panel { padding: 15px; }
             .items-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
             .upg-slots { flex-direction: column; }
+            .upg-container { padding-bottom: 30px; }
         }
     </style>
 </head>
 <body>
 
-<!-- ==========================================================================
-     ФОН
-     ========================================================================== -->
 <div class="bg-cubes" id="bgCubes"></div>
 
-<!-- ==========================================================================
-     ЭКРАН ЗАГРУЗКИ
-     ========================================================================== -->
+<!-- ЭКРАН ЗАГРУЗКИ -->
 <div class="screen active" id="loadingScreen">
     <div class="spinner"></div>
     <div class="loading-text">HOME UP</div>
 </div>
 
-<!-- ==========================================================================
-     ЭКРАН АВТОРИЗАЦИИ
-     ========================================================================== -->
+<!-- ЭКРАН АВТОРИЗАЦИИ -->
 <div class="screen" id="authScreen" style="display: none;">
     <div class="auth-box">
         <div class="auth-logo">
@@ -1253,9 +1214,7 @@
     </div>
 </div>
 
-<!-- ==========================================================================
-     ОСНОВНОЕ ПРИЛОЖЕНИЕ
-     ========================================================================== -->
+<!-- ОСНОВНОЕ ПРИЛОЖЕНИЕ -->
 <div class="screen" id="appScreen" style="display: none;">
     <header>
         <div class="brand-logo">
@@ -1336,7 +1295,7 @@
                 </div>
             </div>
 
-            <!-- КОЛЕСО ФОРТУНЫ -->
+            <!-- КОЛЕСО -->
             <div class="view" id="view-wheel">
                 <div class="card-panel" style="text-align:center;">
                     <h2 style="margin-bottom:20px; color:var(--color-gold);">Колесо Фортуны</h2>
@@ -1349,7 +1308,7 @@
                 </div>
             </div>
 
-            <!-- ПЕРЕРОЖДЕНИЕ (ОБНОВЛЕНО) -->
+            <!-- ПЕРЕРОЖДЕНИЕ -->
             <div class="view" id="view-rebirth">
                 <div class="card-panel">
                     <h2 style="margin-bottom:20px; color:var(--color-gold);">Перерождение</h2>
@@ -1374,7 +1333,7 @@
                 </div>
             </div>
 
-            <!-- АПГРЕЙДЕР (ОБНОВЛЕНО) -->
+            <!-- АПГРЕЙДЕР -->
             <div class="view" id="view-upgrader">
                 <div class="card-panel">
                     <h2 style="margin-bottom:20px; color:var(--color-gold); text-align:center;">Апгрейдер</h2>
@@ -1493,7 +1452,7 @@
                 </div>
             </div>
 
-            <!-- АДМИНКА (ОБНОВЛЕНО) -->
+            <!-- АДМИНКА -->
             <div class="view" id="view-admin">
                 <div class="card-panel" style="border-color:var(--color-danger);">
                     <h2 style="margin-bottom:20px; color:var(--color-danger);">👑 Админ Панель</h2>
@@ -1532,6 +1491,17 @@
                         </select>
                         <input type="file" id="admWeaponImage" class="input-field" accept="image/*" style="padding:10px;">
                         <button class="admin-btn" onclick="AdminSystem.addCustomWeapon()" style="background:var(--color-success); color:#000; width:100%;">ЗАГРУЗИТЬ ОРУЖИЕ</button>
+                    </div>
+
+                    <!-- НОВОЕ: УДАЛЕНИЕ ОРУЖИЯ -->
+                    <h3 style="margin-bottom:10px; font-size:14px; color:var(--color-danger);">🗑 Удалить оружие</h3>
+                    <div style="background:#111; padding:15px; border-radius:10px; margin-bottom:25px;">
+                        <div style="display:flex; gap:10px; margin-bottom:10px;">
+                            <input type="text" id="admWeaponSearch" class="input-field" style="margin-bottom:0; flex:1;" placeholder="🔍 Поиск по названию..." oninput="AdminSystem.renderWeaponList()">
+                            <button class="admin-btn" style="padding:12px 15px;" onclick="AdminSystem.renderWeaponList()">🔄</button>
+                        </div>
+                        <div style="font-size:11px; color:var(--color-text-muted); margin-bottom:10px;">Всего предметов: <span id="admWeaponCount" style="color:var(--color-gold); font-weight:900;">0</span></div>
+                        <div id="admWeaponList" style="max-height:400px; overflow-y:auto; padding-right:5px;"></div>
                     </div>
 
                     <h3 style="margin-bottom:10px; font-size:14px; color:var(--color-text-muted);">Бан</h3>
@@ -1643,10 +1613,9 @@
     };
 
     // ==========================================================================
-    // 2. БАЗА ПРЕДМЕТОВ (100+ ШТУК)
+    // 2. БАЗА ПРЕДМЕТОВ
     // ==========================================================================
     const ItemDatabase = [
-        // Пистолеты
         { n: 'Glock-18 | Фаде', i: '🔫', p: 50000, r: 'legendary' },
         { n: 'Glock-18 | Водный', i: '🔫', p: 2000, r: 'rare' },
         { n: 'USP-S | Убийство', i: '🔫', p: 45000, r: 'legendary' },
@@ -1663,8 +1632,6 @@
         { n: 'Desert Eagle | Пламя', i: '🔫', p: 60000, r: 'legendary' },
         { n: 'R8 | Восход', i: '🔫', p: 7000, r: 'epic' },
         { n: 'R8 | Заря', i: '🔫', p: 800, r: 'uncommon' },
-
-        // Пистолеты-пулеметы
         { n: 'MP9 | Гроза', i: '🔫', p: 350, r: 'common' },
         { n: 'MP9 | Звездный', i: '🔫', p: 4500, r: 'rare' },
         { n: 'MAC-10 | Неон', i: '🔫', p: 700, r: 'uncommon' },
@@ -1678,8 +1645,6 @@
         { n: 'P90 | Азимов', i: '🔫', p: 3500, r: 'rare' },
         { n: 'P90 | Киберпанк', i: '🔫', p: 15000, r: 'epic' },
         { n: 'P90 | Дракон', i: '🔫', p: 55000, r: 'legendary' },
-
-        // Винтовки
         { n: 'AK-47 | Красная', i: '🔫', p: 7000, r: 'epic' },
         { n: 'AK-47 | Вулкан', i: '🔫', p: 20000, r: 'legendary' },
         { n: 'AK-47 | Огненный', i: '🔫', p: 45000, r: 'legendary' },
@@ -1698,8 +1663,6 @@
         { n: 'AUG | Император', i: '🔫', p: 3000, r: 'rare' },
         { n: 'SG 553 | Интеграл', i: '🔫', p: 6500, r: 'epic' },
         { n: 'SG 553 | Мутант', i: '🔫', p: 2000, r: 'rare' },
-
-        // Снайперские
         { n: 'AWP | Азимов', i: '🎯', p: 10000, r: 'epic' },
         { n: 'AWP | Гипер', i: '🎯', p: 28000, r: 'legendary' },
         { n: 'AWP | Дракон', i: '🎯', p: 100000, r: 'legendary' },
@@ -1709,8 +1672,6 @@
         { n: 'SSG 08 | Кровь', i: '🎯', p: 800, r: 'uncommon' },
         { n: 'SCAR-20 | Каркас', i: '🎯', p: 4000, r: 'rare' },
         { n: 'G3SG1 | Флюид', i: '🎯', p: 4000, r: 'rare' },
-
-        // Дробовики и Пулеметы
         { n: 'Nova | Полярный', i: '🔫', p: 1800, r: 'rare' },
         { n: 'Nova | Гипер', i: '🔫', p: 700, r: 'uncommon' },
         { n: 'XM1014 | Транзит', i: '🔫', p: 1100, r: 'uncommon' },
@@ -1723,8 +1684,6 @@
         { n: 'Negev | Мощь', i: '🔫', p: 800, r: 'uncommon' },
         { n: 'M249 | Азимов', i: '🔫', p: 6000, r: 'epic' },
         { n: 'M249 | Огонь', i: '🔫', p: 1500, r: 'uncommon' },
-
-        // Ножи и Перчатки
         { n: '★ Керамбит | Градиент', i: '🔪', p: 250000, r: 'legendary' },
         { n: '★ Керамбит | Убийство', i: '🔪', p: 800000, r: 'secret' },
         { n: '★ Керамбит | Доплер', i: '🔪', p: 450000, r: 'secret' },
@@ -1764,19 +1723,16 @@
         viewedItem: null,
         isCaseRolling: false,
         currentMarketTab: 'buy',
-        
         upgrader: {
             betItem: null,
             targetItem: null,
             isRolling: false,
             modalMode: 'bet'
         },
-        
         antiCheat: {
             clickTimestamps: [],
             isFlagged: false
         },
-        
         lastGlobalEventId: 0,
         currentCase: null,
         lastChatClear: Date.now(),
@@ -1849,15 +1805,12 @@
             try {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 10000);
-                
                 const res = await fetch(Config.SUPABASE_URL + '/rest/v1' + endpoint, {
                     ...options,
                     signal: controller.signal,
                     headers: { ...Config.HEADERS, ...(options.headers || {}) }
                 });
-                
                 clearTimeout(timeoutId);
-                
                 const text = await res.text();
                 if (!res.ok) {
                     let errorMsg = 'Ошибка сети';
@@ -1909,7 +1862,6 @@
         
         getItemIcon(item) {
             if (!item || !item.i) return '📦';
-            // Если это Base64 или URL - возвращаем img
             if (item.i.startsWith('http') || item.i.startsWith('data:image')) {
                 return `<img src="${item.i}" alt="${item.n}" style="max-width:100%;max-height:80px;object-fit:contain;">`;
             }
@@ -2110,8 +2062,9 @@
             if (id === 'chat') ChatSystem.load();
             if (id === 'profile') GameEngine.updateAllUIs();
             if (id === 'market') AuctionSystem.load();
-            if (id === 'news') NewsSystem.load();
-            if (id === 'admin') AdminSystem.loadBannedList();
+            if (id === 'admin') {
+                AdminSystem.renderWeaponList();
+            }
             if (id === 'bonus') BonusSystem.updateUI();
             if (id === 'shop') ShopSystem.updateUI();
             if (id === 'wheel') {
@@ -2475,11 +2428,10 @@
     window.WheelSystem = WheelSystem;
 
     // ==========================================================================
-    // 12. ПЕРЕРОЖДЕНИЕ (ДИНАМИЧЕСКАЯ СТОИМОСТЬ)
+    // 12. ПЕРЕРОЖДЕНИЕ
     // ==========================================================================
     const RebirthSystem = {
         getReqCost(level) {
-            // 1-е перерождение: 1 000 000, 2-е: 2 000 000, 3-е: 4 000 000...
             return 1000000 * Math.pow(2, level);
         },
 
@@ -2560,7 +2512,7 @@
                 const profitPrefix = profit >= 0 ? '📈 +' : '📉 ';
 
                 return `
-                    <div class="item-card r-${it.r}" onclick="MarketSystem.openItemView('${it.n}', 'buy')">
+                    <div class="item-card r-${it.r}" onclick="MarketSystem.openItemView('${it.n.replace(/'/g, "\\'")}', 'buy')">
                         <span class="item-icon">${icon}</span>
                         <span class="item-name">${it.n}</span>
                         <span class="item-price">${Utils.formatNumber(currentPrice)} 🪙</span>
@@ -2709,7 +2661,7 @@
                 const profitPrefix = profit >= 0 ? '📈 +' : '📉 ';
 
                 return `
-                    <div class="item-card r-${it.r}" onclick="MarketSystem.openItemView('${n}', 'sell')">
+                    <div class="item-card r-${it.r}" onclick="MarketSystem.openItemView('${n.replace(/'/g, "\\'")}', 'sell')">
                         <span class="item-icon">${icon}</span>
                         <span class="item-name">${n}</span>
                         <span class="item-price">x${AppState.userInventory[n]}</span>
@@ -2761,7 +2713,7 @@
                                 <div class="auc-price">${Utils.formatNumber(a.price)} 🪙</div>
                                 <div class="auc-profit ${profitClass}">${profitPrefix}${profit}%</div>
                                 ${!isMine 
-                                    ? `<button class="btn-buy-auc" onclick="AuctionSystem.buyLot(${a.id}, '${a.item_name}', ${a.price})">КУПИТЬ</button>` 
+                                    ? `<button class="btn-buy-auc" onclick="AuctionSystem.buyLot(${a.id}, '${a.item_name.replace(/'/g, "\\'")}', ${a.price})">КУПИТЬ</button>` 
                                     : `<div style="font-size:11px; color:var(--color-gold); margin-top:10px;">Ваш лот</div>`
                                 }
                             </div>
@@ -2947,7 +2899,7 @@
                 
                 g.innerHTML = keys.map(n => {
                     const it = AppState.allGameItems.find(x => x.n === n);
-                    return `<div class="item-card r-${it.r}" onclick="UpgraderSystem.pickItem('${n}')">
+                    return `<div class="item-card r-${it.r}" onclick="UpgraderSystem.pickItem('${n.replace(/'/g, "\\'")}')">
                         ${Utils.getItemIcon(it)}
                         <span class="item-name">${n}</span>
                     </div>`;
@@ -2955,7 +2907,7 @@
             } else {
                 title.textContent = 'Выберите цель';
                 g.innerHTML = AppState.allGameItems.map(it => `
-                    <div class="item-card r-${it.r}" onclick="UpgraderSystem.pickItem('${it.n}')">
+                    <div class="item-card r-${it.r}" onclick="UpgraderSystem.pickItem('${it.n.replace(/'/g, "\\'")}')">
                         ${Utils.getItemIcon(it)}
                         <span class="item-name">${it.n}</span>
                     </div>
@@ -3225,15 +3177,13 @@
     window.SettingsSystem = SettingsSystem;
 
     // ==========================================================================
-    // 22. АДМИНИСТРАТОР (С ЗАГРУЗКОЙ ОРУЖИЯ)
+    // 22. АДМИНИСТРАТОР
     // ==========================================================================
     const AdminSystem = {
         async giveSelfMoney() {
             if (AppState.currentUser.username.toLowerCase() !== Config.ADMIN_USERNAME.toLowerCase()) return Utils.showToast('Нет прав', true);
             
-            const amountInput = document.getElementById('admSelfAmount').value;
-            const amount = parseInt(amountInput);
-            
+            const amount = parseInt(document.getElementById('admSelfAmount').value);
             if (isNaN(amount) || amount <= 0) return Utils.showToast('Введите корректную сумму', true);
             
             AppState.currentUser.coins += amount;
@@ -3258,8 +3208,6 @@
             const file = fileInput.files[0];
             
             if (!name || isNaN(price) || !file) return Utils.showToast('Заполните все поля', true);
-            
-            // Проверка размера (Максимум 16 МБ)
             if (file.size > 16 * 1024 * 1024) return Utils.showToast('Картинка слишком большая (макс 16 МБ)', true);
 
             const reader = new FileReader();
@@ -3268,7 +3216,7 @@
                 
                 const newItem = {
                     n: name,
-                    i: base64Image, // Сохраняем как Base64
+                    i: base64Image,
                     p: price,
                     r: rarity
                 };
@@ -3276,19 +3224,17 @@
                 AppState.allGameItems.push(newItem);
                 
                 try {
-                    // Сохраняем в БД (config)
                     await Utils.api('/config', {
                         method: 'POST',
                         headers: { 'Prefer': 'resolution=merge-duplicates' },
                         body: JSON.stringify({ key: 'items_data', value: JSON.stringify(AppState.allGameItems) })
                     });
                     
-                    // Обновляем UI
                     MarketSystem.render();
                     CaseSystem.render();
+                    this.renderWeaponList();
                     Utils.showToast(`Оружие "${name}" успешно добавлено!`);
                     
-                    // Очищаем поля
                     document.getElementById('admWeaponName').value = '';
                     document.getElementById('admWeaponPrice').value = '';
                     fileInput.value = '';
@@ -3297,6 +3243,80 @@
                 }
             };
             reader.readAsDataURL(file);
+        },
+
+        /* ============ НОВОЕ: УДАЛЕНИЕ ОРУЖИЯ ============ */
+        renderWeaponList() {
+            if (!AppState.currentUser || AppState.currentUser.username.toLowerCase() !== Config.ADMIN_USERNAME.toLowerCase()) return;
+            const list = document.getElementById('admWeaponList');
+            const countEl = document.getElementById('admWeaponCount');
+            if (!list) return;
+
+            const searchInput = document.getElementById('admWeaponSearch');
+            const search = (searchInput ? searchInput.value : '').trim().toLowerCase();
+
+            const filtered = AppState.allGameItems
+                .map((it, idx) => ({ it, idx }))
+                .filter(({ it }) => !search || it.n.toLowerCase().includes(search));
+
+            if (countEl) countEl.textContent = filtered.length + ' / ' + AppState.allGameItems.length;
+
+            if (!filtered.length) {
+                list.innerHTML = '<div style="color:#555; text-align:center; padding:20px; font-size:12px;">Ничего не найдено</div>';
+                return;
+            }
+
+            const rarityLabels = {
+                common: 'Обычное',
+                uncommon: 'Необычное',
+                rare: 'Редкое',
+                epic: 'Эпическое',
+                legendary: 'Легендарное',
+                secret: 'Секретное'
+            };
+
+            list.innerHTML = filtered.map(({ it, idx }) => `
+                <div style="display:flex; justify-content:space-between; align-items:center; background:#0a0a0a; padding:8px 10px; border-radius:8px; margin-bottom:6px; border:1px solid var(--color-border-light); gap:8px;">
+                    <div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">
+                        <div style="width:36px; height:36px; display:flex; align-items:center; justify-content:center; background:#000; border-radius:6px; flex-shrink:0; overflow:hidden; font-size:20px;">
+                            ${Utils.getItemIcon(it)}
+                        </div>
+                        <div style="min-width:0; flex:1;">
+                            <div style="font-size:12px; font-weight:bold; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${it.n}</div>
+                            <div style="font-size:10px; color:var(--color-gold);">${Utils.formatNumber(it.p)} 🪙 · ${rarityLabels[it.r] || it.r}</div>
+                        </div>
+                    </div>
+                    <button class="admin-btn danger" style="padding:6px 10px; font-size:11px; flex-shrink:0;" onclick='AdminSystem.deleteWeapon(${JSON.stringify(it.n)})'>🗑 Удалить</button>
+                </div>
+            `).join('');
+        },
+
+        async deleteWeapon(name) {
+            if (AppState.currentUser.username.toLowerCase() !== Config.ADMIN_USERNAME.toLowerCase()) return Utils.showToast('Нет прав', true);
+
+            if (!confirm(`Удалить оружие "${name}"?\n\nЭто удалит его с рынка и из всех кейсов. У игроков в инвентаре оно останется, но его нельзя будет продать/апгрейдить.`)) return;
+
+            const idx = AppState.allGameItems.findIndex(x => x.n === name);
+            if (idx === -1) return Utils.showToast('Оружие не найдено', true);
+
+            const removed = AppState.allGameItems.splice(idx, 1)[0];
+
+            try {
+                await Utils.api(`/config?key=eq.items_data`, {
+                    method: 'PATCH',
+                    body: JSON.stringify({ value: JSON.stringify(AppState.allGameItems) })
+                });
+
+                MarketSystem.render();
+                CaseSystem.render();
+                this.renderWeaponList();
+                Utils.showToast(`Оружие "${removed.n}" удалено!`);
+                Sound.playWin();
+            } catch (err) {
+                // Откатываем в случае ошибки
+                AppState.allGameItems.splice(idx, 0, removed);
+                Utils.showToast('Ошибка удаления: ' + err.message, true);
+            }
         },
 
         async giveCustomMoney() {
@@ -3318,33 +3338,6 @@
             });
             
             Utils.showToast(`Выдано ${Utils.formatNumber(amount)} монет игроку ${target.username}`);
-        },
-
-        async action(action, value) {
-            if (AppState.currentUser.username.toLowerCase() !== Config.ADMIN_USERNAME.toLowerCase()) return Utils.showToast('Нет прав', true);
-            
-            const t = document.getElementById('admTargetUser').value.trim();
-            if (!t) return Utils.showToast('Введите ник', true);
-            
-            const p = await Utils.api(`/players?username=eq.${encodeURIComponent(t)}&select=*`);
-            if (!p.length) return Utils.showToast('Игрок не найден', true);
-            
-            const target = p[0];
-
-            if (action === 'unban') {
-                await Utils.api(`/players?id=eq.${target.id}`, { 
-                    method: 'PATCH', 
-                    body: JSON.stringify({ role: 'user', ban_reason: null, ban_until: null }) 
-                });
-                Utils.showToast('Игрок разбанен');
-            } else if (action === 'wipe') {
-                if (!confirm('Удалить весь инвентарь игрока?')) return;
-                await Utils.api(`/players?id=eq.${target.id}`, { 
-                    method: 'PATCH', 
-                    body: JSON.stringify({ inventory: {} }) 
-                });
-                Utils.showToast('Инвентарь очищен');
-            }
         },
 
         async banPlayer() {
@@ -3371,43 +3364,7 @@
                 }) 
             });
             
-            const timeText = timeMs >= 9999999999999 ? 'Навсегда' : `${Math.round(timeMs/3600000)}ч.`;
-            await Utils.api('/chat', {
-                method: 'POST',
-                body: JSON.stringify({
-                    username: 'СИСТЕМА',
-                    role: 'system',
-                    message: `Игрок ${target.username} забанен админом ${AppState.currentUser.username}. Причина: ${reason}. На время: ${timeText}`,
-                    created_at: Date.now()
-                })
-            });
-            
             Utils.showToast('Игрок забанен!');
-            this.loadBannedList();
-        },
-
-        async loadBannedList() {
-            if (AppState.currentUser.username.toLowerCase() !== Config.ADMIN_USERNAME.toLowerCase()) return;
-            
-            try {
-                const d = await Utils.api('/players?role=eq.banned&select=*');
-                const list = document.getElementById('bannedList');
-                
-                if (!d || !d.length) {
-                    list.innerHTML = '<div style="color:#555; text-align:center; font-size:12px;">Нет забаненных</div>';
-                    return;
-                }
-                
-                list.innerHTML = d.map(p => `
-                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #222; padding:8px 0;">
-                        <div>
-                            <div style="font-weight:bold; color:var(--color-danger); font-size:13px;">${p.username}</div>
-                            <div style="font-size:10px; color:#888;">${p.ban_reason || 'Без причины'}</div>
-                        </div>
-                        <button class="admin-btn" style="padding:4px 8px; font-size:10px;" onclick="AdminSystem.action('unban', 1)">Разбан</button>
-                    </div>
-                `).join('');
-            } catch(e) {}
         },
 
         async sendGlobalBanner() {
@@ -3531,7 +3488,6 @@
         Utils.spawnCubes();
         CaseSystem.render();
         
-        // Принудительное скрытие загрузки через 3 секунды при любом раскладе
         setTimeout(() => {
             const ls = document.getElementById('loadingScreen');
             if (ls && ls.style.display !== 'none') {
@@ -3592,4 +3548,4 @@
     };
 </script>
 </body>
-    </html>
+</html>
